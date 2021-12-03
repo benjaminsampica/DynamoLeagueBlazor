@@ -37,8 +37,10 @@ public class Handler : IRequestHandler<SeedDataCommand>
         var userRole = new ApplicationRole(ApplicationRole.User);
         await _roleManager.CreateAsync(userRole);
 
-        var user = new ApplicationUser("benjamin.sampica@gmail.com", "hunter2", 1);
-        await _userManager.CreateAsync(user);
+        var user = new ApplicationUser("benjamin.sampica@gmail.com", 1) { EmailConfirmed = true };
+        await _userManager.CreateAsync(user, "hunter2");
+
+        await _userManager.AddToRoleAsync(user, ApplicationRole.Admin);
     }
 
     private async Task SeedTeamDataAsync(CancellationToken cancellationToken)
