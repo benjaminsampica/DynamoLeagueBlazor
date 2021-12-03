@@ -1,6 +1,6 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Entities;
+using DynamoLeagueBlazor.Server.Models;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

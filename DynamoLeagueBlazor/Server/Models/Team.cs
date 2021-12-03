@@ -9,9 +9,9 @@ public record Team : BaseEntity
         TeamLogoUrl = teamLogoUrl;
     }
 
-    public string TeamKey { get; set; }
-    public string TeamName { get; set; }
-    public string TeamLogoUrl { get; set; }
+    public string TeamKey { get; init; }
+    public string TeamName { get; init; }
+    public string TeamLogoUrl { get; init; }
 
     public ICollection<Player> Players { get; set; } = Array.Empty<Player>();
 
