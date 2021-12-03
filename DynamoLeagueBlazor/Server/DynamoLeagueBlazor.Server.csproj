@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Client\DynamoLeagueBlazor.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Migrations\" />
+  </ItemGroup>
+
 </Project>

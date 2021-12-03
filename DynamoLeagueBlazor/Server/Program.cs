@@ -15,7 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddRoles<ApplicationRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
@@ -66,6 +68,9 @@ await using (var scope = app.Services.CreateAsyncScope())
     {
         await applicationDbContext.Database.EnsureDeletedAsync();
         await applicationDbContext.Database.EnsureCreatedAsync();
+
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(new SeedDataCommand());
     }
     else
     {

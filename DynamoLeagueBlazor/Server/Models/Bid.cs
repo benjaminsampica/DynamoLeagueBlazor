@@ -9,13 +9,13 @@ public record Bid : BaseEntity
         TeamId = teamId;
     }
 
-    public int Amount { get; set; }
-    public int PlayerId { get; set; }
-    public int TeamId { get; set; }
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    public int Amount { get; private set; }
+    public int PlayerId { get; private set; }
+    public int TeamId { get; private set; }
+    public DateTime DateTime { get; private set; } = DateTime.Now;
 
-    public Team Team { get; set; } = null!;
-    public Player Player { get; set; } = null!;
+    public Team Team { get; private set; } = null!;
+    public Player Player { get; private set; } = null!;
 
     public bool IsEligibleForFreeAgencyExtension(int teamId)
     {

@@ -9,11 +9,11 @@ public record Team : BaseEntity
         TeamLogoUrl = teamLogoUrl;
     }
 
-    public string TeamKey { get; init; }
-    public string TeamName { get; init; }
-    public string TeamLogoUrl { get; init; }
+    public string TeamKey { get; private set; }
+    public string TeamName { get; private set; }
+    public string TeamLogoUrl { get; private set; }
 
-    public ICollection<Player> Players { get; set; } = Array.Empty<Player>();
+    public ICollection<Player> Players { get; private set; } = new HashSet<Player>();
 
     public int CapSpace() => Players.Sum(p => p.ContractValue);
 }
