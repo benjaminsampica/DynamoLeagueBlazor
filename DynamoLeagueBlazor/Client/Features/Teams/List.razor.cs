@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace DynamoLeagueBlazor.Client.Features.Teams.List;
+namespace DynamoLeagueBlazor.Client.Features.Teams;
 
 [Authorize]
 public partial class List
