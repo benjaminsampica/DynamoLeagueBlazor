@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Entities;
+﻿namespace DynamoLeagueBlazor.Server.Models;
 
 public record Team : BaseEntity
 {

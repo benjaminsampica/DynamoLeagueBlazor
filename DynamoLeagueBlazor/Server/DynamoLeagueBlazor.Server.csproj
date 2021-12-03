@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
@@ -23,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Client\DynamoLeagueBlazor.Client.csproj" />
-    <ProjectReference Include="..\Shared\DynamoLeagueBlazor.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

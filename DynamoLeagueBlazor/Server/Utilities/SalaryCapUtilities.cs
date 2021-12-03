@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Utilities;
+﻿namespace DynamoLeagueBlazor.Server.Utilities;
 
 public static class SalaryCapUtilities
 {

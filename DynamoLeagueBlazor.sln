@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoLeagueBlazor.Server", "DynamoLeagueBlazor\Server\DynamoLeagueBlazor.Server.csproj", "{9479FD30-357E-42FF-B5DB-0B6DA19D9A5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Server", "DynamoLeagueBlazor\Server\DynamoLeagueBlazor.Server.csproj", "{9479FD30-357E-42FF-B5DB-0B6DA19D9A5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoLeagueBlazor.Client", "DynamoLeagueBlazor\Client\DynamoLeagueBlazor.Client.csproj", "{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoLeagueBlazor.Shared", "DynamoLeagueBlazor\Shared\DynamoLeagueBlazor.Shared.csproj", "{CDB733B5-8DA9-42C9-8A57-B82C69134B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Client", "DynamoLeagueBlazor\Client\DynamoLeagueBlazor.Client.csproj", "{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDB733B5-8DA9-42C9-8A57-B82C69134B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDB733B5-8DA9-42C9-8A57-B82C69134B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDB733B5-8DA9-42C9-8A57-B82C69134B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDB733B5-8DA9-42C9-8A57-B82C69134B7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

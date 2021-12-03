@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace DynamoLeagueBlazor.Shared.Entities;
+﻿namespace DynamoLeagueBlazor.Server.Models;
 
 public record Player : BaseEntity
 {
@@ -25,6 +23,4 @@ public record Player : BaseEntity
 
     public Team Team { get; private set; } = null!;
     public ICollection<Bid> Bids { get; private set; } = Array.Empty<Bid>();
-
-    public static Expression<Func<Player, bool>> IsActive(int year) => player => player.ContractLength >= year;
 }
