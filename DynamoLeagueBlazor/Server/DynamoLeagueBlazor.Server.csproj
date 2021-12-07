@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\DynamoLeagueBlazor.Shared\DynamoLeagueBlazor.Shared.csproj" />
+    <ProjectReference Include="..\Shared\DynamoLeagueBlazor.Shared.csproj" />
 	<ProjectReference Include="..\Client\DynamoLeagueBlazor.Client.csproj" />
   </ItemGroup>
 
