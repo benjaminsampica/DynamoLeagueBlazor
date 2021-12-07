@@ -62,7 +62,6 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Team, GetTeamListResult.TeamItem>()
-            .ForMember(p => p.PlayerCount, mo => mo.MapFrom(t => t.Players.Count))
-            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace()));
+            .ConstructUsing(p => new GetTeamListResult.TeamItem(p.Id, p.TeamLogoUrl, p.TeamName, p.Players.Count.ToString(), p.CapSpace().ToString()));
     }
 }

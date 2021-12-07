@@ -5,9 +5,9 @@ public class GetTeamListResult
     public IEnumerable<TeamItem> Teams { get; init; } = Array.Empty<TeamItem>();
 
     public record TeamItem(
-        string Id,
+        int Id,
         string TeamLogoUrl,
         string TeamName,
-        int PlayerCount,
-        int CapSpace);
+        string PlayerCount,
+        string CapSpace);
 }

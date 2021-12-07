@@ -1,6 +1,7 @@
 ﻿@page "/teams/list"
+@using static DynamoLeagueBlazor.Shared.Features.Teams.GetTeamListResult
 
-<h3>Teams</h3>
+<h1>Teams</h1>
 
 @if(_result == null)
 {
@@ -8,5 +9,33 @@
 }
 else
 {
-    <RadzenDataList WrapItems="true" Data="_result.Teams"></RadzenDataList>
+    <RadzenDataList WrapItems="true" Data="_result.Teams" TItem="TeamItem">
+        <Template Context="item">
+            <RadzenCard Style="width:300px;">
+                <div class="d-flex flex-row align-items-center">
+                    <RadzenImage Path="@item.TeamLogoUrl" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                    <div>
+                        <h4 class="mb-0">@item.TeamName</h4>
+                        <div>
+                            Players
+                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text="@item.PlayerCount" />
+                        </div>
+                        <div>
+                            Cap Space
+                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text="@item.CapSpace" />
+                        </div>
+                    </div>
+                </div>
+                <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                <div class="row">
+                    <div class="col-md-8">
+                        <RadzenButton Icon="search"></RadzenButton>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        
+                    </div>
+                </div>
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
 }
