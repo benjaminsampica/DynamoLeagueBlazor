@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Server",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Client", "DynamoLeagueBlazor\Client\DynamoLeagueBlazor.Client.csproj", "{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Shared", "DynamoLeagueBlazor\Shared\DynamoLeagueBlazor.Shared\DynamoLeagueBlazor.Shared.csproj", "{D8BEC212-6C75-4909-A780-3678E11C81C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Shared", "DynamoLeagueBlazor\Shared\DynamoLeagueBlazor.Shared.csproj", "{D8BEC212-6C75-4909-A780-3678E11C81C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
