@@ -1,5 +1,12 @@
 ﻿@page "/teams/list"
 
-<h3>List</h3>
+<h3>Teams</h3>
 
-<RadzenButton Text="Hi"></RadzenButton>
+@if(_result == null)
+{
+    <h2>Nothing to show...</h2>
+}
+else
+{
+    <RadzenDataList WrapItems="true" Data="_result.Teams"></RadzenDataList>
+}

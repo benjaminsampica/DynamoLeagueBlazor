@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Infrastructure\Migrations\**" />
-    <Content Remove="Infrastructure\Migrations\**" />
-    <EmbeddedResource Remove="Infrastructure\Migrations\**" />
-    <None Remove="Infrastructure\Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="2.0.1" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
@@ -30,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\DynamoLeagueBlazor.Client.csproj" />
+    <ProjectReference Include="..\Shared\DynamoLeagueBlazor.Shared\DynamoLeagueBlazor.Shared.csproj" />
   </ItemGroup>
 
 </Project>

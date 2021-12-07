@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,18 +55,6 @@ public class Handler : IRequestHandler<Query, GetTeamListResult>
             Teams = teams
         };
     }
-}
-
-public class GetTeamListResult
-{
-    public IEnumerable<TeamItem> Teams { get; init; } = Array.Empty<TeamItem>();
-
-    public record TeamItem(
-        string Id,
-        string TeamLogoUrl,
-        string TeamName,
-        int PlayerCount,
-        int CapSpace);
 }
 
 public class MappingProfile : Profile
