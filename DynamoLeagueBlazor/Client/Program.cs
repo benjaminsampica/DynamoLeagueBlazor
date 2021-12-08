@@ -2,7 +2,7 @@ using DynamoLeagueBlazor.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Radzen;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,9 +15,6 @@ builder.Services.AddHttpClient("DynamoLeagueBlazor.ServerAPI", client => client.
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DynamoLeagueBlazor.ServerAPI"));
 
 builder.Services.AddApiAuthorization();
-
-builder.Services.AddScoped<DialogService>();
-builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<TooltipService>();
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();

@@ -5,24 +5,22 @@
     Player Lookup
 </h1>
 
-@if(_result == null)
-{
-    <h2>
-        <RadzenIcon Icon=loop class="icon-spinner" /> Loading...
-    </h2>
-}
-else
-{
-    <RadzenDataGrid Data=_result.Players TItem=PlayerItem AllowPaging=true PageSize=10>
-        <EmptyTemplate>
-            No data to show...
-        </EmptyTemplate>
-        <Columns>
-            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Name)" />
-            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Position)" />
-            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Team)" />
-            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.ContractValue)" Title="Contract Value"/>
-            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.ContractLength)" Title="Contract Length"/>
-        </Columns>
-    </RadzenDataGrid>
-}
+<MudTable Items="_result.Players" Breakpoint="Breakpoint.Sm" Dense=true Loading=_loading RowsPerPage=10>
+    <HeaderContent>
+        <MudTh>@nameof(PlayerItem.Name)</MudTh>
+        <MudTh>@nameof(PlayerItem.Position)</MudTh>
+        <MudTh>@nameof(PlayerItem.Team)</MudTh>
+        <MudTh>Contract Value</MudTh>
+        <MudTh>Contract Length</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Name</MudTd>
+        <MudTd>@context.Position</MudTd>
+        <MudTd>@context.Team</MudTd>
+        <MudTd>@context.ContractValue</MudTd>
+        <MudTd>@context.ContractLength</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

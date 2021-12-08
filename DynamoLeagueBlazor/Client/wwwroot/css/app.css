@@ -41,3 +41,9 @@
         transform: rotate(0deg);
     }
 }
+
+/* MudBlazor overrides */
+
+.mud-card-header .mud-card-header-actions {
+    align-self: initial !important;
+}

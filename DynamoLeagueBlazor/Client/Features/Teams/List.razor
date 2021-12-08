@@ -9,33 +9,40 @@
 }
 else
 {
-    <RadzenDataList WrapItems=true Data=_result.Teams TItem=TeamItem>
-        <Template Context=item>
-            <RadzenCard Style="width:300px;">
-                <div class="d-flex flex-row align-items-center">
-                    <RadzenImage Path="@item.TeamLogoUrl" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
-                    <div>
-                        <h4 class="mb-0">@item.TeamName</h4>
-                        <div>
-                            Players
-                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text="@item.PlayerCount" />
-                        </div>
-                        <div>
-                            Cap Space
-                            <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text="@item.CapSpace" />
-                        </div>
-                    </div>
-                </div>
-                <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
-                <div class="row">
-                    <div class="col-md-8">
-                        <RadzenButton Icon=search></RadzenButton>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        
-                    </div>
-                </div>
-            </RadzenCard>
-        </Template>
-    </RadzenDataList>
+    <MudGrid>
+        @foreach(var team in _result.Teams)
+        {
+            <MudItem lg=4 xs=12>
+                <MudCard>
+                    <MudCardHeader Class="mud-card-header-override">
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="Color.Secondary" Image=@team.TeamLogoUrl Square=true></MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@team.TeamName</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudChip Color="Color.Info" Variant="Variant.Text">
+                                <MudIcon Icon=@Icons.Outlined.Person />
+                                @team.PlayerCount
+                            </MudChip>
+                            <MudChip Color="Color.Tertiary" Variant="Variant.Text">
+                                <MudIcon Icon=@Icons.Outlined.ReduceCapacity />
+                                @team.CapSpace
+                            </MudChip>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardActions>
+                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye">
+                            View
+                        </MudButton>
+                        <MudButton Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SwapHoriz">
+                            Trade
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+    
 }

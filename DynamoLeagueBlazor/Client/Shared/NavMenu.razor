@@ -1,39 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">DynamoLeagueBlazor</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Dashboard
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/teams/list">
-                <span class="oi oi-plus" aria-hidden="true"></span> Teams
-            </NavLink>
-        </div>
-                <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/players/list">
-                <span class="oi oi-plus" aria-hidden="true"></span> Players
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
+    <MudNavLink Href="/teams/list">Teams</MudNavLink>
+    <MudNavLink Href="/players/list">Players</MudNavLink>
+</MudNavMenu>
