@@ -1,5 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -9,45 +10,21 @@ using Microsoft.Extensions.Options;
 using Respawn;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 
 namespace DynamoLeagueBlazor.Tests;
 
 [SetUpFixture]
 public class IntegrationTesting
 {
-    private static IConfigurationRoot _configuration = null!;
-    private static IServiceProvider _serviceProvider = null!;
     private static Checkpoint _checkpoint = null!;
-
-    internal static WebApplicationFactory<Program> Application { get; private set; } = null!;
 
     [OneTimeSetUp]
     public async Task RunBeforeAnyTestsAsync()
     {
-        var application = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureAppConfiguration((builderContext, builder) =>
-                {
-                    builder.SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", true, true)
-                        .AddEnvironmentVariables();
-
-                    _configuration = builder.Build();
-                });
-            });
-
-        _serviceProvider = application.Services;
-
         _checkpoint = new Checkpoint
         {
             TablesToIgnore = new[] { "__EFMigrationsHistory" }
         };
-
-        Application = application;
-
-        await EnsureDatabaseAsync();
     }
 
     public static async Task ResetStateAsync()
@@ -56,37 +33,8 @@ public class IntegrationTesting
         //await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public static async Task<TEntity?> FindAsync<TEntity>(int id)
-        where TEntity : class
-    {
-        using var scope = _serviceProvider.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        return await context.FindAsync<TEntity>(id);
-    }
-
-    public static async Task AddAsync<TEntity>(TEntity entity)
-        where TEntity : class
-    {
-        using var scope = _serviceProvider.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        context.Add(entity);
-
-        await context.SaveChangesAsync();
-    }
-
-    public static HttpClient CreateAuthenticatedClient(Action<WebApplicationFactoryClientOptions>? options)
-    {
-        var clientOptions = new WebApplicationFactoryClientOptions();
-        if (options is not null)
-        {
-            options.Invoke(clientOptions);
-        }
-
-        var client = Application
+    internal static WebApplicationFactory<Program> CreateAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+        => CreateApplication(options)
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -94,13 +42,12 @@ public class IntegrationTesting
                     services.AddAuthentication("Test")
                         .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>("Test", options => { });
                 });
-            })
-            .CreateClient(clientOptions);
+            });
 
-        return client;
-    }
+    internal static WebApplicationFactory<Program> CreateUnauthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+        => CreateApplication(options);
 
-    public static HttpClient CreateUnauthenticatedClient(Action<WebApplicationFactoryClientOptions>? options)
+    private static WebApplicationFactory<Program> CreateApplication(Action<WebApplicationFactoryClientOptions>? options = null)
     {
         var clientOptions = new WebApplicationFactoryClientOptions();
         if (options is not null)
@@ -108,44 +55,63 @@ public class IntegrationTesting
             options.Invoke(clientOptions);
         }
 
-        var client = Application
-            .CreateClient(clientOptions);
+        var application = new TestWebApplicationFactory();
 
-        return client;
-    }
-
-    private static async Task EnsureDatabaseAsync()
-    {
-        using var scope = _serviceProvider.CreateScope();
-
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        // TODO: Setup localdb when its working on W11
-        //await dynamoLeagueDbContext.Database.MigrateAsync();
-        await dbContext.Database.EnsureDeletedAsync();
-        await dbContext.Database.EnsureCreatedAsync();
+        return application;
     }
 }
 
-internal static class HttpClientExtensions
+internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
-    public static async Task<TestHttpResponseMessage<TResponse>> GetAsync<TResponse>(this HttpClient httpClient, string? requestUri)
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var response = await httpClient.GetAsync(requestUri);
-        var contentStream = await response.Content.ReadAsStreamAsync();
-        var responseContent = await JsonSerializer.DeserializeAsync<TResponse>(contentStream);
+        builder.UseEnvironment("Test");
 
-        var testResponse = (TestHttpResponseMessage<TResponse>)response;
-        testResponse.Content = responseContent;
+        builder.ConfigureAppConfiguration((builderContext, config) =>
+        {
+            config.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables();
+        });
 
-        return testResponse;
+        builder.ConfigureServices(async services =>
+        {
+            var serviceProvider = services.BuildServiceProvider();
+
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            await dbContext.Database.EnsureCreatedAsync();
+        });
     }
 }
 
-internal class TestHttpResponseMessage<TResponse> : HttpResponseMessage
+internal static class IntegrationTestExtensions
 {
-    public new TResponse? Content { get; set; }
+    internal static async Task<TEntity?> FindAsync<TEntity>(this WebApplicationFactory<Program> application, int id)
+    where TEntity : class
+    {
+        using var scope = application.Services.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        return await context.FindAsync<TEntity>(id);
+    }
+
+    internal static async Task AddAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+        where TEntity : class
+    {
+        using var scope = application.Services.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        context.Add(entity);
+
+        await context.SaveChangesAsync();
+    }
 }
+
+internal record TestHttpResponse<TContent>(HttpResponseMessage Message, TContent? Content) where TContent : class;
 
 internal class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {

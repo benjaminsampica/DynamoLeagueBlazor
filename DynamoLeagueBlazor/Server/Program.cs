@@ -82,7 +82,7 @@ await using (var scope = app.Services.CreateAsyncScope())
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         await mediator.Send(new SeedDataCommand());
     }
-    else
+    else if (app.Environment.IsProduction())
     {
         await applicationDbContext.Database.MigrateAsync();
     }
