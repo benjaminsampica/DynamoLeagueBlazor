@@ -14,7 +14,7 @@ public record Player : BaseEntity
     public string Name { get; private set; }
     public string Position { get; private set; }
     public string HeadShot { get; private set; }
-    public int? ContractLength { get; set; }
+    public int ContractLength { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
     public bool Rostered { get; set; }

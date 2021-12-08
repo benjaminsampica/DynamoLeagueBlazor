@@ -1,12 +1,12 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Tests.Features.Teams;
+namespace DynamoLeagueBlazor.Tests.Features.Players;
 
 internal class ListTests : IntegrationTestBase
 {
-    private const string _endpoint = "/teams/list";
+    private const string _endpoint = "/players/list";
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -32,17 +32,17 @@ internal class ListTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeam()
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayer_ThenReturnsOnePlayer()
     {
         var application = CreateAuthenticatedApplication();
-        var team = new Team("Test", "Test", "Test");
-        await application.AddAsync(team);
+        var player = new Player("Test", "Test", "Test", "Test");
+        await application.AddAsync(player);
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<GetTeamListResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<GetPlayerListResult>(_endpoint);
 
         result.Should().NotBeNull();
-        result!.Teams.Should().HaveCount(1);
+        result!.Players.Should().HaveCount(1);
     }
 }

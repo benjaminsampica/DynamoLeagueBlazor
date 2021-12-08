@@ -1,0 +1,17 @@
+﻿@page "/players/list"
+@using static DynamoLeagueBlazor.Shared.Features.Players.GetPlayerListResult
+
+<h1>Teams</h1>
+
+@if(_result == null)
+{
+    <h2>Nothing to show...</h2>
+}
+else
+{
+    <RadzenDataGrid AllowPaging=true Data=_result.Players TItem=PlayerItem>
+        <Columns>
+            <RadzenDataGridColumn TItem=PlayerItem Property=Name Title=Player Name />
+        </Columns>
+    </RadzenDataGrid>
+}

@@ -4,10 +4,12 @@ public class GetTeamListResult
 {
     public IEnumerable<TeamItem> Teams { get; init; } = Array.Empty<TeamItem>();
 
-    public record TeamItem(
-        int Id,
-        string TeamLogoUrl,
-        string TeamName,
-        string PlayerCount,
-        string CapSpace);
+    public class TeamItem
+    {
+        public int Id { get; set; }
+        public string TeamLogoUrl { get; set; }
+        public string TeamName { get; set; }
+        public string PlayerCount { get; set; }
+        public string CapSpace { get; set; }
+    }
 }

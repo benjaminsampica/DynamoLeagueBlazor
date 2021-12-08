@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DynamoLeagueBlazor.Server.Controllers;
+namespace DynamoLeagueBlazor.Server.Features;
 
 public class OidcConfigurationController : Controller
 {

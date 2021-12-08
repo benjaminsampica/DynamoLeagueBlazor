@@ -2,17 +2,17 @@
 using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DynamoLeagueBlazor.Server.Features.Teams.List;
+namespace DynamoLeagueBlazor.Server.Features.Players.List;
 
 [Authorize]
 [ApiController]
-[Route("Teams/[controller]")]
+[Route("Players/[controller]")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -23,15 +23,15 @@ public class ListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<GetTeamListResult> GetAsync()
+    public async Task<GetPlayerListResult> GetAsync()
     {
         return await _mediator.Send(new Query());
     }
 }
 
-public class Query : IRequest<GetTeamListResult> { }
+public class Query : IRequest<GetPlayerListResult> { }
 
-public class Handler : IRequestHandler<Query, GetTeamListResult>
+public class Handler : IRequestHandler<Query, GetPlayerListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -42,17 +42,17 @@ public class Handler : IRequestHandler<Query, GetTeamListResult>
         _mapper = mapper;
     }
 
-    public async Task<GetTeamListResult> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<GetPlayerListResult> Handle(Query request, CancellationToken cancellationToken)
     {
-        var teams = await _dbContext.Teams
-            .Include(t => t.Players)
+        var players = await _dbContext.Players
+            .Include(p => p.Team)
             .AsNoTracking()
-            .ProjectTo<GetTeamListResult.TeamItem>(_mapper.ConfigurationProvider)
+            .ProjectTo<GetPlayerListResult.PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return new GetTeamListResult
+        return new GetPlayerListResult
         {
-            Teams = teams
+            Players = players
         };
     }
 }
@@ -61,8 +61,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Team, GetTeamListResult.TeamItem>()
-            .ForMember(p => p.PlayerCount, mo => mo.MapFrom(t => t.Players.Count))
-            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString()));
+        CreateMap<Player, GetPlayerListResult.PlayerItem>()
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty));
     }
 }
