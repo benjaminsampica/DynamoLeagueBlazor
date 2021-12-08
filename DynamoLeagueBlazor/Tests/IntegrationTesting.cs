@@ -39,8 +39,8 @@ public class IntegrationTesting
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>("Test", options => { });
+                    services.AddAuthentication(TestAuthenticationHandler.AuthenticationName)
+                        .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(TestAuthenticationHandler.AuthenticationName, options => { });
                 });
             });
 
@@ -115,6 +115,8 @@ internal record TestHttpResponse<TContent>(HttpResponseMessage Message, TContent
 
 internal class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    public const string AuthenticationName = "Test";
+
     public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
         : base(options, logger, encoder, clock)
@@ -124,9 +126,9 @@ internal class TestAuthenticationHandler : AuthenticationHandler<AuthenticationS
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
-        var identity = new ClaimsIdentity(claims, "Test");
+        var identity = new ClaimsIdentity(claims, AuthenticationName);
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, "Test");
+        var ticket = new AuthenticationTicket(principal, AuthenticationName);
 
         var result = AuthenticateResult.Success(ticket);
 
