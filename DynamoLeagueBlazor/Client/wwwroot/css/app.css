@@ -23,6 +23,21 @@
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+.icon-spinner {
+    animation: spin-animation 1.5s infinite;
+    display: inline-block;
+}
+
+@keyframes spin-animation {
+    0% {
+        transform: rotate(360deg);
     }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}

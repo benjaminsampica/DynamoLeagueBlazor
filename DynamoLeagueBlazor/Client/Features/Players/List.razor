@@ -1,17 +1,28 @@
 ﻿@page "/players/list"
 @using static DynamoLeagueBlazor.Shared.Features.Players.GetPlayerListResult
 
-<h1>Teams</h1>
+<h1>
+    Player Lookup
+</h1>
 
 @if(_result == null)
 {
-    <h2>Nothing to show...</h2>
+    <h2>
+        <RadzenIcon Icon=loop class="icon-spinner" /> Loading...
+    </h2>
 }
 else
 {
-    <RadzenDataGrid AllowPaging=true Data=_result.Players TItem=PlayerItem>
+    <RadzenDataGrid Data=_result.Players TItem=PlayerItem AllowPaging=true PageSize=10>
+        <EmptyTemplate>
+            No data to show...
+        </EmptyTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem=PlayerItem Property=Name Title=Player Name />
+            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Name)" />
+            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Position)" />
+            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.Team)" />
+            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.ContractValue)" Title="Contract Value"/>
+            <RadzenDataGridColumn TItem=PlayerItem Property="@nameof(PlayerItem.ContractLength)" Title="Contract Length"/>
         </Columns>
     </RadzenDataGrid>
 }
