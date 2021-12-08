@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Teams;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DynamoLeagueBlazor.Server.Features.Teams.List;
+namespace DynamoLeagueBlazor.Server.Features.Teams;
 
 [Authorize]
 [ApiController]
@@ -29,9 +28,9 @@ public class ListController : ControllerBase
     }
 }
 
-public class Query : IRequest<GetTeamListResult> { }
+public class Query : IRequest<GetTeamDetailResult> { }
 
-public class Handler : IRequestHandler<Query, GetTeamListResult>
+public class Handler : IRequestHandler<Query, GetTeamDetailResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -42,15 +41,15 @@ public class Handler : IRequestHandler<Query, GetTeamListResult>
         _mapper = mapper;
     }
 
-    public async Task<GetTeamListResult> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<GetTeamDetailResult> Handle(Query request, CancellationToken cancellationToken)
     {
         var teams = await _dbContext.Teams
             .Include(t => t.Players)
             .AsNoTracking()
-            .ProjectTo<GetTeamListResult.TeamItem>(_mapper.ConfigurationProvider)
+            .ProjectTo<GetTeamDetailResult.PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return new GetTeamListResult
+        return new GetTeamDetailResult
         {
             Teams = teams
         };
@@ -61,7 +60,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Team, GetTeamListResult.TeamItem>()
+        CreateMap<Team, GetTeamDetailResult.PlayerItem>()
             .ForMember(p => p.PlayerCount, mo => mo.MapFrom(t => t.Players.Count))
             .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")));
     }

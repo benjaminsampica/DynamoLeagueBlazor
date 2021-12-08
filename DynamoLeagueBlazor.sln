@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Client",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Shared", "DynamoLeagueBlazor\Shared\DynamoLeagueBlazor.Shared.csproj", "{D8BEC212-6C75-4909-A780-3678E11C81C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoLeagueBlazor.Tests", "DynamoLeagueBlazor\Tests\DynamoLeagueBlazor.Tests.csproj", "{888EC223-BE3D-4598-8976-328C3E79B160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Tests", "DynamoLeagueBlazor\Tests\DynamoLeagueBlazor.Tests.csproj", "{888EC223-BE3D-4598-8976-328C3E79B160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
