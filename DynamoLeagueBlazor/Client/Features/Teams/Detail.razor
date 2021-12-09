@@ -1,22 +1,61 @@
 ﻿@page "/teams/{teamId:int}"
+@using static DynamoLeagueBlazor.Shared.Features.Teams.GetTeamDetailResult
 
-<MudGrid>
-    <MudItem lg=4 xs=12>
-        <img src="@_result.TeamLogoUrl" style=""/>
-        <MudDivider DividerType=DividerType.Inset />
-        <MudText Typo="Typo.h3">@_result.TeamName</MudText>
-        <MudChip Color="Color.Tertiary" Variant="Variant.Text">
-            <MudIcon Icon=@Icons.Outlined.ReduceCapacity />
-            @_result.CapSpace
-        </MudChip>
-        <MudButton Variant="Variant.Text" Color="Color.Primary">
-            Rostered Players
-        </MudButton>
-        <MudButton Variant="Variant.Text" Color="Color.Primary">
-            Dropped Players
-        </MudButton>
-    </MudItem>
-    <MudItem lg=8 xs=12>
-        Hello
-    </MudItem>
-</MudGrid>
+@if(_result is null)
+{
+    <MudCard>
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%" />
+        <MudCardContent>
+            <MudSkeleton Width="30%" />
+            <MudSkeleton Width="80%" />
+            <MudSkeleton Width="100%" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem lg=3 xs=12 Class="flex-column align-content-center">
+                    <img src="@_result.TeamLogoUrl" />
+                    <MudDivider DividerType=DividerType.Middle Class="pt-2" />
+                    <MudText Typo="Typo.h3">@_result.TeamName</MudText>
+                    <MudChip Color="Color.Tertiary" Variant="Variant.Text">
+                        <MudIcon Icon=@Icons.Outlined.ReduceCapacity />
+                        @_result.CapSpace
+                    </MudChip>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">
+                        Rostered Players
+                    </MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">
+                        Dropped Players
+                    </MudButton>
+                </MudItem>
+                <MudItem lg=9 xs=12>
+                    <MudTable Items="_result.RosteredPlayers" Dense=true Elevation=0 >
+                        <HeaderContent>
+                            <MudTh>@nameof(PlayerItem.Name)</MudTh>
+                            <MudTh>@nameof(PlayerItem.Position)</MudTh>
+                            <MudTh>Contract Value</MudTh>
+                            <MudTh>Contract Length</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>
+                            <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
+                            <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
+                            <MudTd DataLabel="Contract Length">@context.ContractLength</MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}
