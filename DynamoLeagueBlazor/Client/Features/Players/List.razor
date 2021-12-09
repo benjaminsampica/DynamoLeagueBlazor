@@ -1,11 +1,12 @@
 ﻿@page "/players"
 @using static DynamoLeagueBlazor.Shared.Features.Players.GetPlayerListResult
 
-<h1>
-    Player Lookup
-</h1>
-
-<MudTable Items="_result.Players" Dense=true Loading=_loading >
+<MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Player Lookup</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
     <HeaderContent>
         <MudTh>@nameof(PlayerItem.Name)</MudTh>
         <MudTh>@nameof(PlayerItem.Position)</MudTh>

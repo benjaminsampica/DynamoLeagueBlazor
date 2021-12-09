@@ -11,6 +11,7 @@ public partial class List
 
     private GetPlayerListResult _result = new();
     private bool _loading;
+    private string _searchValue = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,5 +25,14 @@ public partial class List
         {
             exception.Redirect();
         }
+    }
+
+    private bool FilterFunc(GetPlayerListResult.PlayerItem item)
+    {
+        if (string.IsNullOrWhiteSpace(_searchValue))
+            return true;
+        if ($"{item.Name} {item.Position} {item.ContractValue} {item.ContractLength} {item.Team}".Contains(_searchValue))
+            return true;
+        return false;
     }
 }

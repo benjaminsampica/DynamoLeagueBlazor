@@ -40,8 +40,13 @@ else
                     </MudBadge>
                 </MudItem>
                 <MudItem lg=9 xs=12>
-                    <MudText Typo="Typo.h6">@_playerTableHeader</MudText>
-                    <MudTable Items="_playersToDisplay" Dense=true Elevation=0>
+                    <MudTable Items="_playersToDisplay" Dense=true Elevation=0 RowsPerPage=10>
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">@_playerTableHeader</MudText>
+                        </ToolBarContent>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
                         <HeaderContent>
                             <MudTh>@nameof(PlayerItem.Name)</MudTh>
                             <MudTh>@nameof(PlayerItem.Position)</MudTh>
