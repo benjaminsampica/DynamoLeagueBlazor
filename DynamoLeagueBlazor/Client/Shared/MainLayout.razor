@@ -2,18 +2,25 @@
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleNavMenu())" />
         <MudText Typo="Typo.h5" Class="ml-3">Dynamo League</MudText>
         <MudSpacer />
         <LoginDisplay />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
+    <NavMenu Show=_showNavMenu/>
     <MudMainContent>
-        <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
-            @Body
-        </MudContainer>
+            <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
+                <ErrorBoundary @ref=_errorBoundary>
+                    <ChildContent>
+                        @Body
+                    </ChildContent>
+                    <ErrorContent>
+                        <MudAlert Severity=Severity.Error>
+                            An Error Occured...
+                        </MudAlert>
+                    </ErrorContent>
+                </ErrorBoundary>
+            </MudContainer>
     </MudMainContent>
 </MudLayout>
 
@@ -22,8 +29,6 @@
 <MudSnackbarProvider/>
 
 @code {
-    bool _drawerOpen = true;
-
     private MudTheme darkTheme = new MudTheme()
     {
         Palette = new Palette()
@@ -51,8 +56,16 @@
         }
     };
 
-    void DrawerToggle()
+    private ErrorBoundary? _errorBoundary;
+    private bool _showNavMenu = true;
+
+    protected override void OnParametersSet()
     {
-        _drawerOpen = !_drawerOpen;
+        _errorBoundary?.Recover();
+    }
+
+    private void ToggleNavMenu()
+    {
+        _showNavMenu = !_showNavMenu;
     }
 }

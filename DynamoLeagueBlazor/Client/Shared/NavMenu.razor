@@ -1,5 +1,18 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
-    <MudNavLink Href="/teams" Match=NavLinkMatch.Prefix>Teams</MudNavLink>
-    <MudNavLink Href="/players">Players</MudNavLink>
-</MudNavMenu>
+﻿<MudDrawer @bind-Open="Show" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudNavMenu>
+        <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
+        <MudNavLink Href="/teams" Match=NavLinkMatch.Prefix>Teams</MudNavLink>
+        <MudNavLink Href="/players">Players</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code 
+{
+    [Parameter, EditorRequired] public bool Show { get; set; }
+
+    void DrawerToggle()
+    {
+        Show = !Show;
+    }
+}
+
