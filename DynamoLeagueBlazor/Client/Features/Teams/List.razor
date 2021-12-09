@@ -19,13 +19,13 @@ else
                             <MudAvatar Color="Color.Secondary" Image=@team.TeamLogoUrl Size=Size.Large></MudAvatar>
                         </CardHeaderAvatar>
                         <CardHeaderContent>
-                            <MudText Typo="Typo.h6">@team.TeamName</MudText>
+                            <MudText Typo="Typo.h5">@team.TeamName</MudText>
                         </CardHeaderContent>
                         <CardHeaderActions>
-                            <MudChip Color="Color.Info" Variant="Variant.Text" Icon=@Icons.Outlined.Person>
+                            <MudChip Color="Color.Info" Variant="Variant.Text" Icon=@Icons.Outlined.Person Size=Size.Large>
                                 @team.PlayerCount
                             </MudChip>
-                            <MudChip Color="Color.Tertiary" Variant="Variant.Text" Icon=@Icons.Outlined.ReduceCapacity>
+                            <MudChip Color="Color.Tertiary" Variant="Variant.Text" Icon=@Icons.Outlined.ReduceCapacity Size=Size.Large>
                                 @team.CapSpace
                             </MudChip>
                         </CardHeaderActions>
@@ -34,10 +34,10 @@ else
                         @{ 
                             var detailHref = $"/teams/{team.Id}";
                         }
-                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link=@detailHref>
+                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link=@detailHref Size=Size.Large>
                             Detail
                         </MudButton>
-                        <MudButton Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SwapHoriz">
+                        <MudButton Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SwapHoriz" Size=Size.Large>
                             Trade
                         </MudButton>
                     </MudCardActions>
