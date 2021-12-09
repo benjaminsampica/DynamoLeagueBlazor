@@ -6,7 +6,7 @@ public partial class Detail
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
-    [Parameter] public int Id { get; set; }
+    [Parameter] public int TeamId { get; set; }
 
     protected override Task OnInitializedAsync()
     {

@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
@@ -7,11 +6,11 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams;
 internal class ListTests : IntegrationTestBase
 {
     private const string _endpoint = "/teams/list";
+
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
-
         var client = application.CreateClient();
 
         var response = await client.GetAsync(_endpoint);
@@ -23,7 +22,6 @@ internal class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_ThenDoesAllowAccess()
     {
         var application = CreateAuthenticatedApplication();
-
         var client = application.CreateClient();
 
         var response = await client.GetAsync(_endpoint);
@@ -35,8 +33,8 @@ internal class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeam()
     {
         var application = CreateAuthenticatedApplication();
-        var team = new Team("Test", "Test", "Test");
-        await application.AddAsync(team);
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
 
         var client = application.CreateClient();
 

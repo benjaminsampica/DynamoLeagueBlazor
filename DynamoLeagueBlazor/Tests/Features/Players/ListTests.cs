@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
@@ -35,8 +34,8 @@ internal class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayer_ThenReturnsOnePlayer()
     {
         var application = CreateAuthenticatedApplication();
-        var player = new Player("Test", "Test", "Test", "Test");
-        await application.AddAsync(player);
+        var mockPlayer = CreateFakePlayer();
+        await application.AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
