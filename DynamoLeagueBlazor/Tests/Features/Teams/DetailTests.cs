@@ -36,11 +36,17 @@ internal class DetailTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenGivenValidTeamId_ThenReturnsResult()
+    public async Task GivenAnyAuthenticatedUser_WhenGivenValidTeamId_ThenReturnsExpectedResult()
     {
         var application = CreateAuthenticatedApplication();
+
         var stubTeam = CreateFakeTeam();
         await application.AddAsync(stubTeam);
+
+        var stubPlayer = CreateFakePlayer();
+        stubPlayer.TeamId = stubTeam.Id;
+        await application.AddAsync(stubPlayer);
+
         var client = application.CreateClient();
         var endpoint = _endpoint + stubTeam.Id;
 
@@ -48,6 +54,8 @@ internal class DetailTests : IntegrationTestBase
 
         response.Should().NotBeNull();
         response!.TeamName.Should().Be(stubTeam.TeamName);
-        response.CapSpace.Should().Be(stubTeam.CapSpace().ToString("C0"));
+        response.CapSpace.Should().Be(stubPlayer.ContractValue.ToString("C0"));
+        response.RosteredPlayers.Should().NotBeEmpty();
+        response.DroppedPlayers.Should().NotBeEmpty();
     }
 }

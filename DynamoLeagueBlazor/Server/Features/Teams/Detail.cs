@@ -44,14 +44,14 @@ public class DetailHandler : IRequestHandler<DetailQuery, GetTeamDetailResult>
 
     public async Task<GetTeamDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
-        var team = await _dbContext.Teams
-            .Where(t => t.Id == request.TeamId)
+        var teamWithPlayers = await _dbContext.Teams
             .Include(t => t.Players)
+            .Where(t => t.Id == request.TeamId)
             .AsNoTracking()
             .ProjectTo<GetTeamDetailResult>(_mapper.ConfigurationProvider)
             .SingleAsync(cancellationToken);
 
-        return team;
+        return teamWithPlayers;
     }
 }
 
@@ -63,6 +63,8 @@ public class DetailMappingProfile : Profile
             .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")));
 
         CreateMap<Team, GetTeamDetailResult>()
-            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")));
+            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")))
+            .ForMember(p => p.DroppedPlayers, mo => mo.MapFrom(s => s.Players))
+            .ForMember(p => p.RosteredPlayers, mo => mo.MapFrom(s => s.Players));
     }
 }
