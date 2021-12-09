@@ -5,7 +5,7 @@
     Player Lookup
 </h1>
 
-<MudTable Items="_result.Players" Breakpoint="Breakpoint.Sm" Dense=true Loading=_loading RowsPerPage=10>
+<MudTable Items="_result.Players" Breakpoint="Breakpoint.Sm" Dense=true Loading=_loading RowsPerPage=10 Elevation=0 Class="bg-none">
     <HeaderContent>
         <MudTh>@nameof(PlayerItem.Name)</MudTh>
         <MudTh>@nameof(PlayerItem.Position)</MudTh>
@@ -14,11 +14,11 @@
         <MudTh>Contract Length</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd>@context.Name</MudTd>
-        <MudTd>@context.Position</MudTd>
-        <MudTd>@context.Team</MudTd>
-        <MudTd>@context.ContractValue</MudTd>
-        <MudTd>@context.ContractLength</MudTd>
+        <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>
+        <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
+        <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
+        <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
+        <MudTd DataLabel="Contract Length">@context.ContractLength</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager />

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
@@ -8,8 +11,17 @@ public partial class Detail
 
     [Parameter] public int TeamId { get; set; }
 
-    protected override Task OnInitializedAsync()
+    private GetTeamDetailResult? _result;
+
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        try
+        {
+            _result = await HttpClient.GetFromJsonAsync<GetTeamDetailResult>($"teams/{TeamId}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 }

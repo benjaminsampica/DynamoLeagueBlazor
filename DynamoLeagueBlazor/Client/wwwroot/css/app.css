@@ -42,6 +42,10 @@
     }
 }
 
+.bg-none {
+    background-color: transparent !important;
+}
+
 /* MudBlazor overrides */
 
 .mud-card-header .mud-card-header-actions {
