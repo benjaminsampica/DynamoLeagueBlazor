@@ -1,7 +1,186 @@
 ﻿@page "/"
+@using DynamoLeagueBlazor.Shared.Utilities
+@using Microsoft.AspNetCore.Authorization
+@using Position = DynamoLeagueBlazor.Shared.Enums.Position
+@attribute [Authorize]
 
-<h3>Dashboard</h3>
+<h1>Rules</h1>
 
-@code {
+<MudExpansionPanels DisableBorders="true">
+    <MudExpansionPanel Text="Cost">
+        League dues are $100 in the first year, incrementing by $5 each even year after the first year. Every even year the cap space will increase. See the chart below for reference.
+        Dues <b>must</b> be paid by January 1st each season. If an owner does not pay by one week before the season, that owner will be removed from the league.
+        <br /><br />
+        <MudGrid Spacing=1>
+            @foreach(var year in Enumerable.Range(DateTime.Today.Year, 5))
+            {
+                var date = new DateOnly(year, 1, 1);
 
-}
+                <MudItem xs=6 Style="text-align: right;">
+                    @year League Dues
+                </MudItem>
+                <MudItem xs=6 Class="mud-success-text">
+                    @LeagueDuesUtilities.GetCurrentLeagueDues(date).ToString("C0")
+                </MudItem>
+                <MudItem xs=6 Style="text-align: right;">
+                    @year Salary Cap
+                </MudItem>
+                <MudItem xs=6 Class="mud-success-text">
+                    @SalaryCapUtilities.GetCurrentCapValue(date).ToString("C0")
+                </MudItem>
+            }
+        </MudGrid>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Draft">
+        Year one will be a traditional auction draft of 30 rounds. 
+        Each team will have $999 to spend in the draft. 
+        Player contracts will be assigned after the draft.
+        Year 2 and after, the draft will consist of rookies and free agents. 
+        Team budgets will be based on remaining cap space, and contracts will be assigned after the draft.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Trade/Waiver">
+        Acquiring players through traders or waivers requires enough cap space to obtain a player. If an acquisition results in exceeding your cap, the owner(s) will pay a luxury tax equal to
+        double the amount over the cap. Once a team is over cap, the only moves allowed will be to get back under the cap. A team cannot continue to purchase high end players. When trading a player,
+        that players remaining contract will be transfered to the new owner(s). The commissioner will be responsible for approving trades and only trades with blatant collusion will be stopped. Each owner(s)
+        will have a $200 FAAB to spend on waivers, and the FAAB amount spent will be the acquired players contract salary. All waiver pickups are a one year contract, with the owner having the options to
+        franchise or make the player a Restricted Free Agent at the end of the season.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Fines">
+         Owning a player that receives a fine, will result in the owner(s) receiving a fine based on the players contract value. The fines start a $1 and
+        increment by $1 dollar for each $50 in contract value with a maximum fine of $6. Fines must be called out by other owners and will be paid at the end
+        of the season. If the NFL reverses their decision, the commissioner will pay the owner(s) back the fine amount. Attempting to make a trade or waiver claim
+        that is invalid will result in a blocked claim/trade and a $5 fine.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Contracts/Rosters">
+        Each owner(s) will need to select a contract length for drafted players each year. Contract lengths are restricted by the salary you are willing to pay
+        players. The minimum contract length based on salary is listed on the contract chart below. Dropping a player will reduce cap space by half for the remainder
+        of the players contract. E.g. $6 for 4 years would be $3 for 4 years. If the dropped player is picked up off of waivers, the prior owner(s) is
+        released of the contract obligation. Players on their last year of contract must either be franchised or become a restricted free agent.
+        Each Team must have 30 players for the sake of the draft, but can drop players after it.
+
+        <MudSimpleTable Elevation=0>
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>1 Year</th>
+                    <th>2 Years</th>
+                    <th>3 Years</th>
+                    <th>4 Years</th>
+                    <th>5 Years</th>
+                    <th>6 Years</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var position in Position.List)
+                {
+                    <tr>
+                        <td>@position.Name</td>
+                        @foreach(var price in position.PerYearContractPriceTable())
+                        {
+                            <td>@price</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Restricted Free Agents">
+        Restricted free agents will be silent auctioned throughout the off-season. Teams can bid for a restricted free agent, and the owner(s) of that player will have the chance to match
+        the bid. If a restricted free agent receives no bids, they will be returned to the waiver pool.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Franchised Players">
+        Franchising a player results in an owner(s) signing a player for the average cost of the top (number of years for the players fading contract) players of the player's position.
+        A minimum 3 year contract must be placed on a franchised players.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Team Management">
+        Management of a team is each owners responsibility. The league will have rosters in the Yahoo Fantasy app, this app will be used for all other functions that are not possible in yahoo.
+        Co-owners are welcome as there is a lot of management in the Dynamo League. Team names are mandatory, no one wants to play Tom's Swell Team. Not having an original team name will result in a
+        fine of $5/week starting in week 1.
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Payouts">
+        <MudGrid Spacing=1>
+            <MudItem xs=6 Style="text-align: right;">
+                1st
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+                70% of pot
+            </MudItem>
+            <MudItem xs=6 Style="text-align: right;">
+                2nd
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+                15% of pot
+            </MudItem>
+            <MudItem xs=6 Style="text-align: right;">
+                3rd
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+               10% of pot
+            </MudItem>
+            <MudItem xs=6 Style="text-align: right;">
+                Loser Bracket Champ
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+               5% of pot
+            </MudItem>
+        </MudGrid>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Scoring">
+        <MudGrid Spacing=1>
+            <MudItem xs=6 Class="mud-info"><b>Offense</b></MudItem>
+            <MudItem xs=6 Class="mud-info"><b>League Value</b></MudItem>
+            <MudItem xs=6>Passing Touchdown</MudItem>
+            <MudItem xs=6>5</MudItem>
+            <MudItem xs=6>Interception</MudItem>
+            <MudItem xs=6>-1</MudItem>
+            <MudItem xs=6>Passing Yards</MudItem>
+            <MudItem xs=6>25 yard/point</MudItem>
+            <MudItem xs=6>Rushing Touchdown</MudItem>
+            <MudItem xs=6>6</MudItem>
+            <MudItem xs=6>Rushing Yards</MudItem>
+            <MudItem xs=6>10 yards/point</MudItem>
+            <MudItem xs=6>Receiving Touchdown</MudItem>
+            <MudItem xs=6>6</MudItem>
+            <MudItem xs=6>Receiving Receptions</MudItem>
+            <MudItem xs=6>.5 per catch</MudItem>
+            <MudItem xs=6>2-Point Conversion</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Fumble Lost</MudItem>
+            <MudItem xs=6>-2</MudItem>
+            <MudItem xs=12 Class="mud-info"><b>Defense</b></MudItem>
+            <MudItem xs=6>Sacks</MudItem>
+            <MudItem xs=6>1</MudItem>
+            <MudItem xs=6>Interception</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Fumble Recovery</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Touchdown</MudItem>
+            <MudItem xs=6>6</MudItem>
+            <MudItem xs=6>Safety</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Blocked Kick</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Extra Point Returned</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>0 Points Allowed</MudItem>
+            <MudItem xs=6>10</MudItem>
+            <MudItem xs=6>1-6 Points Allowed</MudItem>
+            <MudItem xs=6>7</MudItem>
+            <MudItem xs=6>7-13 Points Allowed</MudItem>
+            <MudItem xs=6>4</MudItem>
+            <MudItem xs=6>14-20 Points Allowed</MudItem>
+            <MudItem xs=6>1</MudItem>
+            <MudItem xs=6>21-27 Points Allowed</MudItem>
+            <MudItem xs=6>0</MudItem>
+            <MudItem xs=6>28-34 Points Allowed</MudItem>
+            <MudItem xs=6>-1</MudItem>
+            <MudItem xs=6>35+ Points Allowed</MudItem>
+            <MudItem xs=6>-4</MudItem>
+            <MudItem xs=12 Class="mud-info"><b>Special Teams</b></MudItem>
+            <MudItem xs=6>Punt Return TD</MudItem>
+            <MudItem xs=6>2</MudItem>
+            <MudItem xs=6>Kickoff Return TD</MudItem>
+            <MudItem xs=6>2</MudItem>
+        </MudGrid>
+    </MudExpansionPanel>
+</MudExpansionPanels>
