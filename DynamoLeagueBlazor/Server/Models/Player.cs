@@ -23,6 +23,7 @@ public record Player : BaseEntity
 
     public Team Team { get; private set; } = null!;
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
+    public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
     public bool IsActive => ContractLength >= DateTime.Now.Year;
 }

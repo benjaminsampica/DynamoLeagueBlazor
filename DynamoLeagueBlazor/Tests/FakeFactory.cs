@@ -17,20 +17,30 @@ internal class FakeFactory
 
     public static Team CreateFakeTeam()
     {
-        var fakeTeam = new AutoFaker<Team>()
+        var faker = new AutoFaker<Team>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Players);
 
-        return fakeTeam.Generate();
+        return faker.Generate();
     }
 
     public static Player CreateFakePlayer()
     {
-        var fakeTeam = new AutoFaker<Player>()
+        var faker = new AutoFaker<Player>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Bids)
-            .Ignore(f => f.Team);
+            .Ignore(f => f.Team)
+            .Ignore(f => f.Fines);
 
-        return fakeTeam.Generate();
+        return faker.Generate();
+    }
+
+    public static Fine CreateFakeFine()
+    {
+        var faker = new AutoFaker<Fine>()
+            .Ignore(f => f.Id)
+            .Ignore(f => f.Player);
+
+        return faker.Generate();
     }
 }

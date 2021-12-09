@@ -110,6 +110,18 @@ internal static class IntegrationTestExtensions
 
         await context.SaveChangesAsync();
     }
+
+    internal static async Task UpdateAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+        where TEntity : class
+    {
+        using var scope = application.Services.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        context.Update(entity);
+
+        await context.SaveChangesAsync();
+    }
 }
 
 internal record TestHttpResponse<TContent>(HttpResponseMessage Message, TContent? Content) where TContent : class;

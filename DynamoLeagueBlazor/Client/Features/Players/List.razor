@@ -1,6 +1,10 @@
 ﻿@page "/players"
 @using static DynamoLeagueBlazor.Shared.Features.Players.GetPlayerListResult
 
+<Title>
+    Player Lookup
+</Title>
+
 <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Player Lookup</MudText>
