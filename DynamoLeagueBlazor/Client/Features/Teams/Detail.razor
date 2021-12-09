@@ -1,2 +1,22 @@
-﻿@page "/teams/{teamId}"
+﻿@page "/teams/{teamId:int}"
 
+<MudGrid>
+    <MudItem lg=4 xs=12>
+        <img src="@_result.TeamLogoUrl" style=""/>
+        <MudDivider DividerType=DividerType.Inset />
+        <MudText Typo="Typo.h3">@_result.TeamName</MudText>
+        <MudChip Color="Color.Tertiary" Variant="Variant.Text">
+            <MudIcon Icon=@Icons.Outlined.ReduceCapacity />
+            @_result.CapSpace
+        </MudChip>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">
+            Rostered Players
+        </MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">
+            Dropped Players
+        </MudButton>
+    </MudItem>
+    <MudItem lg=8 xs=12>
+        Hello
+    </MudItem>
+</MudGrid>

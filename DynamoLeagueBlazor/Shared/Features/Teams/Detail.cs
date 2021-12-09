@@ -2,6 +2,7 @@
 
 public class GetTeamDetailResult
 {
+    public string TeamLogoUrl { get; set; }
     public string TeamName { get; set; }
     public string CapSpace { get; set; }
 

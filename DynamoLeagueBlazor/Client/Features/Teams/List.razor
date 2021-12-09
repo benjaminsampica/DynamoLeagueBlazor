@@ -33,8 +33,11 @@ else
                         </CardHeaderActions>
                     </MudCardHeader>
                     <MudCardActions>
-                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye">
-                            View
+                        @{ 
+                            var detailHref = $"/teams/{team.Id}";
+                        }
+                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link=@detailHref HtmlTag=a>
+                            Detail
                         </MudButton>
                         <MudButton Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SwapHoriz">
                             Trade
