@@ -1,26 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleNavMenu())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Dynamo League</MudText>
+    <MudAppBar Elevation=3>
+        <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
         <MudSpacer />
-        <LoginDisplay />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleNavMenu())" />
     </MudAppBar>
     <NavMenu Show=_showNavMenu/>
     <MudMainContent>
-            <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
-                <ErrorBoundary @ref=_errorBoundary>
-                    <ChildContent>
-                        @Body
-                    </ChildContent>
-                    <ErrorContent>
-                        <MudAlert Severity=Severity.Error>
-                            An Error Occured...
-                        </MudAlert>
-                    </ErrorContent>
-                </ErrorBoundary>
-            </MudContainer>
+        <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
+            <ErrorBoundary @ref=_errorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <MudAlert Severity=Severity.Error>
+                        An Error Occured...
+                    </MudAlert>
+                </ErrorContent>
+            </ErrorBoundary>
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 
