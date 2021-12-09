@@ -15,7 +15,7 @@ public partial class List
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<GetTeamListResult>("teams/list");
+            _result = await HttpClient.GetFromJsonAsync<GetTeamListResult>("teams");
         }
         catch (AccessTokenNotAvailableException exception)
         {

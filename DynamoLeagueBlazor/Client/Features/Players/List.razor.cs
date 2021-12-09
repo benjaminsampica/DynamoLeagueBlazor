@@ -17,7 +17,7 @@ public partial class List
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<GetPlayerListResult>("players/list") ?? new();
+            _result = await HttpClient.GetFromJsonAsync<GetPlayerListResult>("players") ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)

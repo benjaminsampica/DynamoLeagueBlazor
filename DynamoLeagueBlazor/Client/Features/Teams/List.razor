@@ -1,4 +1,4 @@
-﻿@page "/teams/list"
+﻿@page "/teams"
 @using static DynamoLeagueBlazor.Shared.Features.Teams.GetTeamListResult
 
 <h1>Teams</h1>
@@ -22,12 +22,10 @@ else
                             <MudText Typo="Typo.h6">@team.TeamName</MudText>
                         </CardHeaderContent>
                         <CardHeaderActions>
-                            <MudChip Color="Color.Info" Variant="Variant.Text">
-                                <MudIcon Icon=@Icons.Outlined.Person />
+                            <MudChip Color="Color.Info" Variant="Variant.Text" Icon=@Icons.Outlined.Person>
                                 @team.PlayerCount
                             </MudChip>
-                            <MudChip Color="Color.Tertiary" Variant="Variant.Text">
-                                <MudIcon Icon=@Icons.Outlined.ReduceCapacity />
+                            <MudChip Color="Color.Tertiary" Variant="Variant.Text" Icon=@Icons.Outlined.ReduceCapacity>
                                 @team.CapSpace
                             </MudChip>
                         </CardHeaderActions>
@@ -36,7 +34,7 @@ else
                         @{ 
                             var detailHref = $"/teams/{team.Id}";
                         }
-                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link=@detailHref HtmlTag=a>
+                        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link=@detailHref>
                             Detail
                         </MudButton>
                         <MudButton Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SwapHoriz">
