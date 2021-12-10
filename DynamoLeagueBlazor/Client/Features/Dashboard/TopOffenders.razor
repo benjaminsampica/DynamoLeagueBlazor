@@ -10,25 +10,57 @@
 }
 else
 {
-    <MudText Typo=Typo.h3>
-        Top Offenders
-    </MudText>
-    @if(_result.Players.Count() > 1)
-    {
-        var firstPlayer = _result.Players.First();
+    <MudGrid>
+        <MudItem>
+            <MudText Typo=Typo.h3>
+                Top Offenders
+            </MudText>
+        </MudItem>
 
-        <MudAvatarGroup Max="5" Spacing="2" Class="align-center">
-            <MudAvatar Image=@firstPlayer.PlayerHeadShotUrl Size=Size.Large />
-            @foreach(var player in _result.Players.Skip(1))
-            {
-                <MudAvatar Image=@player.PlayerHeadShotUrl />
-            }  
-        </MudAvatarGroup>
-    }
-    else
-    {
-        <MudAlert Severity=Severity.Normal>
-            There aren't enough players with fines quite yet. Check back later!
-        </MudAlert>
-    }
+        @if(_result.Players.Count() > 1)
+        {
+            <MudItem xs=12 lg=6>
+                @{
+                    var firstPlayer = _result.Players.First();
+                }
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Image=@firstPlayer.PlayerHeadShotUrl></MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1">@firstPlayer.PlayerName</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudText Typo="Typo.h3" Color=Color.Success>@firstPlayer.TotalFineAmount</MudText>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                </MudCard>
+            </MudItem>
+            <MudItem xs=12 lg=6>
+                @foreach(var player in _result.Players.Skip(1))
+                {
+                    <MudCard >
+                        <MudCardHeader>
+                            <CardHeaderAvatar>
+                                <MudAvatar Image=@player.PlayerHeadShotUrl></MudAvatar>
+                            </CardHeaderAvatar>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.body1">@player.PlayerName</MudText>
+                            </CardHeaderContent>
+                            <CardHeaderActions>
+                                <MudText Typo="Typo.h5" Color=Color.Success>@player.TotalFineAmount</MudText>
+                            </CardHeaderActions>
+                        </MudCardHeader>
+                    </MudCard>
+                }
+            </MudItem>
+        }
+        else
+        {
+            <MudAlert Severity=Severity.Normal>
+                There aren't enough players with fines quite yet. Check back later!
+            </MudAlert>
+        }
+    </MudGrid>
 }
