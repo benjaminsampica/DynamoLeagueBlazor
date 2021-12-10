@@ -19,7 +19,9 @@
         <MudTh>Contract Length</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>
+        <MudTd DataLabel=@nameof(PlayerItem.Name)>
+            <PlayerNameWithHeadShot Name="@context.Name" HeadShotUrl="@context.HeadShotUrl" />
+        </MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
         <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>

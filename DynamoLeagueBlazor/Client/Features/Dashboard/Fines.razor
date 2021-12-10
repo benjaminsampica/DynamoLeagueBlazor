@@ -2,7 +2,7 @@
 
 <MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Fines</MudText>
+        <MudText Typo="Typo.h6">All Fines</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
@@ -13,7 +13,9 @@
         <MudTh>Status</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel=Name>@context.PlayerName</MudTd>
+        <MudTd DataLabel=Name>
+            <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
+        </MudTd>
         <MudTd DataLabel=Reason>@context.FineReason</MudTd>
         <MudTd DataLabel=Amount>@context.FineAmount</MudTd>
         <MudTd DataLabel=Status>
