@@ -9,17 +9,13 @@ public partial class TopOffenders
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
-    private GetFineListResult _result = new();
-    private bool _loading;
-    private string _searchValue = string.Empty;
+    private GetTopOffendersResult? _result;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<GetFineListResult>("fines") ?? new();
-            _loading = false;
+            _result = await HttpClient.GetFromJsonAsync<GetTopOffendersResult>("fines/topoffenders");
         }
         catch (AccessTokenNotAvailableException exception)
         {

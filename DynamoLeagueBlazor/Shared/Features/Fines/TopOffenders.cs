@@ -1,13 +1,13 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
-public class TopOffendersResult
+public class GetTopOffendersResult
 {
-    public IEnumerable<PlayerItem> Players { get; set; }
+    public IEnumerable<PlayerItem> Players { get; set; } = Array.Empty<PlayerItem>();
 
     public class PlayerItem
     {
         public string PlayerHeadShotUrl { get; set; }
         public string PlayerName { get; set; }
-        public string FineAmount { get; set; }
+        public string TotalFineAmount { get; set; }
     }
 }

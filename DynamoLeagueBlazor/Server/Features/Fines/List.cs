@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DynamoLeagueBlazor.Server.Features.Fines.List;
+namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [Authorize]
 [ApiController]
