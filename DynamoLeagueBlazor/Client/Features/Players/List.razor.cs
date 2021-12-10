@@ -1,6 +1,7 @@
 using DynamoLeagueBlazor.Shared.Features.Players;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Players;
@@ -8,6 +9,7 @@ namespace DynamoLeagueBlazor.Client.Features.Players;
 public partial class List
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
 
     private GetPlayerListResult _result = new();
     private bool _loading;
@@ -35,5 +37,15 @@ public partial class List
         if ($"{item.Name} {item.Position} {item.ContractValue} {item.ContractLength} {item.Team}".Contains(_searchValue))
             return true;
         return false;
+    }
+
+    private void OpenAddFineDialog(int playerId)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(AddFine.PlayerId), playerId }
+        };
+
+        DialogService.Show<AddFine>("Add A New Fine", parameters);
     }
 }

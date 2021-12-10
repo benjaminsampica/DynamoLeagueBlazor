@@ -63,7 +63,8 @@ internal class AddTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync(_endpoint, new AddFineRequest(-1, string.Empty));
+        var badRequest = new AddFineRequest { PlayerId = -1, FineReason = string.Empty };
+        var response = await client.PostAsJsonAsync(_endpoint, badRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var details = await JsonSerializer.DeserializeAsync<ValidationProblemDetails>(await response.Content.ReadAsStreamAsync());

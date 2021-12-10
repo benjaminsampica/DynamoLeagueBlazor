@@ -63,6 +63,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Player, GetPlayerListResult.PlayerItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty))
-            .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")));
+            .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")))
+            .ForMember(d => d.HeadShotUrl, mo => mo.MapFrom(s => s.HeadShot));
     }
 }

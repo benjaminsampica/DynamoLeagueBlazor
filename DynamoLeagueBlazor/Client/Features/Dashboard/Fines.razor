@@ -22,12 +22,11 @@
             @{
                 RenderFragment status = context.FineStatus switch
                 {
-                    "Approved" => @<MudChip Icon="CheckCircle" Color=Color.Success Variant=Variant.Outlined />,
-                    "Pending" => @<MudChip Icon="Info" Color=Color.Info Variant=Variant.Outlined />,
+                    "Approved" => @<MudIcon Icon=@Icons.Outlined.CheckCircle Color=Color.Success />,
+                    "Pending" => @<MudIcon Icon=@Icons.Outlined.Info Color=Color.Info />,
                     _ => throw new ArgumentOutOfRangeException("Fine Status not found")
                 };
             }
-
             @status
         </MudTd>
     </RowTemplate>

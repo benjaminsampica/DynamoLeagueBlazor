@@ -2,7 +2,11 @@
 
 namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
-public record AddFineRequest(int PlayerId, string FineReason);
+public class AddFineRequest
+{
+    public int PlayerId { get; set; }
+    public string FineReason { get; set; }
+}
 
 public class AddFineRequestValidator : AbstractValidator<AddFineRequest>
 {
