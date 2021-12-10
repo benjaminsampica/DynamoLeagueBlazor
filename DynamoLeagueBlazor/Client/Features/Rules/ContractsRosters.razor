@@ -1,0 +1,35 @@
+﻿@using Position = DynamoLeagueBlazor.Shared.Enums.Position
+
+<MudExpansionPanel Text="Contracts/Rosters">
+    Each owner(s) will need to select a contract length for drafted players each year. Contract lengths are restricted by the salary you are willing to pay
+    players. The minimum contract length based on salary is listed on the contract chart below. Dropping a player will reduce cap space by half for the remainder
+    of the players contract. E.g. $6 for 4 years would be $3 for 4 years. If the dropped player is picked up off of waivers, the prior owner(s) is
+    released of the contract obligation. Players on their last year of contract must either be franchised or become a restricted free agent.
+    Each Team must have 30 players for the sake of the draft, but can drop players after it.
+
+    <MudSimpleTable Elevation=0>
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>1 Year</th>
+                <th>2 Years</th>
+                <th>3 Years</th>
+                <th>4 Years</th>
+                <th>5 Years</th>
+                <th>6 Years</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var position in Position.List)
+            {
+                <tr>
+                    <td>@position.Name</td>
+                    @foreach(var price in position.PerYearContractPriceTable())
+                    {
+                        <td>@price</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+</MudExpansionPanel>

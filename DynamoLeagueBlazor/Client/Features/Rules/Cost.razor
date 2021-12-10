@@ -1,0 +1,26 @@
+﻿@using DynamoLeagueBlazor.Shared.Utilities
+
+<MudExpansionPanel Text="Cost">
+    League dues are $100 in the first year, incrementing by $5 each even year after the first year. Every even year the cap space will increase. See the chart below for reference.
+    Dues <b>must</b> be paid by January 1st each season. If an owner does not pay by one week before the season, that owner will be removed from the league.
+    <br /><br />
+    <MudGrid Spacing=1>
+        @foreach(var year in Enumerable.Range(DateTime.Today.Year, 5))
+        {
+            var date = new DateOnly(year, 1, 1);
+
+            <MudItem xs=6 Style="text-align: right;">
+                @year League Dues
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+                @LeagueDuesUtilities.GetCurrentLeagueDues(date).ToString("C0")
+            </MudItem>
+            <MudItem xs=6 Style="text-align: right;">
+                @year Salary Cap
+            </MudItem>
+            <MudItem xs=6 Class="mud-success-text">
+                @SalaryCapUtilities.GetCurrentCapValue(date).ToString("C0")
+            </MudItem>
+        }
+    </MudGrid>
+</MudExpansionPanel>
