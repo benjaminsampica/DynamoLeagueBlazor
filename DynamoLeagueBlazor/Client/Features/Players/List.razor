@@ -7,7 +7,7 @@
 
 <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Player Lookup</MudText>
+        <MudText Typo="Typo.h6">@_title</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
