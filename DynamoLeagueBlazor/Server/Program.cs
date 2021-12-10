@@ -1,5 +1,7 @@
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.Fines;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -40,6 +42,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>());
 
 var app = builder.Build();
 

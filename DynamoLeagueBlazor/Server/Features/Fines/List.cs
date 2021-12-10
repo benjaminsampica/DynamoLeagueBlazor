@@ -25,24 +25,24 @@ public class ListController : ControllerBase
     [HttpGet]
     public async Task<GetFineListResult> GetAsync()
     {
-        return await _mediator.Send(new Query());
+        return await _mediator.Send(new ListQuery());
     }
 }
 
-public class Query : IRequest<GetFineListResult> { }
+public class ListQuery : IRequest<GetFineListResult> { }
 
-public class Handler : IRequestHandler<Query, GetFineListResult>
+public class ListHandler : IRequestHandler<ListQuery, GetFineListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public Handler(ApplicationDbContext dbContext, IMapper mapper)
+    public ListHandler(ApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
-    public async Task<GetFineListResult> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<GetFineListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var fines = await _dbContext.Fines
             .Include(p => p.Player)
@@ -57,9 +57,9 @@ public class Handler : IRequestHandler<Query, GetFineListResult>
     }
 }
 
-public class MappingProfile : Profile
+public class ListMappingProfile : Profile
 {
-    public MappingProfile()
+    public ListMappingProfile()
     {
         CreateMap<Fine, GetFineListResult.FineItem>()
             .ForMember(d => d.FineStatus, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
