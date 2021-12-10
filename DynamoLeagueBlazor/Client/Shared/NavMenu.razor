@@ -1,10 +1,10 @@
 ﻿<MudDrawer @bind-Open="Show" Elevation="3" Variant=DrawerVariant.Persistent Anchor=Anchor.End ClipMode="DrawerClipMode.Always">
     <MudNavMenu>
-        <MudNavLink Href="/" Match=NavLinkMatch.All>Rules</MudNavLink>
+        <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
         <MudNavLink Href="/teams" Match=NavLinkMatch.Prefix>Teams</MudNavLink>
         <MudNavLink Href="/players">Players</MudNavLink>
-        
-    </MudNavMenu>
+        <MudNavLink Href="/rules">Rules</MudNavLink>
+        </MudNavMenu>
     <MudDivider />
     <LoginDisplay />
 </MudDrawer>

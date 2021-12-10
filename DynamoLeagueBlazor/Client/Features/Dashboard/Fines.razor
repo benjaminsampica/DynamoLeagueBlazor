@@ -1,0 +1,35 @@
+﻿@using static DynamoLeagueBlazor.Shared.Features.Fines.GetFineListResult
+
+<MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Fines</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Reason</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel=Name>@context.PlayerName</MudTd>
+        <MudTd DataLabel=Reason>@context.FineReason</MudTd>
+        <MudTd DataLabel=Amount>@context.FineAmount</MudTd>
+        <MudTd DataLabel=Status>
+            @{
+                RenderFragment status = context.FineStatus switch
+                {
+                    "Approved" => @<MudChip Icon="CheckCircle" Color=Color.Success Variant=Variant.Outlined />,
+                    "Pending" => @<MudChip Icon="Info" Color=Color.Info Variant=Variant.Outlined />,
+                    _ => throw new ArgumentOutOfRangeException("Fine Status not found")
+                };
+            }
+
+            @status
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
