@@ -46,7 +46,10 @@ public class AddHandler : IRequestHandler<AddQuery, int>
     {
         // TODO: Calculate amount
         var amount = 1;
-        var fine = new Fine(amount, request.FineReason, request.PlayerId);
+        var fine = new Fine(amount, request.FineReason, request.PlayerId)
+        {
+            Status = true
+        };
 
         _dbContext.Fines.Add(fine);
         await _dbContext.SaveChangesAsync(cancellationToken);

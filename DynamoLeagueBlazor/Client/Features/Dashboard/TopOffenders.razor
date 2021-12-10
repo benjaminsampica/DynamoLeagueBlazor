@@ -10,8 +10,10 @@
 }
 else
 {
-    <h1>Top Offenders</h1>
-    @if(_result.Players.Count() > 2)
+    <MudText Typo=Typo.h3>
+        Top Offenders
+    </MudText>
+    @if(_result.Players.Count() > 1)
     {
         var firstPlayer = _result.Players.First();
 
