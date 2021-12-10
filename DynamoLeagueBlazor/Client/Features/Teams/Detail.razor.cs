@@ -15,12 +15,14 @@ public partial class Detail
     private GetTeamDetailResult? _result;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
+    private string _title = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             _result = await HttpClient.GetFromJsonAsync<GetTeamDetailResult>($"teams/{TeamId}");
+            _title = $"Team Detail - {_result!.TeamName}";
             ShowRosteredPlayers();
         }
         catch (AccessTokenNotAvailableException exception)
@@ -31,13 +33,13 @@ public partial class Detail
 
     private void ShowRosteredPlayers()
     {
-        _playersToDisplay = _result.RosteredPlayers;
+        _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
     }
 
     private void ShowDroppedPlayers()
     {
-        _playersToDisplay = _result.DroppedPlayers;
+        _playersToDisplay = _result!.DroppedPlayers;
         _playerTableHeader = "Dropped Players";
     }
 }

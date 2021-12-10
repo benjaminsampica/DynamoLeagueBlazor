@@ -10,6 +10,7 @@ public partial class List
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
     private GetTeamListResult? _result;
+    private const string _title = "Teams";
 
     protected override async Task OnInitializedAsync()
     {

@@ -12,6 +12,7 @@ public partial class List
     private GetPlayerListResult _result = new();
     private bool _loading;
     private string _searchValue = string.Empty;
+    private const string _title = "Player Lookup";
 
     protected override async Task OnInitializedAsync()
     {

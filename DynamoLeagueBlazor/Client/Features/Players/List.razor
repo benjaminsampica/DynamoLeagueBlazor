@@ -2,7 +2,7 @@
 @using static DynamoLeagueBlazor.Shared.Features.Players.GetPlayerListResult
 
 <Title>
-    Player Lookup
+    @_title
 </Title>
 
 <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">

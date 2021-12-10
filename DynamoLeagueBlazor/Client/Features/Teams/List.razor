@@ -2,10 +2,10 @@
 @using static DynamoLeagueBlazor.Shared.Features.Teams.GetTeamListResult
 
 <Title>
-    Teams
+    @_title
 </Title>
 
-<h1>Teams</h1>
+<h1>@_title</h1>
 
 @if(_result is null)
 {
@@ -49,5 +49,4 @@ else
             </MudItem>
         }
     </MudGrid>
-    
 }
