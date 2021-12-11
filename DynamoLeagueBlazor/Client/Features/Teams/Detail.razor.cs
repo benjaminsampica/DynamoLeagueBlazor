@@ -37,9 +37,9 @@ public partial class Detail
         _playerTableHeader = "Rostered Players";
     }
 
-    private void ShowDroppedPlayers()
+    private void ShowUnrosteredPlayers()
     {
-        _playersToDisplay = _result!.DroppedPlayers;
-        _playerTableHeader = "Dropped Players";
+        _playersToDisplay = _result!.UnrosteredPlayers;
+        _playerTableHeader = "Unrostered Players";
     }
 }

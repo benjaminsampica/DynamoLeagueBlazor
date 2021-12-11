@@ -1,0 +1,49 @@
+﻿@if(_result is null)
+{
+    <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="50px"/>
+    <MudAvatarGroup Max="5" Spacing="5">
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="75px" Height="75px" />
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="75px" Height="75px" />
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="75px" Height="75px" />
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="75px" Height="75px" />
+    </MudAvatarGroup>
+}
+else
+{
+    <MudGrid>
+        <MudItem xs=12>
+            <MudText Typo=Typo.h3 Align=Align.Center>
+                Top Offenders
+            </MudText>
+        </MudItem>
+
+        @if(_result.Players.Count() > 2)
+        {
+            <MudItem xs=12>
+                @{
+                    var firstPlayer = _result.Players.First();
+
+                }
+                <PlayerCard BackgroundColor="background: rgba(192,192,192, .6);" Player="@firstPlayer" NameTypo=Typo.h4 FineAmountTypo=Typo.h3/>
+            </MudItem>
+            <MudItem xs=12>
+                @{
+                    var secondPlayer = _result.Players.Skip(1).First();
+                    var thirdPlayer = _result.Players.Skip(2).First();
+                }
+                <PlayerCard BackgroundColor="background: rgba(192,192,192, .6);" Player="@secondPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
+                <PlayerCard BackgroundColor="background: rgba(176,141,87, .6);" Player="@thirdPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
+            </MudItem>
+            @foreach(var player in _result.Players.Skip(3))
+            {
+                <PlayerCard Player="@player" NameTypo=Typo.body1 FineAmountTypo=Typo.h6/>
+            }
+        }
+        else
+        {
+            <MudAlert Severity=Severity.Normal>
+                There aren't enough players with fines quite yet. Check back later!
+            </MudAlert>
+        }
+    </MudGrid>
+}

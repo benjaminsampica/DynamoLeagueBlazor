@@ -56,6 +56,6 @@ internal class DetailTests : IntegrationTestBase
         response!.TeamName.Should().Be(stubTeam.TeamName);
         response.CapSpace.Should().Be(stubPlayer.ContractValue.ToString("C0"));
         response.RosteredPlayers.Should().NotBeEmpty();
-        response.DroppedPlayers.Should().NotBeEmpty();
+        response.UnrosteredPlayers.Should().NotBeEmpty();
     }
 }

@@ -64,7 +64,7 @@ public class DetailMappingProfile : Profile
 
         CreateMap<Team, GetTeamDetailResult>()
             .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")))
-            .ForMember(p => p.DroppedPlayers, mo => mo.MapFrom(s => s.Players))
+            .ForMember(p => p.UnrosteredPlayers, mo => mo.MapFrom(s => s.Players))
             .ForMember(p => p.RosteredPlayers, mo => mo.MapFrom(s => s.Players));
     }
 }

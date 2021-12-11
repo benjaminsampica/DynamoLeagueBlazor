@@ -37,9 +37,9 @@ else
                             Rostered Players
                         </MudButton>
                     </MudBadge>
-                    <MudBadge Origin=Origin.CenterRight Content=_result.DroppedPlayers.Count() Color=Color.Secondary>
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PersonOff OnClick=ShowDroppedPlayers>
-                            Dropped Players
+                    <MudBadge Origin=Origin.CenterRight Content=_result.UnrosteredPlayers.Count() Color=Color.Secondary>
+                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PersonOff OnClick=ShowUnrosteredPlayers>
+                            Unrostered Players
                         </MudButton>
                     </MudBadge>
                 </MudItem>

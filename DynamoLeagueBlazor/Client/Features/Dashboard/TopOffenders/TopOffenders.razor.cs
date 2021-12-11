@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Dashboard;
+namespace DynamoLeagueBlazor.Client.Features.Dashboard.TopOffenders;
 
 public partial class TopOffenders
 {

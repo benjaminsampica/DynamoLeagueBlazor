@@ -8,7 +8,7 @@ public class GetTeamDetailResult
 
     public IEnumerable<PlayerItem> RosteredPlayers { get; init; } = Array.Empty<PlayerItem>();
 
-    public IEnumerable<PlayerItem> DroppedPlayers { get; init; } = Array.Empty<PlayerItem>();
+    public IEnumerable<PlayerItem> UnrosteredPlayers { get; init; } = Array.Empty<PlayerItem>();
 
     public class PlayerItem
     {
