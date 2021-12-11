@@ -1,6 +1,6 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
-public class GetTopOffendersResult
+public class TopOffendersResult
 {
     public IEnumerable<PlayerItem> Players { get; set; } = Array.Empty<PlayerItem>();
 

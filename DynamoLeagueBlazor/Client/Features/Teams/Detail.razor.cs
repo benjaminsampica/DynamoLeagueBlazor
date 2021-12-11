@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
-using static DynamoLeagueBlazor.Shared.Features.Teams.GetTeamDetailResult;
+using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
@@ -12,7 +12,7 @@ public partial class Detail
 
     [Parameter] public int TeamId { get; set; }
 
-    private GetTeamDetailResult? _result;
+    private TeamDetailResult? _result;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
@@ -21,7 +21,7 @@ public partial class Detail
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<GetTeamDetailResult>($"teams/{TeamId}");
+            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"teams/{TeamId}");
             _title = $"Team Detail - {_result!.TeamName}";
             ShowRosteredPlayers();
         }

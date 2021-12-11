@@ -9,14 +9,14 @@ public partial class List
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
-    private GetTeamListResult? _result;
+    private TeamListResult? _result;
     private const string _title = "Teams";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<GetTeamListResult>("teams");
+            _result = await HttpClient.GetFromJsonAsync<TeamListResult>("teams");
         }
         catch (AccessTokenNotAvailableException exception)
         {

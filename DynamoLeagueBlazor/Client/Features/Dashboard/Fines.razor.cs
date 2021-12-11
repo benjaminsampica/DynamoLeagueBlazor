@@ -9,7 +9,7 @@ public partial class Fines
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
-    private GetFineListResult _result = new();
+    private FineListResult _result = new();
     private bool _loading;
     private string _searchValue = string.Empty;
 
@@ -18,7 +18,7 @@ public partial class Fines
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<GetFineListResult>("fines") ?? new();
+            _result = await HttpClient.GetFromJsonAsync<FineListResult>("fines") ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)
@@ -27,7 +27,7 @@ public partial class Fines
         }
     }
 
-    private bool FilterFunc(GetFineListResult.FineItem item)
+    private bool FilterFunc(FineListResult.FineItem item)
     {
         if (string.IsNullOrWhiteSpace(_searchValue))
             return true;

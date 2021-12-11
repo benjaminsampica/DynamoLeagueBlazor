@@ -23,15 +23,15 @@ public class ListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<GetTeamListResult> GetAsync()
+    public async Task<TeamListResult> GetAsync()
     {
         return await _mediator.Send(new ListQuery());
     }
 }
 
-public class ListQuery : IRequest<GetTeamListResult> { }
+public class ListQuery : IRequest<TeamListResult> { }
 
-public class ListHandler : IRequestHandler<ListQuery, GetTeamListResult>
+public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -42,15 +42,15 @@ public class ListHandler : IRequestHandler<ListQuery, GetTeamListResult>
         _mapper = mapper;
     }
 
-    public async Task<GetTeamListResult> Handle(ListQuery request, CancellationToken cancellationToken)
+    public async Task<TeamListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var teams = await _dbContext.Teams
             .Include(t => t.Players)
             .AsNoTracking()
-            .ProjectTo<GetTeamListResult.TeamItem>(_mapper.ConfigurationProvider)
+            .ProjectTo<TeamListResult.TeamItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return new GetTeamListResult
+        return new TeamListResult
         {
             Teams = teams
         };
@@ -61,7 +61,7 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
-        CreateMap<Team, GetTeamListResult.TeamItem>()
+        CreateMap<Team, TeamListResult.TeamItem>()
             .ForMember(p => p.PlayerCount, mo => mo.MapFrom(t => t.Players.Count))
             .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")));
     }

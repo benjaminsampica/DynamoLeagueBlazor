@@ -5,7 +5,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 internal class TopOffendersTests : IntegrationTestBase
 {
-    private const string _endpoint = "fines/topoffenders";
+    private const string _endpoint = "dashboard/topoffenders";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -44,7 +44,7 @@ internal class TopOffendersTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<GetTopOffendersResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<TopOffendersResult>(_endpoint);
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(1);
@@ -82,7 +82,7 @@ internal class TopOffendersTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<GetTopOffendersResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<TopOffendersResult>(_endpoint);
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);

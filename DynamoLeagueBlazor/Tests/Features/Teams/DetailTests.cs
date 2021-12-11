@@ -50,7 +50,7 @@ internal class DetailTests : IntegrationTestBase
         var client = application.CreateClient();
         var endpoint = _endpoint + stubTeam.Id;
 
-        var response = await client.GetFromJsonAsync<GetTeamDetailResult>(endpoint);
+        var response = await client.GetFromJsonAsync<TeamDetailResult>(endpoint);
 
         response.Should().NotBeNull();
         response!.TeamName.Should().Be(stubTeam.TeamName);

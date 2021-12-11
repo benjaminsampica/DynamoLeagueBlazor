@@ -1,6 +1,6 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Teams;
 
-public class GetTeamDetailResult
+public class TeamDetailResult
 {
     public string TeamLogoUrl { get; set; }
     public string TeamName { get; set; }

@@ -43,7 +43,7 @@ internal class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<GetFineListResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<FineListResult>(_endpoint);
 
         result.Should().NotBeNull();
         result!.Fines.Should().HaveCount(1);

@@ -11,7 +11,7 @@ public partial class List
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
 
-    private GetPlayerListResult _result = new();
+    private PlayerListResult _result = new();
     private bool _loading;
     private string _searchValue = string.Empty;
     private const string _title = "Players";
@@ -21,7 +21,7 @@ public partial class List
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<GetPlayerListResult>("players") ?? new();
+            _result = await HttpClient.GetFromJsonAsync<PlayerListResult>("players") ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)
@@ -30,7 +30,7 @@ public partial class List
         }
     }
 
-    private bool FilterFunc(GetPlayerListResult.PlayerItem item)
+    private bool FilterFunc(PlayerListResult.PlayerItem item)
     {
         if (string.IsNullOrWhiteSpace(_searchValue))
             return true;

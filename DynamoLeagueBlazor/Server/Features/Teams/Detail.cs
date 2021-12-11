@@ -23,15 +23,15 @@ public class DetailController : ControllerBase
     }
 
     [HttpGet("{teamId}")]
-    public async Task<GetTeamDetailResult> GetAsync(int teamId)
+    public async Task<TeamDetailResult> GetAsync(int teamId)
     {
         return await _mediator.Send(new DetailQuery(teamId));
     }
 }
 
-public record DetailQuery(int TeamId) : IRequest<GetTeamDetailResult> { }
+public record DetailQuery(int TeamId) : IRequest<TeamDetailResult> { }
 
-public class DetailHandler : IRequestHandler<DetailQuery, GetTeamDetailResult>
+public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -42,13 +42,13 @@ public class DetailHandler : IRequestHandler<DetailQuery, GetTeamDetailResult>
         _mapper = mapper;
     }
 
-    public async Task<GetTeamDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
+    public async Task<TeamDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
         var teamWithPlayers = await _dbContext.Teams
             .Include(t => t.Players)
             .Where(t => t.Id == request.TeamId)
             .AsNoTracking()
-            .ProjectTo<GetTeamDetailResult>(_mapper.ConfigurationProvider)
+            .ProjectTo<TeamDetailResult>(_mapper.ConfigurationProvider)
             .SingleAsync(cancellationToken);
 
         return teamWithPlayers;
@@ -59,10 +59,10 @@ public class DetailMappingProfile : Profile
 {
     public DetailMappingProfile()
     {
-        CreateMap<Player, GetTeamDetailResult.PlayerItem>()
+        CreateMap<Player, TeamDetailResult.PlayerItem>()
             .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")));
 
-        CreateMap<Team, GetTeamDetailResult>()
+        CreateMap<Team, TeamDetailResult>()
             .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")))
             .ForMember(p => p.UnrosteredPlayers, mo => mo.MapFrom(s => s.Players))
             .ForMember(p => p.RosteredPlayers, mo => mo.MapFrom(s => s.Players));

@@ -1,6 +1,6 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Teams;
 
-public class GetTeamListResult
+public class TeamListResult
 {
     public IEnumerable<TeamItem> Teams { get; init; } = Array.Empty<TeamItem>();
 

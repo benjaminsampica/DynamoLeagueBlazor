@@ -1,6 +1,6 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
-public class GetFineListResult
+public class FineListResult
 {
     public IEnumerable<FineItem> Fines { get; init; } = Array.Empty<FineItem>();
 

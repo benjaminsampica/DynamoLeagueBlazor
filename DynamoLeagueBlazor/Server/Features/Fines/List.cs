@@ -23,15 +23,15 @@ public class ListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<GetFineListResult> GetAsync()
+    public async Task<FineListResult> GetAsync()
     {
         return await _mediator.Send(new ListQuery());
     }
 }
 
-public class ListQuery : IRequest<GetFineListResult> { }
+public class ListQuery : IRequest<FineListResult> { }
 
-public class ListHandler : IRequestHandler<ListQuery, GetFineListResult>
+public class ListHandler : IRequestHandler<ListQuery, FineListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -42,15 +42,15 @@ public class ListHandler : IRequestHandler<ListQuery, GetFineListResult>
         _mapper = mapper;
     }
 
-    public async Task<GetFineListResult> Handle(ListQuery request, CancellationToken cancellationToken)
+    public async Task<FineListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var fines = await _dbContext.Fines
             .Include(p => p.Player)
             .AsNoTracking()
-            .ProjectTo<GetFineListResult.FineItem>(_mapper.ConfigurationProvider)
+            .ProjectTo<FineListResult.FineItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        return new GetFineListResult
+        return new FineListResult
         {
             Fines = fines
         };
@@ -61,7 +61,7 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
-        CreateMap<Fine, GetFineListResult.FineItem>()
+        CreateMap<Fine, FineListResult.FineItem>()
             .ForMember(d => d.FineStatus, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
             .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Player.Name))
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShot))
