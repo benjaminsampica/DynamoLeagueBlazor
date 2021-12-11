@@ -1,5 +1,6 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Features.Fines;
 
 namespace DynamoLeagueBlazor.Tests;
 
@@ -40,6 +41,14 @@ internal class FakeFactory
         var faker = new AutoFaker<Fine>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Player);
+
+        return faker.Generate();
+    }
+
+    public static AddFineRequest CreateFakeValidAddFineRequest()
+    {
+        var faker = new AutoFaker<AddFineRequest>()
+            .RuleFor(f => f.PlayerId, 1);
 
         return faker.Generate();
     }

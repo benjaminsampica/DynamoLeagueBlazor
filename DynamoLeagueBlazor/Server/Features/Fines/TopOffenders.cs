@@ -47,7 +47,7 @@ public class TopOffendersHandler : IRequestHandler<TopOffendersQuery, GetTopOffe
         var players = await _dbContext.Players
             .Where(p => p.Fines.Any(f => f.Status))
             .OrderByDescending(p => p.Fines.Sum(f => f.FineAmount))
-            .Take(5)
+            .Take(10)
             .ProjectTo<GetTopOffendersResult.PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

@@ -1,5 +1,4 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Server.Models;
+﻿using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Fines;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
@@ -18,7 +17,7 @@ internal class AddTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = AutoFaker.Generate<AddFineRequest>();
+        var stubRequest = CreateFakeValidAddFineRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -31,7 +30,7 @@ internal class AddTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = AutoFaker.Generate<AddFineRequest>();
+        var stubRequest = CreateFakeValidAddFineRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -44,7 +43,7 @@ internal class AddTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = AutoFaker.Generate<AddFineRequest>();
+        var stubRequest = CreateFakeValidAddFineRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

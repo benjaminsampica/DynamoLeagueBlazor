@@ -38,6 +38,7 @@ internal class TopOffendersTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
         var mockFine = CreateFakeFine();
+        mockFine.Status = true;
         mockFine.PlayerId = mockPlayer.Id;
         await application.AddAsync(mockFine);
 
@@ -55,10 +56,10 @@ internal class TopOffendersTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenThereIsSixPlayersWithApprovedFines_ThenReturnsOnlyTopFiveByFineAmount()
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsElevenPlayersWithApprovedFines_ThenReturnsOnlyTopTenByFineAmount()
     {
         var application = CreateAuthenticatedApplication();
-        foreach (var count in Enumerable.Range(0, 5))
+        foreach (var count in Enumerable.Range(0, 10))
         {
             var mockPlayer = CreateFakePlayer();
             await application.AddAsync(mockPlayer);
@@ -84,7 +85,7 @@ internal class TopOffendersTests : IntegrationTestBase
         var result = await client.GetFromJsonAsync<GetTopOffendersResult>(_endpoint);
 
         result.Should().NotBeNull();
-        result!.Players.Should().HaveCount(5);
+        result!.Players.Should().HaveCount(10);
         result.Players.ToList().TrueForAll(p => p.TotalFineAmount != sixthFine.FineAmount.ToString("C0")).Should().BeTrue();
     }
 }
