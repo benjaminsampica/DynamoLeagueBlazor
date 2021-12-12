@@ -65,12 +65,23 @@ public class Handler : IRequestHandler<SeedDataCommand>
         {
             var player = new Player("390.p.100001", "Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
             {
-                TeamId = new Random().Next(1, 10),
-                ContractLength = DateTime.Now.Year,
-                ContractValue = 1,
-                YearAcquired = DateTime.Now.Year,
-                Rostered = true
+                TeamId = new Random().Next(1, 10)
             };
+
+            if (i % 2 == 0)
+            {
+                player.SetToRostered(DateTime.Today.AddYears(1), 1);
+
+                if (i % 10 == 0)
+                {
+                    player.SetToUnrostered();
+                }
+            }
+            else
+            {
+                player.SetToUnsigned();
+            }
+
             _dbContext.Players.Add(player);
         }
 
