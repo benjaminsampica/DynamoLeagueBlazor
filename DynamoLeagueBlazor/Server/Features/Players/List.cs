@@ -46,7 +46,6 @@ public class Handler : IRequestHandler<Query, PlayerListResult>
     {
         var players = await _dbContext.Players
             .Include(p => p.Team)
-            .AsNoTracking()
             .ProjectTo<PlayerListResult.PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

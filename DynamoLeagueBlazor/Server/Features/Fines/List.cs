@@ -46,7 +46,6 @@ public class ListHandler : IRequestHandler<ListQuery, FineListResult>
     {
         var fines = await _dbContext.Fines
             .Include(p => p.Player)
-            .AsNoTracking()
             .ProjectTo<FineListResult.FineItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

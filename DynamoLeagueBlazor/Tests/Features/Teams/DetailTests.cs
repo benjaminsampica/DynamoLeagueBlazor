@@ -43,9 +43,20 @@ internal class DetailTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await application.AddAsync(stubTeam);
 
-        var stubPlayer = CreateFakePlayer();
-        stubPlayer.TeamId = stubTeam.Id;
-        await application.AddAsync(stubPlayer);
+        var mockRosteredPlayer = CreateFakePlayer();
+        mockRosteredPlayer.TeamId = stubTeam.Id;
+        mockRosteredPlayer.SetToRostered(DateTime.MaxValue, 1);
+        await application.AddAsync(mockRosteredPlayer);
+
+        var mockUnrosteredPlayer = CreateFakePlayer();
+        mockUnrosteredPlayer.TeamId = stubTeam.Id;
+        mockUnrosteredPlayer.SetToUnrostered();
+        await application.AddAsync(mockUnrosteredPlayer);
+
+        var mockUnsignedPlayer = CreateFakePlayer();
+        mockUnsignedPlayer.TeamId = stubTeam.Id;
+        mockUnsignedPlayer.SetToUnsigned();
+        await application.AddAsync(mockUnsignedPlayer);
 
         var client = application.CreateClient();
         var endpoint = _endpoint + stubTeam.Id;
@@ -54,8 +65,9 @@ internal class DetailTests : IntegrationTestBase
 
         response.Should().NotBeNull();
         response!.TeamName.Should().Be(stubTeam.TeamName);
-        response.CapSpace.Should().Be(stubPlayer.ContractValue.ToString("C0"));
+        response.CapSpace.Should().Be((mockRosteredPlayer.ContractValue + mockUnrosteredPlayer.ContractValue / 2).ToString("C0"));
         response.RosteredPlayers.Should().NotBeEmpty();
         response.UnrosteredPlayers.Should().NotBeEmpty();
+        response.UnsignedPlayers.Should().NotBeEmpty();
     }
 }

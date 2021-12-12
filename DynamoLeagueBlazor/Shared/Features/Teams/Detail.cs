@@ -6,9 +6,10 @@ public class TeamDetailResult
     public string TeamName { get; set; }
     public string CapSpace { get; set; }
 
-    public IEnumerable<PlayerItem> RosteredPlayers { get; init; } = Array.Empty<PlayerItem>();
+    public List<PlayerItem> RosteredPlayers { get; init; } = new List<PlayerItem>();
+    public List<PlayerItem> UnrosteredPlayers { get; init; } = new List<PlayerItem>();
+    public List<PlayerItem> UnsignedPlayers { get; init; } = new List<PlayerItem>();
 
-    public IEnumerable<PlayerItem> UnrosteredPlayers { get; init; } = Array.Empty<PlayerItem>();
 
     public class PlayerItem
     {

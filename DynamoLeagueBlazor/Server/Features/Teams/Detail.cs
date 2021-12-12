@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
@@ -44,14 +45,41 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
 
     public async Task<TeamDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
-        var teamWithPlayers = await _dbContext.Teams
-            .Include(t => t.Players)
+        var teamDetail = await _dbContext.Teams
             .Where(t => t.Id == request.TeamId)
-            .AsNoTracking()
             .ProjectTo<TeamDetailResult>(_mapper.ConfigurationProvider)
             .SingleAsync(cancellationToken);
 
-        return teamWithPlayers;
+        var rosteredPlayersQuery = _dbContext.Players
+            .Where(p => p.TeamId == request.TeamId)
+            .WhereIsRostered();
+        var rosteredPlayers = await rosteredPlayersQuery
+            .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
+        teamDetail.RosteredPlayers.AddRange(rosteredPlayers);
+
+        var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
+
+        var unrosteredPlayersQuery = _dbContext.Players
+            .Where(p => p.TeamId == request.TeamId)
+            .WhereIsUnrostered();
+        var unrosteredPlayers = await unrosteredPlayersQuery
+            .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
+        teamDetail.UnrosteredPlayers.AddRange(unrosteredPlayers);
+
+        var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken) / 2;
+
+        teamDetail.CapSpace = (rosteredPlayersContractValue + unrosteredPlayersContractValue).ToString("C0");
+
+        var unsignedPlayers = await _dbContext.Players
+            .Where(p => p.TeamId == request.TeamId)
+            .WhereIsUnsigned()
+            .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
+        teamDetail.UnsignedPlayers.AddRange(unsignedPlayers);
+
+        return teamDetail;
     }
 }
 
@@ -59,12 +87,9 @@ public class DetailMappingProfile : Profile
 {
     public DetailMappingProfile()
     {
-        CreateMap<Player, TeamDetailResult.PlayerItem>()
+        CreateMap<Player, PlayerItem>()
             .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")));
 
-        CreateMap<Team, TeamDetailResult>()
-            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")))
-            .ForMember(p => p.UnrosteredPlayers, mo => mo.MapFrom(s => s.Players))
-            .ForMember(p => p.RosteredPlayers, mo => mo.MapFrom(s => s.Players));
+        CreateMap<Team, TeamDetailResult>();
     }
 }
