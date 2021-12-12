@@ -42,4 +42,10 @@ public partial class Detail
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
     }
+
+    private void ShowUnsignedPlayers()
+    {
+        _playersToDisplay = _result!.UnsignedPlayers;
+        _playerTableHeader = "Unsigned Players";
+    }
 }

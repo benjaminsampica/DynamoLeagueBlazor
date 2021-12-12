@@ -42,6 +42,11 @@ else
                             Unrostered Players
                         </MudButton>
                     </MudBadge>
+                    <MudBadge Origin=Origin.CenterRight Content=_result.UnsignedPlayers.Count() Color=Color.Secondary>
+                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PendingActions OnClick=ShowUnsignedPlayers>
+                            Unsigned Players
+                        </MudButton>
+                    </MudBadge>
                 </MudItem>
                 <MudItem lg=9 xs=12>
                     <MudTable Items="_playersToDisplay" Dense=true Elevation=0>

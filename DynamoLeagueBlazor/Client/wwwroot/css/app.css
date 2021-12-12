@@ -8,6 +8,14 @@
     }
 }
 
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.05);
+}
+
 /* MudBlazor overrides */
 
 .mud-card-header .mud-card-header-actions {
