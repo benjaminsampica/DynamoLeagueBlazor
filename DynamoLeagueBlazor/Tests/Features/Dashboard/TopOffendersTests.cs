@@ -1,7 +1,7 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Fines;
+﻿using DynamoLeagueBlazor.Shared.Features.Dashboard;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Tests.Features.Fines;
+namespace DynamoLeagueBlazor.Tests.Features.Dashboard;
 
 internal class TopOffendersTests : IntegrationTestBase
 {

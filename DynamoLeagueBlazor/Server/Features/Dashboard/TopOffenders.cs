@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Shared.Features.Dashboard;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

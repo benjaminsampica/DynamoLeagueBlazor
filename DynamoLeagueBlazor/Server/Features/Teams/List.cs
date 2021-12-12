@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,37 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
     public async Task<TeamListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var teams = await _dbContext.Teams
-            .Include(t => t.Players)
             .ProjectTo<TeamItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
+
+        foreach (var team in teams)
+        {
+            var rosteredPlayersQuery = _dbContext.Players
+                .Where(p => p.TeamId == team.Id)
+                .WhereIsRostered();
+            var rosteredPlayerCount = await rosteredPlayersQuery.CountAsync(cancellationToken);
+            team.RosteredPlayerCount = rosteredPlayerCount.ToString();
+
+            var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
+
+            var unrosteredPlayersQuery = _dbContext.Players
+                .Where(p => p.TeamId == team.Id)
+                .WhereIsUnrostered();
+            var unrosteredPlayerCount = await unrosteredPlayersQuery.CountAsync(cancellationToken);
+            team.UnrosteredPlayerCount = unrosteredPlayerCount.ToString();
+
+            var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
+
+            var unsignedPlayersQuery = _dbContext.Players
+                .Where(p => p.TeamId == team.Id)
+                .WhereIsUnsigned();
+            var unsignedPlayerCount = await unsignedPlayersQuery.CountAsync(cancellationToken);
+            team.UnsignedPlayerCount = unsignedPlayerCount.ToString();
+
+            var unsignedPlayersContractValue = await unsignedPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
+
+            team.CapSpace = CapSpaceUtilities.CalculateCurrentCapSpace(rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue).ToString("C0");
+        }
 
         return new TeamListResult
         {
@@ -61,8 +90,6 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
-        CreateMap<Team, TeamItem>()
-            .ForMember(p => p.RosteredPlayerCount, mo => mo.MapFrom(t => t.Players.Count))
-            .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")));
+        CreateMap<Team, TeamItem>();
     }
 }

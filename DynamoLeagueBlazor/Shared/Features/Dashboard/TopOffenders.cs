@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
+﻿namespace DynamoLeagueBlazor.Shared.Features.Dashboard;
 
 public class TopOffendersResult
 {
