@@ -30,21 +30,31 @@ internal class ListTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeam()
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeamWithPlayerCounts()
     {
         var application = CreateAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
         var rosteredPlayer = CreateFakePlayer().SetToRostered(DateTime.MaxValue, int.MaxValue);
+        rosteredPlayer.TeamId = mockTeam.Id;
+        await application.AddAsync(rosteredPlayer);
+
         var unrosteredPlayer = CreateFakePlayer().SetToUnrostered();
+        unrosteredPlayer.TeamId = mockTeam.Id;
+        await application.AddAsync(unrosteredPlayer);
+
         var unsignedPlayer = CreateFakePlayer().SetToUnsigned();
+        unsignedPlayer.TeamId = mockTeam.Id;
+        await application.AddAsync(unsignedPlayer);
 
         var client = application.CreateClient();
 
         var result = await client.GetFromJsonAsync<TeamListResult>(_endpoint);
 
         result.Should().NotBeNull();
-        result!.Teams.Should().Contain(t => t.RosteredPlayerCount == "1");
+        result!.Teams.Should().Contain(t => t.RosteredPlayerCount == "1"
+            && t.UnsignedPlayerCount == "1"
+            && t.UnrosteredPlayerCount == "1");
     }
 }
