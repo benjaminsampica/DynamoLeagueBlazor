@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,16 +69,19 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
             .ToListAsync(cancellationToken);
         teamDetail.UnrosteredPlayers.AddRange(unrosteredPlayers);
 
-        var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken) / 2;
+        var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
 
-        teamDetail.CapSpace = (rosteredPlayersContractValue + unrosteredPlayersContractValue).ToString("C0");
-
-        var unsignedPlayers = await _dbContext.Players
+        var unsignedPlayersQuery = _dbContext.Players
             .Where(p => p.TeamId == request.TeamId)
-            .WhereIsUnsigned()
+            .WhereIsUnsigned();
+        var unsignedPlayers = await unsignedPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         teamDetail.UnsignedPlayers.AddRange(unsignedPlayers);
+
+        var unsignedPlayersContractValue = await unsignedPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
+
+        teamDetail.CapSpace = CapSpaceUtilities.CalculateCurrentCapSpace(rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue).ToString("C0");
 
         return teamDetail;
     }

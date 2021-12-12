@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Shared.Features.Teams.TeamListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
@@ -46,7 +47,7 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
     {
         var teams = await _dbContext.Teams
             .Include(t => t.Players)
-            .ProjectTo<TeamListResult.TeamItem>(_mapper.ConfigurationProvider)
+            .ProjectTo<TeamItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
         return new TeamListResult
@@ -60,8 +61,8 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
-        CreateMap<Team, TeamListResult.TeamItem>()
-            .ForMember(p => p.PlayerCount, mo => mo.MapFrom(t => t.Players.Count))
+        CreateMap<Team, TeamItem>()
+            .ForMember(p => p.RosteredPlayerCount, mo => mo.MapFrom(t => t.Players.Count))
             .ForMember(p => p.CapSpace, mo => mo.MapFrom(t => t.CapSpace().ToString("C0")));
     }
 }

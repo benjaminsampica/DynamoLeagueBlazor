@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Utilities;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
@@ -65,7 +66,7 @@ internal class DetailTests : IntegrationTestBase
 
         response.Should().NotBeNull();
         response!.TeamName.Should().Be(stubTeam.TeamName);
-        response.CapSpace.Should().Be((mockRosteredPlayer.ContractValue + mockUnrosteredPlayer.ContractValue / 2).ToString("C0"));
+        response.CapSpace.Should().Be(CapSpaceUtilities.CalculateCurrentCapSpace(mockRosteredPlayer.ContractValue, mockUnrosteredPlayer.ContractValue, mockUnsignedPlayer.ContractValue).ToString("C0"));
         response.RosteredPlayers.Should().NotBeEmpty();
         response.UnrosteredPlayers.Should().NotBeEmpty();
         response.UnsignedPlayers.Should().NotBeEmpty();

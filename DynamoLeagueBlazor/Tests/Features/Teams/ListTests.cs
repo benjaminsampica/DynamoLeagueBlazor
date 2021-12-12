@@ -36,11 +36,15 @@ internal class ListTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
+        var rosteredPlayer = CreateFakePlayer().SetToRostered(DateTime.MaxValue, int.MaxValue);
+        var unrosteredPlayer = CreateFakePlayer().SetToUnrostered();
+        var unsignedPlayer = CreateFakePlayer().SetToUnsigned();
+
         var client = application.CreateClient();
 
         var result = await client.GetFromJsonAsync<TeamListResult>(_endpoint);
 
         result.Should().NotBeNull();
-        result!.Teams.Should().HaveCount(1);
+        result!.Teams.Should().Contain(t => t.RosteredPlayerCount == "1");
     }
 }

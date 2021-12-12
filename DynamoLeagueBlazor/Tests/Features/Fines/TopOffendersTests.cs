@@ -74,11 +74,11 @@ internal class TopOffendersTests : IntegrationTestBase
         var sixthPlayer = CreateFakePlayer();
         await application.AddAsync(sixthPlayer);
 
-        var sixthFine = CreateFakeFine();
-        sixthFine.PlayerId = sixthPlayer.Id;
-        sixthFine.Status = true;
-        sixthFine.FineAmount = 1;
-        await application.AddAsync(sixthFine);
+        var lowestFine = CreateFakeFine();
+        lowestFine.PlayerId = sixthPlayer.Id;
+        lowestFine.Status = true;
+        lowestFine.FineAmount = 1;
+        await application.AddAsync(lowestFine);
 
         var client = application.CreateClient();
 
@@ -86,6 +86,6 @@ internal class TopOffendersTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);
-        result.Players.ToList().TrueForAll(p => p.TotalFineAmount != sixthFine.FineAmount.ToString("C0")).Should().BeTrue();
+        result.Players.Should().OnlyContain(p => p.TotalFineAmount != lowestFine.FineAmount.ToString("C0"));
     }
 }

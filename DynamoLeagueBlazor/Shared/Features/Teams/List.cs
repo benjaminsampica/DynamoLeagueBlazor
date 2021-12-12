@@ -9,7 +9,9 @@ public class TeamListResult
         public int Id { get; set; }
         public string TeamLogoUrl { get; set; }
         public string TeamName { get; set; }
-        public string PlayerCount { get; set; }
+        public string RosteredPlayerCount { get; set; }
+        public string UnrosteredPlayerCount { get; set; }
+        public string UnsignedPlayerCount { get; set; }
         public string CapSpace { get; set; }
     }
 }
