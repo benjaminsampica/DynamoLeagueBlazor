@@ -36,7 +36,7 @@ internal class FineDetailTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsFound_ThenReturnsExpectedResult()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 

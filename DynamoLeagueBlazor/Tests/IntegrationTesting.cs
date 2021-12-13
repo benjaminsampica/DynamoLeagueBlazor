@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Areas.Identity;
+using DynamoLeagueBlazor.Server.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -33,14 +34,25 @@ public class IntegrationTesting
         //await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    internal static WebApplicationFactory<Program> CreateAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
         => CreateApplication(options)
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddAuthentication(TestAuthenticationHandler.AuthenticationName)
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(TestAuthenticationHandler.AuthenticationName, options => { });
+                    services.AddAuthentication(UserAuthenticationHandler.AuthenticationName)
+                        .AddScheme<AuthenticationSchemeOptions, UserAuthenticationHandler>(UserAuthenticationHandler.AuthenticationName, options => { });
+                });
+            });
+
+    internal static WebApplicationFactory<Program> CreateAdminAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+        => CreateApplication(options)
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthentication(AdminAuthenticationHandler.AuthenticationName)
+                        .AddScheme<AuthenticationSchemeOptions, AdminAuthenticationHandler>(AdminAuthenticationHandler.AuthenticationName, options => { });
                 });
             });
 
@@ -126,11 +138,11 @@ internal static class IntegrationTestExtensions
 
 internal record TestHttpResponse<TContent>(HttpResponseMessage Message, TContent? Content) where TContent : class;
 
-internal class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AuthenticationName = "Test";
+    public const string AuthenticationName = "User";
 
-    public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
+    public UserAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
         : base(options, logger, encoder, clock)
     {
@@ -138,7 +150,30 @@ internal class TestAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+        var claims = new[] { new Claim(ClaimTypes.Name, "Test user"), new Claim(ClaimTypes.Role, ApplicationRole.User) };
+        var identity = new ClaimsIdentity(claims, AuthenticationName);
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, AuthenticationName);
+
+        var result = AuthenticateResult.Success(ticket);
+
+        return Task.FromResult(result);
+    }
+}
+
+internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+{
+    public const string AuthenticationName = "Admin";
+
+    public AdminAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+        : base(options, logger, encoder, clock)
+    {
+    }
+
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var claims = new[] { new Claim(ClaimTypes.Name, "Test user"), new Claim(ClaimTypes.Role, ApplicationRole.Admin) };
         var identity = new ClaimsIdentity(claims, AuthenticationName);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationName);

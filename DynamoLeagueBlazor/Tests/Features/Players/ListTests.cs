@@ -22,7 +22,7 @@ internal class ListTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayer_ThenReturnsOnePlayer()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
 

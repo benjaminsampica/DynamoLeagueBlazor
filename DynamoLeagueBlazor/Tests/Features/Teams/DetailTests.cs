@@ -25,7 +25,7 @@ internal class DetailTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenGivenValidTeamId_ThenReturnsExpectedResult()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
         await application.AddAsync(stubTeam);

@@ -21,7 +21,7 @@ internal class ListTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeamWithPlayerCounts()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 

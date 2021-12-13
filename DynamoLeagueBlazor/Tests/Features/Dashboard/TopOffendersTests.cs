@@ -22,7 +22,7 @@ internal class TopOffendersTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithAFine_ThenReturnsOnePlayerWithAFine()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
         var mockFine = CreateFakeFine();
@@ -46,7 +46,7 @@ internal class TopOffendersTests : IntegrationTestBase
     [Test]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsElevenPlayersWithApprovedFines_ThenReturnsOnlyTopTenByFineAmount()
     {
-        var application = CreateAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         foreach (var count in Enumerable.Range(0, 10))
         {
             var mockPlayer = CreateFakePlayer();
