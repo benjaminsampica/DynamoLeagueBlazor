@@ -59,7 +59,7 @@ html, body {
 }
 
 .loader {
-    border: 16px solid rgba(0, 0 ,0 ,0.00);
+    border: 16px solid rgba(0, 0, 0, 0.00);
     border-top: 16px solid #776be7;
     border-radius: 50%;
     width: 120px;
