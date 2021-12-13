@@ -31,7 +31,7 @@ public class ListController : ControllerBase
     }
 }
 
-public class ListQuery : IRequest<TeamListResult> { }
+public record ListQuery : IRequest<TeamListResult> { }
 
 public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 {

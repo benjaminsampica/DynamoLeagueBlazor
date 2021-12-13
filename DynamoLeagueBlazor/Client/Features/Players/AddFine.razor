@@ -2,6 +2,7 @@
     <FluentValidationValidator />
     <MudDialog>
         <DialogContent>
+             This player's contract is worth @_result.ContractValue and when penalized their fine amount is @(_result.FineAmount).
              <MudTextField Label="Fine Reason" HelperText="Enter a fine reason..." @bind-Value="_form.FineReason" For="@(() => _form.FineReason)" Lines=5/>
         </DialogContent>
         <DialogActions>

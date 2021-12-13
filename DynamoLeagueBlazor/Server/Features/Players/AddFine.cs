@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [Authorize]
-[Route("fines/add")]
+[Route("players/addfine")]
 [ApiController]
-public class AddController : ControllerBase
+public class AddFineController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
-    public AddController(IMediator mediator, IMapper mapper)
+    public AddFineController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
         _mapper = mapper;
@@ -25,24 +25,24 @@ public class AddController : ControllerBase
     [HttpPost]
     public async Task<int> PostAsync([FromBody] AddFineRequest request)
     {
-        var query = _mapper.Map<AddQuery>(request);
+        var query = _mapper.Map<AddFineQuery>(request);
 
         return await _mediator.Send(query);
     }
 }
 
-public record AddQuery(int PlayerId, string FineReason) : IRequest<int> { }
+public record AddFineQuery(int PlayerId, string FineReason) : IRequest<int> { }
 
-public class AddHandler : IRequestHandler<AddQuery, int>
+public class AddFineHandler : IRequestHandler<AddFineQuery, int>
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public AddHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public AddFineHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(AddQuery request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddFineQuery request, CancellationToken cancellationToken)
     {
         // TODO: Calculate amount
         var amount = 1;
@@ -59,6 +59,6 @@ public class AddMappingProfile : Profile
 {
     public AddMappingProfile()
     {
-        CreateMap<AddFineRequest, AddQuery>();
+        CreateMap<AddFineRequest, AddFineQuery>();
     }
 }

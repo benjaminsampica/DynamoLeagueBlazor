@@ -29,7 +29,7 @@ public class ListController : ControllerBase
     }
 }
 
-public class Query : IRequest<PlayerListResult> { }
+public record Query : IRequest<PlayerListResult> { }
 
 public class Handler : IRequestHandler<Query, PlayerListResult>
 {

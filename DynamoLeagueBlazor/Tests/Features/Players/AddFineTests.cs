@@ -6,9 +6,9 @@ using System.Text.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
-internal class AddTests : IntegrationTestBase
+internal class AddFineTests : IntegrationTestBase
 {
-    private const string _endpoint = "fines/add";
+    private const string _endpoint = "players/addfine";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
