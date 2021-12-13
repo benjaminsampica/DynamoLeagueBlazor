@@ -32,8 +32,7 @@ public partial class AddFine : IDisposable
         try
         {
             var queryString = QueryHelpers.AddQueryString("players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
-            var response = await HttpClient.GetAsync(queryString, _cts.Token) ?? new();
-            var d = await response.Content.ReadAsStringAsync();
+            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
         }
         catch (AccessTokenNotAvailableException exception)
         {

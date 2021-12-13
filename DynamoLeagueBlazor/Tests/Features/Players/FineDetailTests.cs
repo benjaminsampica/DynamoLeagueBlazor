@@ -1,6 +1,7 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
@@ -25,7 +26,7 @@ internal class FineDetailTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeRequest();
-        var endpoint = $"{_endpoint}/{stubRequest.PlayerId}";
+        var endpoint = QueryHelpers.AddQueryString(_endpoint, nameof(FineDetailRequest.PlayerId), stubRequest.PlayerId.ToString());
 
         var response = await client.GetAsync(endpoint);
 
@@ -33,7 +34,7 @@ internal class FineDetailTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenPlayerIdIsFound_ThenReturnsExpectedResult()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsFound_ThenReturnsExpectedResult()
     {
         var application = CreateAuthenticatedApplication();
 
@@ -42,8 +43,9 @@ internal class FineDetailTests : IntegrationTestBase
         var player = CreateFakePlayer();
         await application.AddAsync(player);
         var mockRequest = CreateFakeRequest();
-        mockRequest.PlayerId = 1;
-        var endpoint = $"{_endpoint}?PlayerId={player.Id}";
+        mockRequest.PlayerId = player.Id;
+
+        var endpoint = QueryHelpers.AddQueryString(_endpoint, nameof(FineDetailRequest.PlayerId), mockRequest.PlayerId.ToString());
 
         var response = await client.GetFromJsonAsync<FineDetailResult>(endpoint);
 
