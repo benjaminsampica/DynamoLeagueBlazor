@@ -6,7 +6,7 @@ using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
-public partial class Detail
+public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
@@ -16,12 +16,13 @@ public partial class Detail
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
+    private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"teams/{TeamId}");
+            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"teams/{TeamId}", _cts.Token);
             _title = $"Team Detail - {_result!.TeamName}";
             ShowRosteredPlayers();
         }
@@ -47,5 +48,11 @@ public partial class Detail
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
     }
 }

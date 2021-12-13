@@ -46,7 +46,7 @@ public partial class AddFine : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("players/addfine", _form, _cts.Token);
+            var response = await HttpClient.PostAsJsonAsync("players/addfine", _form);
 
             if (response.IsSuccessStatusCode)
             {

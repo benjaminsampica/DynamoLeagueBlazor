@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DynamoLeagueBlazor.Server.Features.Players.List;
+namespace DynamoLeagueBlazor.Server.Features.Players;
 
 [Authorize]
 [ApiController]
@@ -25,24 +25,24 @@ public class ListController : ControllerBase
     [HttpGet]
     public async Task<PlayerListResult> GetAsync()
     {
-        return await _mediator.Send(new Query());
+        return await _mediator.Send(new ListQuery());
     }
 }
 
-public record Query : IRequest<PlayerListResult> { }
+public record ListQuery : IRequest<PlayerListResult> { }
 
-public class Handler : IRequestHandler<Query, PlayerListResult>
+public class ListHandler : IRequestHandler<ListQuery, PlayerListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public Handler(ApplicationDbContext dbContext, IMapper mapper)
+    public ListHandler(ApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
-    public async Task<PlayerListResult> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<PlayerListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var players = await _dbContext.Players
             .Include(p => p.Team)
@@ -56,9 +56,9 @@ public class Handler : IRequestHandler<Query, PlayerListResult>
     }
 }
 
-public class MappingProfile : Profile
+public class ListMappingProfile : Profile
 {
-    public MappingProfile()
+    public ListMappingProfile()
     {
         CreateMap<Player, PlayerListResult.PlayerItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty))
