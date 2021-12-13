@@ -24,15 +24,15 @@ else
                     var firstPlayer = _result.Players.First();
 
                 }
-                <PlayerCard BackgroundColor="background: rgba(192,192,192, .6);" Player="@firstPlayer" NameTypo=Typo.h4 FineAmountTypo=Typo.h3/>
+                <PlayerCard BackgroundColor="background: rgba(255, 215, 0, .6);" Player="@firstPlayer" NameTypo=Typo.h4 FineAmountTypo=Typo.h3/>
             </MudItem>
             <MudItem xs=12>
                 @{
                     var secondPlayer = _result.Players.Skip(1).First();
                     var thirdPlayer = _result.Players.Skip(2).First();
                 }
-                <PlayerCard BackgroundColor="background: rgba(192,192,192, .6);" Player="@secondPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
-                <PlayerCard BackgroundColor="background: rgba(176,141,87, .6);" Player="@thirdPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
+                <PlayerCard BackgroundColor="background: rgba(192, 192, 192, .6);" Player="@secondPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
+                <PlayerCard BackgroundColor="background: rgba(176, 141, 87, .6);" Player="@thirdPlayer" NameTypo=Typo.h6 FineAmountTypo=Typo.h4/>
             </MudItem>
             @foreach(var player in _result.Players.Skip(3))
             {
