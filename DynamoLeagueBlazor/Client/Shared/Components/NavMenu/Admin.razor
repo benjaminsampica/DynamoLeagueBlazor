@@ -1,5 +1,6 @@
-﻿<h3>Admin</h3>
-
-@code {
-    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-}
+﻿<AuthorizeView Roles="Admin">
+    <Authorized>
+        <MudDivider />
+        Hello ADMIN
+    </Authorized>
+</AuthorizeView>

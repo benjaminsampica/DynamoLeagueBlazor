@@ -4,12 +4,13 @@ using System.Security.Claims;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;
 
-public class CurrentUserClaimsFactory : UserClaimsPrincipalFactory<ApplicationUser>
+public class CurrentUserClaimsFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
     public CurrentUserClaimsFactory(
         UserManager<ApplicationUser> userManager,
+        RoleManager<ApplicationRole> roleManager,
         IOptions<IdentityOptions> optionsAccessor)
-            : base(userManager, optionsAccessor)
+            : base(userManager, roleManager, optionsAccessor)
     {
     }
 

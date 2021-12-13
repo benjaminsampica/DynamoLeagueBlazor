@@ -4,7 +4,7 @@
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
-<AuthorizeView>
+<AuthorizeView Context=context>
     <Authorized>
         <MudNavLink OnClick="BeginSignOut">Log Out</MudNavLink>
     </Authorized>

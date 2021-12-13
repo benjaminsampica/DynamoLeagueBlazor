@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,16 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+    {
+        options.IdentityResources["openid"].UserClaims.Add("name");
+        options.ApiResources.Single().UserClaims.Add("name");
+        options.IdentityResources["openid"].UserClaims.Add("role");
+        options.ApiResources.Single().UserClaims.Add("role");
+        options.IdentityResources["openid"].UserClaims.Add(nameof(ApplicationUser.TeamId));
+        options.ApiResources.Single().UserClaims.Add(nameof(ApplicationUser.TeamId));
+    });
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -38,14 +48,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy(AdminAuthorizationRequirement.Name, policy =>
-    {
-        policy.Requirements.Add(new AdminAuthorizationRequirement());
-    });
-});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
