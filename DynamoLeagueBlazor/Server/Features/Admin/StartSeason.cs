@@ -47,7 +47,7 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonQuery>
         var random = new Random();
 
         var players = _dbContext.Players
-            .WhereIsAFreeAgent()
+            .WhereIsEligibleForFreeAgency()
             .AsTracking();
 
         foreach (var player in players)

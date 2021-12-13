@@ -79,6 +79,6 @@ public static class PlayerExtensions
             && p.EndOfFreeAgency == null
             && p.YearAcquired == DateTime.Today.Year);
 
-    public static IQueryable<Player> WhereIsAFreeAgent(this IQueryable<Player> players)
+    public static IQueryable<Player> WhereIsEligibleForFreeAgency(this IQueryable<Player> players)
         => players.Where(p => p.ContractLength == null || p.ContractLength < DateTime.Today.Year);
 }

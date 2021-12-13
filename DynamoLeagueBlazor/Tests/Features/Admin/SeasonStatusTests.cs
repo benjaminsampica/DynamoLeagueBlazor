@@ -44,4 +44,16 @@ internal class SeasonStatusTests : IntegrationTestBase
 
         result.Should().BeTrue();
     }
+
+    [Test]
+    public async Task GivenAuthenticatedAdmin_WhenNoPlayerIsAFreeAgent_ThenReturnsFalse()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<bool>(_endpoint);
+
+        result.Should().BeFalse();
+    }
 }
