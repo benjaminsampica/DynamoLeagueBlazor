@@ -1,6 +1,7 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -36,10 +37,12 @@ internal class AddFineTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_GivenAValidFine_ThenSavesIt()
     {
         var application = CreateAuthenticatedApplication();
-
         var client = application.CreateClient();
-
+        var mockPlayer = CreateFakePlayer();
+        await application.AddAsync(mockPlayer);
         var stubRequest = CreateFakeValidRequest();
+        stubRequest.PlayerId = mockPlayer.Id;
+
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,6 +52,7 @@ internal class AddFineTests : IntegrationTestBase
         fine!.PlayerId.Should().Be(stubRequest.PlayerId);
         fine.Status.Should().BeFalse();
         fine.FineReason.Should().Be(stubRequest.FineReason);
+        fine.FineAmount.Should().Be(FineUtilities.CalculateFineAmount(mockPlayer.ContractValue));
     }
 
     [Test]
