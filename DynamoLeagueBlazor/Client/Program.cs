@@ -1,5 +1,5 @@
 using DynamoLeagueBlazor.Client;
-using DynamoLeagueBlazor.Client.Features.Identity;
+using DynamoLeagueBlazor.Client.Areas.Identity;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

@@ -53,6 +53,13 @@ public record Player : BaseEntity
 
         return this;
     }
+
+    public Player SetToFreeAgent(DateTime endOfFreeAgency)
+    {
+        EndOfFreeAgency = endOfFreeAgency;
+
+        return this;
+    }
 }
 
 public static class PlayerExtensions
@@ -73,5 +80,5 @@ public static class PlayerExtensions
             && p.YearAcquired == DateTime.Today.Year);
 
     public static IQueryable<Player> WhereIsAFreeAgent(this IQueryable<Player> players)
-        => players.Where(p => p.ContractLength < DateTime.Today.Year);
+        => players.Where(p => p.ContractLength == null || p.ContractLength < DateTime.Today.Year);
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Identity;
+namespace DynamoLeagueBlazor.Client.Areas.Identity;
 
 public class ApplicationUserFactory
     : AccountClaimsPrincipalFactory<RemoteUserAccount>

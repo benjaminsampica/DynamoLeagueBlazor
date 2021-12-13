@@ -23,26 +23,26 @@ public class StartSeasonController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAsync()
     {
-        await _mediator.Send(new Query());
+        await _mediator.Send(new StartSeasonQuery());
 
         return NoContent();
     }
 }
 
-public record Query : IRequest<Unit> { }
+public record StartSeasonQuery : IRequest<Unit> { }
 
-public class Handler : IRequestHandler<Query>
+public class StartSeasonHandler : IRequestHandler<StartSeasonQuery>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly DateTime _boundaryStartDate = new(DateTime.Today.Year, 6, 25);
     private readonly DateTime _boundaryEndDate = new(DateTime.Today.Year, 8, 20);
 
-    public Handler(ApplicationDbContext dbContext)
+    public StartSeasonHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(StartSeasonQuery request, CancellationToken cancellationToken)
     {
         var random = new Random();
 
@@ -52,7 +52,9 @@ public class Handler : IRequestHandler<Query>
 
         foreach (var player in players)
         {
-            player.EndOfFreeAgency = GetRandomBoundariedEndOfFreeAgency(random, _boundaryStartDate, _boundaryEndDate);
+            var date = GetRandomBoundariedDate(random, _boundaryStartDate, _boundaryEndDate);
+
+            player.SetToFreeAgent(date);
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -60,7 +62,7 @@ public class Handler : IRequestHandler<Query>
         return Unit.Value;
     }
 
-    private static DateTime GetRandomBoundariedEndOfFreeAgency(Random seed, DateTime boundaryStartDate, DateTime boundaryEndDate)
+    private static DateTime GetRandomBoundariedDate(Random seed, DateTime boundaryStartDate, DateTime boundaryEndDate)
     {
         var maximumDaysToAdd = (boundaryEndDate - boundaryStartDate).Days;
         var daysToAdd = seed.Next(maximumDaysToAdd);
