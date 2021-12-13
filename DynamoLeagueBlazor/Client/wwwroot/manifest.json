@@ -1,9 +1,9 @@
 {
-  "name": "DynamoLeagueBlazor",
-  "short_name": "DynamoLeagueBlazor",
+  "name": "Dynamo League - Fantasy Football",
+  "short_name": "Dynamo League",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#32333d",
   "theme_color": "#03173d",
   "prefer_related_applications": false,
   "icons": [

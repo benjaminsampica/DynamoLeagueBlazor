@@ -39,6 +39,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AdminAuthorizationRequirement.Name, policy =>
+    {
+        policy.Requirements.Add(new AdminAuthorizationRequirement());
+    });
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
