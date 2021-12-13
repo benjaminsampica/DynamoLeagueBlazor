@@ -1,4 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+﻿using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

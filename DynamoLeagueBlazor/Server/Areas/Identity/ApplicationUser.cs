@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;
+namespace DynamoLeagueBlazor.Server.Areas.Identity;
 
 public class ApplicationUser : IdentityUser
 {

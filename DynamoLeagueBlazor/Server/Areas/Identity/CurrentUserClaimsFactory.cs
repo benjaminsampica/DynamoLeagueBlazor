@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;
+namespace DynamoLeagueBlazor.Server.Areas.Identity;
 
 public class CurrentUserClaimsFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {

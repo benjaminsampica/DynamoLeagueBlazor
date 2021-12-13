@@ -1,5 +1,6 @@
+using Duende.IdentityServer.Services;
+using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Fines;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -20,21 +21,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.
+    })
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
-    {
-        options.IdentityResources["openid"].UserClaims.Add("name");
-        options.ApiResources.Single().UserClaims.Add("name");
-        options.IdentityResources["openid"].UserClaims.Add("role");
-        options.ApiResources.Single().UserClaims.Add("role");
-        options.IdentityResources["openid"].UserClaims.Add(nameof(ApplicationUser.TeamId));
-        options.ApiResources.Single().UserClaims.Add(nameof(ApplicationUser.TeamId));
-    });
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+builder.Services.AddTransient<IProfileService, ProfileService>();
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.Configure<IdentityOptions>(options =>
