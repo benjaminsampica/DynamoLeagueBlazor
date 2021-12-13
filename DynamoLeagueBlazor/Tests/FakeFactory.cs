@@ -45,7 +45,7 @@ internal class FakeFactory
         return faker.Generate();
     }
 
-    public static AddFineRequest CreateFakeValidAddFineRequest()
+    public static AddFineRequest CreateFakeVal()
     {
         var faker = new AutoFaker<AddFineRequest>()
             .RuleFor(f => f.PlayerId, 1);

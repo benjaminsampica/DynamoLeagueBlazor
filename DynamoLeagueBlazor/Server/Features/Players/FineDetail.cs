@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,7 @@ public class FineDetailController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{playerId}")]
+    [HttpGet]
     public async Task<FineDetailResult> GetAsync([FromQuery] FineDetailRequest request)
     {
         return await _mediator.Send(new FineDetailQuery(request.PlayerId));
@@ -50,13 +49,5 @@ public class FineDetailHandler : IRequestHandler<FineDetailQuery, FineDetailResu
         };
 
         return result;
-    }
-}
-
-public class FineDetailRequestValidator : AbstractValidator<FineDetailRequest>
-{
-    public FineDetailRequestValidator(ApplicationDbContext dbContext)
-    {
-        RuleFor(p => p.PlayerId).Must(id => dbContext.Players.Any(p => p.Id == id));
     }
 }

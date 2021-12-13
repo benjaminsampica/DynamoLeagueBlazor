@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Server.Models;
+﻿using AutoBogus;
+using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Fines;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
@@ -10,6 +11,14 @@ internal class AddFineTests : IntegrationTestBase
 {
     private const string _endpoint = "players/addfine";
 
+    private static AddFineRequest CreateFakeValidRequest()
+    {
+        var faker = new AutoFaker<AddFineRequest>()
+            .RuleFor(f => f.PlayerId, 1);
+
+        return faker.Generate();
+    }
+
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -17,23 +26,10 @@ internal class AddFineTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = CreateFakeValidAddFineRequest();
+        var stubRequest = CreateFakeValidRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-    [Test]
-    public async Task GivenAnyAuthenticatedUser_ThenDoesAllowAccess()
-    {
-        var application = CreateAuthenticatedApplication();
-
-        var client = application.CreateClient();
-
-        var stubRequest = CreateFakeValidAddFineRequest();
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Test]
@@ -43,7 +39,7 @@ internal class AddFineTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = CreateFakeValidAddFineRequest();
+        var stubRequest = CreateFakeValidRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -2,11 +2,9 @@
 using DynamoLeagueBlazor.Shared.Features.Players;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Players;
 
@@ -18,7 +16,7 @@ public partial class AddFine : IDisposable
     [Parameter, EditorRequired] public int PlayerId { get; set; }
 
     private AddFineRequest _form = null!;
-    private FineDetailResult _result = new() { FineAmount = "Unknown", ContractValue = "Unknown" };
+    private FineDetailResult _fineDetail = new();
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
@@ -34,23 +32,7 @@ public partial class AddFine : IDisposable
         try
         {
             var queryString = QueryHelpers.AddQueryString("players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
-            var response = await HttpClient.GetAsync(queryString, _cts.Token);
-
-            if (response.IsSuccessStatusCode)
-            {
-                _result = await JsonSerializer.DeserializeAsync<FineDetailResult>(await response.Content.ReadAsStreamAsync()) ?? new() { FineAmount = "Unknown", ContractValue = "Unknown" };
-            }
-            else
-            {
-                var content = await JsonSerializer.DeserializeAsync<ValidationProblemDetails>(await response.Content.ReadAsStreamAsync());
-
-                foreach (var propertyError in content.Errors)
-                {
-                    var message = string.Join(", ", propertyError.Value);
-
-                    SnackBar.Add(message, Severity.Error);
-                }
-            }
+            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
         }
         catch (AccessTokenNotAvailableException exception)
         {

@@ -20,18 +20,6 @@ internal class ListTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_ThenDoesAllowAccess()
-    {
-        var application = CreateAuthenticatedApplication();
-
-        var client = application.CreateClient();
-
-        var response = await client.GetAsync(_endpoint);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
-    [Test]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneFine_ThenReturnsOneFine()
     {
         var application = CreateAuthenticatedApplication();

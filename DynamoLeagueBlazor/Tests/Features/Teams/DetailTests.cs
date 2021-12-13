@@ -23,20 +23,6 @@ internal class DetailTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_ThenDoesAllowAccess()
-    {
-        var application = CreateAuthenticatedApplication();
-        var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
-        var client = application.CreateClient();
-        var endpoint = _endpoint + stubTeam.Id;
-
-        var response = await client.GetAsync(endpoint);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
-    [Test]
     public async Task GivenAnyAuthenticatedUser_WhenGivenValidTeamId_ThenReturnsExpectedResult()
     {
         var application = CreateAuthenticatedApplication();
