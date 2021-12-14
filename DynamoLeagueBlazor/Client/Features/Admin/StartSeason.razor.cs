@@ -9,7 +9,7 @@ public partial class StartSeason
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
 
-    private bool _isDisabled;
+    private bool _isDisabled = true;
     private bool _isProcessing;
 
     protected override async Task OnInitializedAsync()
@@ -19,7 +19,6 @@ public partial class StartSeason
 
     private async Task StartSeasonAsync()
     {
-        _isDisabled = true;
         _isProcessing = true;
         await HttpClient.PostAsync("admin/startseason", null);
 
