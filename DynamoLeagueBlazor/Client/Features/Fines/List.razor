@@ -1,8 +1,14 @@
-﻿@using static DynamoLeagueBlazor.Shared.Features.Fines.FineListResult
+﻿@page "/fines"
+
+@using static DynamoLeagueBlazor.Shared.Features.Fines.FineListResult
+
+<Title>
+    @_title
+</Title>
 
 <MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)"> 
     <ToolBarContent>
-        <MudText Typo="Typo.h6">All Fines</MudText>
+        <MudText Typo="Typo.h6">@_title</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>

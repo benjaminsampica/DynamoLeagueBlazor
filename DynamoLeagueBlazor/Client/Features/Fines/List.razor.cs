@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Dashboard;
+namespace DynamoLeagueBlazor.Client.Features.Fines;
 
-public partial class Fines : IDisposable
+public partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
     private FineListResult _result = new();
     private bool _loading;
     private string _searchValue = string.Empty;
+    private const string _title = "Fines";
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
