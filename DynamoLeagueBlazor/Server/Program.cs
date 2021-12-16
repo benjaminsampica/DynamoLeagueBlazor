@@ -91,7 +91,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    if (app.Environment.IsEnvironment("Local"))
+    if (app.Environment.IsDevelopment())
     {
         await applicationDbContext.Database.EnsureDeletedAsync();
         await applicationDbContext.Database.EnsureCreatedAsync();
@@ -99,7 +99,7 @@ await using (var scope = app.Services.CreateAsyncScope())
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         await mediator.Send(new SeedDataCommand());
     }
-    else if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+    else if (app.Environment.IsStaging() || app.Environment.IsProduction())
     {
         await applicationDbContext.Database.MigrateAsync();
     }
