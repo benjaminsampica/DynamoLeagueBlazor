@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
+    // Replace in memory when W11 SQL server works.
     options.UseInMemoryDatabase("ReplaceMe");
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
@@ -90,7 +91,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsEnvironment("Local"))
     {
         await applicationDbContext.Database.EnsureDeletedAsync();
         await applicationDbContext.Database.EnsureCreatedAsync();
@@ -98,7 +99,7 @@ await using (var scope = app.Services.CreateAsyncScope())
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         await mediator.Send(new SeedDataCommand());
     }
-    else if (app.Environment.IsProduction())
+    else if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     {
         await applicationDbContext.Database.MigrateAsync();
     }

@@ -15,14 +15,11 @@ public class EmailSender : IEmailSender
 
     public async Task SendEmailAsync(string email, string subject, string message)
     {
-        var mimeMessage = new MimeMessage();
+        using var mimeMessage = new MimeMessage();
 
         mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
-
         mimeMessage.To.Add(new MailboxAddress(string.Empty, email));
-
         mimeMessage.Subject = subject;
-
         mimeMessage.Body = new TextPart("html")
         {
             Text = message
@@ -33,7 +30,6 @@ public class EmailSender : IEmailSender
         client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
         await client.ConnectAsync(_emailSettings.MailServer);
-
         await client.AuthenticateAsync(_emailSettings.Sender, _emailSettings.Password);
 
         await client.SendAsync(mimeMessage);
