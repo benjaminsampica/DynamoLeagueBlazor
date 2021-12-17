@@ -11,10 +11,8 @@ on:
       - '**/README.md'
 
 jobs:
-  build-publish:
-
+  pipeline:
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -31,26 +29,14 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -c Release -o 'drop' 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: dynamoleague
-        path: drop
-      
-  web-deploy:
-    name: Deploy
-    runs-on: windows-latest
-    needs: [build-publish]
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: dynamoleague
     - name: Deploy
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      if: github.ref == 'refs/heads/main'
       with:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        local-dir: '/'
-        server-dir: 'dynamoleague/'
+        local-dir: '/drop'
+        server-dir: '/'
         dry-run: true
+    
