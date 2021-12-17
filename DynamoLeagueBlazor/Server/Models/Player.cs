@@ -2,15 +2,13 @@
 
 public record Player : BaseEntity
 {
-    public Player(string playerKey, string name, string position, string headShot)
+    public Player(string name, string position, string headShot)
     {
-        PlayerKey = playerKey;
         Name = name;
         Position = position;
         HeadShot = headShot;
     }
 
-    public string PlayerKey { get; private set; }
     public string Name { get; private set; }
     public string Position { get; private set; }
     public string HeadShot { get; private set; }
