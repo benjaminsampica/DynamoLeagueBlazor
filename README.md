@@ -1,3 +1,5 @@
+[![.NET](https://github.com/benjaminsampica/DynamoLeagueBlazor/actions/workflows/dotnet.yml/badge.svg)](https://github.com/benjaminsampica/DynamoLeagueBlazor/actions/workflows/dotnet.yml)
+
 # Introduction
 
 Dynamo League is a fantasy football league based off the Yahoo fantasy football leagues with heavily customized rulesets. 
