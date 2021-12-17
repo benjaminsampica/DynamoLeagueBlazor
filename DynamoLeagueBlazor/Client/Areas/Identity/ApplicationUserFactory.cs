@@ -39,12 +39,12 @@ public class ApplicationUserFactory
                     {
                         foreach (var role in roles.EnumerateArray())
                         {
-                            identity.AddClaim(new Claim(options.RoleClaim, role.GetString()));
+                            identity.AddClaim(new Claim(options.RoleClaim, role.GetString() ?? string.Empty));
                         }
                     }
                     else
                     {
-                        identity.AddClaim(new Claim(options.RoleClaim, roles.GetString()));
+                        identity.AddClaim(new Claim(options.RoleClaim, roles.GetString() ?? string.Empty));
                     }
                 }
             }

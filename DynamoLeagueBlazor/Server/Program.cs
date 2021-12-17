@@ -54,7 +54,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>());
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"))
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
     .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 

@@ -98,7 +98,7 @@ namespace DynamoLeagueBlazor.Server.Areas.Identity.Pages.Account
         }
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public void OnGet(string returnUrl = null)
         {
             SetPageModel(returnUrl);
         }
