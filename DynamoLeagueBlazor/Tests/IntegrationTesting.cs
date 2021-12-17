@@ -18,10 +18,17 @@ namespace DynamoLeagueBlazor.Tests;
 public class IntegrationTesting
 {
     private static Checkpoint _checkpoint = null!;
+    private static IConfiguration _configuration = null!;
 
     [OneTimeSetUp]
-    public async Task RunBeforeAnyTestsAsync()
+    public void RunBeforeAnyTests()
     {
+        _configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables()
+                .Build();
+
         _checkpoint = new Checkpoint
         {
             TablesToIgnore = new[] { "__EFMigrationsHistory" }
@@ -30,8 +37,7 @@ public class IntegrationTesting
 
     public static async Task ResetStateAsync()
     {
-        // TODO: Setup localdb when its working on W11
-        //await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
     internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
@@ -67,7 +73,8 @@ public class IntegrationTesting
             options.Invoke(clientOptions);
         }
 
-        var application = new TestWebApplicationFactory();
+        var application = new TestWebApplicationFactory(_configuration);
+        _configuration = application.Services.GetRequiredService<IConfiguration>();
 
         return application;
     }
@@ -75,15 +82,20 @@ public class IntegrationTesting
 
 internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
+    private readonly IConfiguration _configuration;
+
+    public TestWebApplicationFactory(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Test");
 
         builder.ConfigureAppConfiguration((builderContext, config) =>
         {
-            config.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .AddEnvironmentVariables();
+            config.AddConfiguration(_configuration);
         });
 
         builder.ConfigureServices(async services =>
