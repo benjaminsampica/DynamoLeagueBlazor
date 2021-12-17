@@ -35,10 +35,6 @@ public class IntegrationTesting
             TablesToIgnore = new[] { "__EFMigrationsHistory" }
         };
 
-        // Hack for migrations on GitHub Actions timing out.
-        const string TimeoutEnvironmentKey = "DOTNET_HOST_FACTORY_RESOLVER_DEFAULT_TIMEOUT_IN_SECONDS";
-        Environment.SetEnvironmentVariable(TimeoutEnvironmentKey, "30");
-
         // Create the database.
         var _ = new TestWebApplicationFactory(_configuration).CreateClient();
     }
