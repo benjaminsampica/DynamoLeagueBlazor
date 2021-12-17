@@ -101,14 +101,14 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
             config.AddConfiguration(_configuration);
         });
 
-        builder.ConfigureServices(async services =>
+        builder.ConfigureServices(services =>
         {
             var serviceProvider = services.BuildServiceProvider();
 
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            await dbContext.Database.MigrateAsync();
+            dbContext.Database.Migrate();
         });
     }
 }

@@ -6,6 +6,10 @@ namespace DynamoLeague.Business.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bids_FreeAgents_FreeAgentId",
+                table: "Bids");
+
             migrationBuilder.DropTable(
                 name: "FreeAgents");
 
