@@ -44,7 +44,8 @@ internal class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var player = await application.FindAsync<Player>(1);
+        var player = await application.FirstOrDefaultAsync<Player>();
+        player.Should().NotBeNull();
         player!.EndOfFreeAgency.Should().NotBeNull();
     }
 
@@ -63,7 +64,8 @@ internal class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var player = await application.FindAsync<Player>(1);
+        var player = await application.FirstOrDefaultAsync<Player>();
+        player.Should().NotBeNull();
         player!.EndOfFreeAgency.Should().BeNull();
     }
 }

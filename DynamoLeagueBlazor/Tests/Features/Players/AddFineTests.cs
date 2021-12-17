@@ -47,7 +47,7 @@ internal class AddFineTests : IntegrationTestBase
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var fine = await application.FindAsync<Fine>(1);
+        var fine = await application.FirstOrDefaultAsync<Fine>();
         fine.Should().NotBeNull();
         fine!.PlayerId.Should().Be(stubRequest.PlayerId);
         fine.Status.Should().BeFalse();
