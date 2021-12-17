@@ -1,4 +1,6 @@
-﻿namespace DynamoLeagueBlazor.Server.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DynamoLeagueBlazor.Server.Models;
 
 public record Fine : BaseEntity
 {
@@ -9,6 +11,7 @@ public record Fine : BaseEntity
         PlayerId = playerId;
     }
 
+    [Column(TypeName = "decimal(18,0)")]
     public decimal FineAmount { get; set; }
     public bool Status { get; set; }
     public DateTime FineDate { get; set; } = DateTime.Now;

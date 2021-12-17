@@ -15,11 +15,9 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    // Replace in memory when W11 SQL server works.
-    options.UseInMemoryDatabase("ReplaceMe");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -93,15 +91,16 @@ await using (var scope = app.Services.CreateAsyncScope())
 
     if (app.Environment.IsDevelopment())
     {
-        await applicationDbContext.Database.EnsureDeletedAsync();
-        await applicationDbContext.Database.EnsureCreatedAsync();
+        //await applicationDbContext.Database.EnsureDeletedAsync();
+        //await applicationDbContext.Database.EnsureCreatedAsync();
 
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        await mediator.Send(new SeedDataCommand());
+        //var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        //await mediator.Send(new SeedDataCommand());
+        await applicationDbContext.Database.MigrateAsync();
     }
     else if (app.Environment.IsStaging() || app.Environment.IsProduction())
     {
-        await applicationDbContext.Database.MigrateAsync();
+        //await applicationDbContext.Database.MigrateAsync();
     }
 }
 
