@@ -105,28 +105,28 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
             config.AddConfiguration(_configuration);
         });
 
-        builder.ConfigureServices(async services =>
+        builder.ConfigureServices(services =>
         {
             var serviceProvider = services.BuildServiceProvider();
 
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            await dbContext.Database.MigrateAsync();
+            dbContext.Database.Migrate();
         });
     }
 }
 
 internal static class IntegrationTestExtensions
 {
-    internal static async Task<TEntity?> FindAsync<TEntity>(this WebApplicationFactory<Program> application, int id)
-    where TEntity : class
+    internal static async Task<TEntity?> FirstOrDefaultAsync<TEntity>(this WebApplicationFactory<Program> application)
+        where TEntity : class
     {
         using var scope = application.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        return await context.FindAsync<TEntity>(id);
+        return await context.Set<TEntity>().FirstOrDefaultAsync();
     }
 
     internal static async Task AddAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
