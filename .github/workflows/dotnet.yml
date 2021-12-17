@@ -30,7 +30,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c Release -o 'drop'
+      run: dotnet publish '**/*.Server.csproj' -c Release -o 'drop' 
     - uses: actions/upload-artifact@v2
       with:
         name: dynamoleague
