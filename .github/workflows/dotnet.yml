@@ -19,10 +19,6 @@ jobs:
         dotnet-version: 6.0.x
     - name: Install WASM
       run: dotnet workload install wasm-tools 
-    - name: Install LocalDb
-      uses: potatoqualitee/mssqlsuite@v1
-      with:
-        install: localdb
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
