@@ -48,8 +48,8 @@ jobs:
     - name: Deploy
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
-        server: ftp.samkirkland.com
-        username: morkusporkus-001
+        server: win5184.site4now.net
+        username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         local-dir: '/'
         server-dir: 'dynamoleague/'
