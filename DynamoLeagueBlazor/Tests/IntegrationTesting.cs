@@ -78,7 +78,6 @@ public class IntegrationTesting
         }
 
         var application = new TestWebApplicationFactory(_configuration);
-        _configuration = application.Services.GetRequiredService<IConfiguration>();
 
         return application;
     }
