@@ -20,6 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
+builder.Services.AddDbContextFactory<ApplicationDbContext>(lifetime: ServiceLifetime.Scoped);
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -91,16 +93,16 @@ await using (var scope = app.Services.CreateAsyncScope())
 
     if (app.Environment.IsDevelopment())
     {
-        //await applicationDbContext.Database.EnsureDeletedAsync();
-        //await applicationDbContext.Database.EnsureCreatedAsync();
+        await applicationDbContext.Database.EnsureDeletedAsync();
+        await applicationDbContext.Database.EnsureCreatedAsync();
 
-        //var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        //await mediator.Send(new SeedDataCommand());
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(new SeedDataCommand());
         await applicationDbContext.Database.MigrateAsync();
     }
     else if (app.Environment.IsStaging() || app.Environment.IsProduction())
     {
-        //await applicationDbContext.Database.MigrateAsync();
+        await applicationDbContext.Database.MigrateAsync();
     }
 }
 

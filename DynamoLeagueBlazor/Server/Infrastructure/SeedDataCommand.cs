@@ -2,6 +2,7 @@
 using DynamoLeagueBlazor.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure;
 
@@ -24,65 +25,79 @@ public class Handler : IRequestHandler<SeedDataCommand>
     {
         await SeedIdentityDataAsync();
 
-        await SeedTeamDataAsync(cancellationToken);
+        await SeedDataAsync(cancellationToken);
 
         return Unit.Value;
     }
 
     private async Task SeedIdentityDataAsync()
     {
-        var adminRole = new ApplicationRole(ApplicationRole.Admin);
-        await _roleManager.CreateAsync(adminRole);
+        if (!await _roleManager.RoleExistsAsync(ApplicationRole.Admin))
+        {
+            var adminRole = new ApplicationRole(ApplicationRole.Admin);
+            await _roleManager.CreateAsync(adminRole);
+        }
+        if (!await _roleManager.RoleExistsAsync(ApplicationRole.User))
+        {
+            var userRole = new ApplicationRole(ApplicationRole.User);
+            await _roleManager.CreateAsync(userRole);
+        }
 
-        var userRole = new ApplicationRole(ApplicationRole.User);
-        await _roleManager.CreateAsync(userRole);
+        if (await _userManager.FindByEmailAsync("benjamin.sampica@gmail.com") is null)
+        {
+            var user = new ApplicationUser("benjamin.sampica@gmail.com", 1) { EmailConfirmed = true };
+            await _userManager.CreateAsync(user, "hunter2");
 
-        var user = new ApplicationUser("benjamin.sampica@gmail.com", 1) { EmailConfirmed = true };
-        await _userManager.CreateAsync(user, "hunter2");
-
-        await _userManager.AddToRoleAsync(user, ApplicationRole.Admin);
+            await _userManager.AddToRoleAsync(user, ApplicationRole.Admin);
+        }
     }
 
-    private async Task SeedTeamDataAsync(CancellationToken cancellationToken)
+    private async Task SeedDataAsync(CancellationToken cancellationToken)
     {
-        var teams = new List<Team>
+        if (!await _dbContext.Teams.AnyAsync(cancellationToken))
         {
-            new Team("390.l.40360.t.1", "Space Force", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.2", "The Donald", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.3", "Big Chief no Fart", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.4", "Altoona Tunafish", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.5", "Can't Fine This", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.6", "Finkle Einhorn", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.7", "J.J. Mafia", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.8", "Natty Lite", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.9", "Starts With a W", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-            new Team("390.l.40360.t.10", "Magic SKOL Bus", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg")
-        };
-        _dbContext.Teams.AddRange(teams);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        for (int i = 1; i < 250; i++)
-        {
-            var player = new Player("390.p.100001", "Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
+            var teams = new List<Team>
             {
-                TeamId = new Random().Next(1, 10)
+                new Team("390.l.40360.t.1", "Space Force", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.2", "The Donald", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.3", "Big Chief no Fart", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.4", "Altoona Tunafish", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.5", "Can't Fine This", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.6", "Finkle Einhorn", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.7", "J.J. Mafia", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.8", "Natty Lite", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.9", "Starts With a W", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
+                new Team("390.l.40360.t.10", "Magic SKOL Bus", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg")
             };
+            _dbContext.Teams.AddRange(teams);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
 
-            if (i % 2 == 0)
+        if (!await _dbContext.Players.AnyAsync(cancellationToken))
+        {
+            for (int i = 1; i < 250; i++)
             {
-                player.SetToRostered(DateTime.Today.AddYears(1), 1);
-
-                if (i % 10 == 0)
+                var player = new Player("390.p.100001", "Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
                 {
-                    player.SetToUnrostered();
-                }
-            }
-            else
-            {
-                player.SetToUnsigned();
-            }
+                    TeamId = new Random().Next(1, 10)
+                };
 
-            _dbContext.Players.Add(player);
+                if (i % 2 == 0)
+                {
+                    player.SetToRostered(DateTime.Today.AddYears(1), 1);
+
+                    if (i % 10 == 0)
+                    {
+                        player.SetToUnrostered();
+                    }
+                }
+                else
+                {
+                    player.SetToUnsigned();
+                }
+
+                _dbContext.Players.Add(player);
+            }
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);

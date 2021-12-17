@@ -9,7 +9,29 @@
 
 @if(_result is null)
 {
-    <MudText Typo=Typo.h3>Nothing to show...</MudText>
+    <MudGrid>
+        @for(int i = 0; i <= 10; i++)
+        {
+        <MudItem lg=4 xs=12>
+            <MudCard>
+                <MudCardHeader Class="mud-card-header-override">
+                    <CardHeaderAvatar>
+                        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="50px" Height="50px" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudSkeleton SkeletonType="SkeletonType.Text" Width="200px" Height="20px"></MudSkeleton>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardActions>
+                    @for(int i = 0; i <= 3; i++)
+                    {
+                        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="50px" Height="30px" />
+                    }    
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        }
+    </MudGrid>
 }
 else
 {

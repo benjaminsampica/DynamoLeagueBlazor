@@ -35,10 +35,10 @@ public record ListQuery : IRequest<TeamListResult> { }
 
 public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContext;
     private readonly IMapper _mapper;
 
-    public ListHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public ListHandler(IDbContextFactory<ApplicationDbContext> dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -46,13 +46,19 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 
     public async Task<TeamListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
-        var teams = await _dbContext.Teams
-            .ProjectTo<TeamItem>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
-
-        foreach (var team in teams)
+        List<TeamItem> teams = new();
+        using (var dbContext = await _dbContext.CreateDbContextAsync(cancellationToken))
         {
-            var rosteredPlayersQuery = _dbContext.Players
+            teams = await dbContext.Teams
+                .ProjectTo<TeamItem>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        };
+
+        await Parallel.ForEachAsync(teams, async (team, cancellationToken) =>
+        {
+            using var dbContext = await _dbContext.CreateDbContextAsync(cancellationToken);
+
+            var rosteredPlayersQuery = dbContext.Players
                 .Where(p => p.TeamId == team.Id)
                 .WhereIsRostered();
             var rosteredPlayerCount = await rosteredPlayersQuery.CountAsync(cancellationToken);
@@ -60,7 +66,7 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 
             var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
-            var unrosteredPlayersQuery = _dbContext.Players
+            var unrosteredPlayersQuery = dbContext.Players
                 .Where(p => p.TeamId == team.Id)
                 .WhereIsUnrostered();
             var unrosteredPlayerCount = await unrosteredPlayersQuery.CountAsync(cancellationToken);
@@ -68,7 +74,7 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 
             var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
 
-            var unsignedPlayersQuery = _dbContext.Players
+            var unsignedPlayersQuery = dbContext.Players
                 .Where(p => p.TeamId == team.Id)
                 .WhereIsUnsigned();
             var unsignedPlayerCount = await unsignedPlayersQuery.CountAsync(cancellationToken);
@@ -77,7 +83,7 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
             var unsignedPlayersContractValue = await unsignedPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
             team.CapSpace = CapSpaceUtilities.CalculateCurrentCapSpace(rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue).ToString("C0");
-        }
+        });
 
         return new TeamListResult
         {
