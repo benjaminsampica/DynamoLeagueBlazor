@@ -22,7 +22,7 @@ public class IntegrationTesting
     private static IConfiguration _configuration = null!;
 
     [OneTimeSetUp]
-    public void RunBeforeAnyTests()
+    public async Task RunBeforeAnyTestsAsync()
     {
         _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -35,8 +35,14 @@ public class IntegrationTesting
             TablesToIgnore = new[] { "__EFMigrationsHistory" }
         };
 
-        // Create the database.
-        var _ = new TestWebApplicationFactory(_configuration).CreateClient();
+        var application = new TestWebApplicationFactory(_configuration);
+
+        var serviceProvider = application.Services;
+
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        await dbContext.Database.MigrateAsync();
     }
 
     public static async Task ResetStateAsync()
@@ -99,16 +105,6 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureAppConfiguration((builderContext, config) =>
         {
             config.AddConfiguration(_configuration);
-        });
-
-        builder.ConfigureServices(services =>
-        {
-            var serviceProvider = services.BuildServiceProvider();
-
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            dbContext.Database.Migrate();
         });
     }
 }
