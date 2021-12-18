@@ -77,6 +77,15 @@ public record Player : BaseEntity
 
         return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
     }
+
+    public Bid AddBid(int amount, int teamIdOfBidder)
+    {
+        var bid = new Bid(amount, teamIdOfBidder, Id);
+
+        Bids.Add(bid);
+
+        return bid;
+    }
 }
 
 public static class PlayerExtensions

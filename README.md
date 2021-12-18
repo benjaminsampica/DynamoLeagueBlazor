@@ -7,7 +7,7 @@ It is comprised of two separate stand-alone applications - a client UI written w
 
 # Getting Started
 
-Running & Contributing to Dynamo League Blazor requires the following:
+Running & contributing to Dynamo League Blazor requires the following:
 
 - .NET 6 SDK
 - IIS Express

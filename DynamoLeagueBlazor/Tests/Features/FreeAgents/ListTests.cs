@@ -40,12 +40,10 @@ internal class ListTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
-        var mockBid = CreateFakeBid();
-        mockBid.TeamId = mockTeam.Id;
-
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        mockPlayer.Bids.Add(mockBid);
+        var bidAmount = int.MaxValue;
+        mockPlayer.AddBid(bidAmount, mockTeam.Id);
         var biddingClosesOn = DateTime.MaxValue;
         mockPlayer.SetToFreeAgent(biddingClosesOn);
         await application.AddAsync(mockPlayer);
@@ -60,7 +58,7 @@ internal class ListTests : IntegrationTestBase
         var freeAgent = result.FreeAgents.First();
         freeAgent.PlayerPosition.Should().Be(mockPlayer.Position);
         freeAgent.PlayerTeam.Should().Be(mockTeam.TeamName);
-        freeAgent.HighestBid.Should().Be(mockBid.Amount.ToString("C0"));
+        freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
         freeAgent.BiddingEnds.Should().Be(biddingClosesOn.ToShortDateString());
     }
 }
