@@ -1,11 +1,11 @@
 ﻿<MudDrawer @bind-Open="Show" Elevation="3" Variant=DrawerVariant.Persistent Anchor=Anchor.End ClipMode="DrawerClipMode.Always">
     <MudNavMenu>
         <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
-        <MudNavLink Href="/teams" Match=NavLinkMatch.Prefix>Teams</MudNavLink>
+        <MudNavLink Href="/teams">Teams</MudNavLink>
         <MudNavLink Href="/players">Players</MudNavLink>
         <MudNavLink Href="/fines">Fines</MudNavLink>
         <MudNavGroup Title="Free Agents" Expanded=false>
-            <MudNavLink Href="/bidding">Bidding</MudNavLink>
+            <MudNavLink Href="/freeagents">Bidding</MudNavLink>
             <MudNavLink Href="/offermatching">Offer Matching</MudNavLink>
         </MudNavGroup>
         <MudNavLink Href="/rules">Rules</MudNavLink>
