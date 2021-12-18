@@ -50,7 +50,9 @@ internal class FakeFactory
         var faker = new AutoFaker<Bid>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Player)
-            .Ignore(f => f.Team);
+            .Ignore(f => f.PlayerId)
+            .Ignore(f => f.Team)
+            .Ignore(f => f.TeamId);
 
         return faker.Generate();
     }
