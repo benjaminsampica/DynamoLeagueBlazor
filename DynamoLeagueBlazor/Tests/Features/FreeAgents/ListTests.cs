@@ -41,7 +41,6 @@ internal class ListTests : IntegrationTestBase
         await application.AddAsync(mockTeam);
 
         var mockBid = CreateFakeBid();
-        await application.AddAsync(mockBid);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
