@@ -43,13 +43,13 @@ internal class ListTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
 
-        var bidAmount = int.MaxValue;
-        var bid = mockPlayer.AddBid(bidAmount, mockTeam.Id);
-        await application.AddAsync(bid);
-
         var biddingClosesOn = DateTime.MaxValue;
         mockPlayer.SetToFreeAgent(biddingClosesOn);
         await application.AddAsync(mockPlayer);
+
+        var bidAmount = int.MaxValue;
+        mockPlayer.AddBid(bidAmount, mockTeam.Id);
+        await application.UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
