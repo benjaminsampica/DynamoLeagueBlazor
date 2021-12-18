@@ -64,6 +64,7 @@ public class ListMappingProfile : Profile
     {
         CreateMap<Player, FreeAgentListResult.FreeAgentItem>()
             .ForMember(d => d.PlayerTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty))
+            .ForMember(d => d.PlayerPosition, mo => mo.MapFrom(s => s.Position))
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.HeadShot))
             .ForMember(d => d.HighestBid, mo => mo.MapFrom(s =>
