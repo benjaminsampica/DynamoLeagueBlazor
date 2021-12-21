@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -57,9 +57,9 @@ public class AddFineHandler : IRequestHandler<AddFineQuery, int>
     }
 }
 
-public class AddMappingProfile : Profile
+public class AddFineMappingProfile : Profile
 {
-    public AddMappingProfile()
+    public AddFineMappingProfile()
     {
         CreateMap<AddFineRequest, AddFineQuery>();
     }

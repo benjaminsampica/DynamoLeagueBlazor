@@ -5,36 +5,52 @@
     @_title
 </Title>
 
-<MudAlert Severity=Severity.Info ShowCloseIcon=false>
-    All bidding ends at 10 p.m. CT on the bidding end date.
-</MudAlert>
+<MudGrid>
+    <MudItem xs=12>
+        <MudAlert Severity=Severity.Info ShowCloseIcon=false>
+            All bidding ends at 10 p.m. CT on the bidding end date.
+        </MudAlert>
+    </MudItem>
+    <MudItem xs=12>
+        <MudTable Items="_result.FreeAgents" Dense=true Loading=_loading Filter="new Func<FreeAgentItem, bool>(FilterFunc)">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">@_title</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Actions</MudTh>
+                <MudTh>@nameof(FreeAgentItem.PlayerName)</MudTh>
+                <MudTh>@nameof(FreeAgentItem.PlayerPosition)</MudTh>
+                <MudTh>@nameof(FreeAgentItem.PlayerTeam)</MudTh>
+                <MudTh>Bidding Ends</MudTh>
+                <MudTh>Highest Bid</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    @{
+                        var href = $"freeagents/{context.PlayerId}";
+                    }
+                    <MudIconButton Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" Link="@href"/>
+                </MudTd>
+                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerName)>
+                    <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
+                </MudTd>
+                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerPosition)>@context.PlayerPosition</MudTd>
+                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerTeam)>@context.PlayerTeam</MudTd>
+                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds</MudTd>
+                <MudTd DataLabel="Highest Bid">
+                    @context.HighestBid
+                    @if (context.CurrentUserIsHighestBidder)
+                    {
+                        <MudBadge Color=Color.Success>You!</MudBadge>
+                    }
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>
 
-<MudTable Items="_result.FreeAgents" Dense=true Loading=_loading Filter="new Func<FreeAgentItem, bool>(FilterFunc)">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">@_title</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Actions</MudTh>
-        <MudTh>@nameof(FreeAgentItem.PlayerName)</MudTh>
-        <MudTh>@nameof(FreeAgentItem.PlayerPosition)</MudTh>
-        <MudTh>@nameof(FreeAgentItem.PlayerTeam)</MudTh>
-        <MudTh>Bidding Ends</MudTh>
-        <MudTh>Highest Bid</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Actions">
-        </MudTd>
-        <MudTd DataLabel=@nameof(FreeAgentItem.PlayerName)>
-            <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
-        </MudTd>
-        <MudTd DataLabel=@nameof(FreeAgentItem.PlayerPosition)>@context.PlayerPosition</MudTd>
-        <MudTd DataLabel=@nameof(FreeAgentItem.PlayerTeam)>@context.PlayerTeam</MudTd>
-        <MudTd DataLabel="Bidding Closes On">@context.BiddingEnds</MudTd>
-        <MudTd DataLabel="Highest Bid">@context.HighestBid</MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>

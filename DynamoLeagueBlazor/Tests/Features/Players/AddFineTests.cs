@@ -1,6 +1,6 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;

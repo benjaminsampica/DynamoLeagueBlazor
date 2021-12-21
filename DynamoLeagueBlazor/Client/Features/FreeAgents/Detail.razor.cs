@@ -1,37 +1,30 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Players;
+namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
 
-public partial class AddFine : IDisposable
+[Authorize]
+public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int PlayerId { get; set; }
+    [Parameter] public int PlayerId { get; set; }
 
-    private AddFineRequest _form = null!;
-    private FineDetailResult _fineDetail = new();
+    private FreeAgentDetailResult? _result;
+    private AddBidRequest _form = new();
     private bool _processingForm;
+    private const string _title = "Free Agent Details";
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _form = new AddFineRequest { PlayerId = PlayerId };
-
-        await GetPlayerFineDetailsAsync();
-    }
-
-    private async Task GetPlayerFineDetailsAsync()
-    {
         try
         {
-            var queryString = QueryHelpers.AddQueryString("players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
-            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
+            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"freeagents/{PlayerId}", _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -45,7 +38,7 @@ public partial class AddFine : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("players/addfine", _form);
+            var response = await HttpClient.PostAsJsonAsync("freeagents/addbid", _form);
 
             if (response.IsSuccessStatusCode)
             {
@@ -62,10 +55,7 @@ public partial class AddFine : IDisposable
         }
 
         _processingForm = false;
-        MudDialogInstance.Close();
     }
-
-    private void Cancel() => MudDialogInstance.Close();
 
     public void Dispose()
     {

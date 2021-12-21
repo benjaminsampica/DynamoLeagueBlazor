@@ -1,5 +1,6 @@
-﻿using DynamoLeagueBlazor.Server.Areas.Identity;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,14 +33,14 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
     private async Task SeedIdentityDataAsync()
     {
-        if (!await _roleManager.RoleExistsAsync(ApplicationRole.Admin))
+        if (!await _roleManager.RoleExistsAsync(RoleName.Admin))
         {
-            var adminRole = new ApplicationRole(ApplicationRole.Admin);
+            var adminRole = new ApplicationRole(RoleName.Admin);
             await _roleManager.CreateAsync(adminRole);
         }
-        if (!await _roleManager.RoleExistsAsync(ApplicationRole.User))
+        if (!await _roleManager.RoleExistsAsync(RoleName.User))
         {
-            var userRole = new ApplicationRole(ApplicationRole.User);
+            var userRole = new ApplicationRole(RoleName.User);
             await _roleManager.CreateAsync(userRole);
         }
 
@@ -48,7 +49,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
             var user = new ApplicationUser("benjamin.sampica@gmail.com", 1) { EmailConfirmed = true };
             await _userManager.CreateAsync(user, "hunter2");
 
-            await _userManager.AddToRoleAsync(user, ApplicationRole.Admin);
+            await _userManager.AddToRoleAsync(user, RoleName.Admin);
         }
     }
 

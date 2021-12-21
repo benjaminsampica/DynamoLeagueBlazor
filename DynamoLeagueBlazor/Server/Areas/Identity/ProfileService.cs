@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
+using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using IdentityModel;
 
 namespace DynamoLeagueBlazor.Server.Areas.Identity;

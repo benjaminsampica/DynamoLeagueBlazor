@@ -1,5 +1,5 @@
-﻿using DynamoLeagueBlazor.Server.Areas.Identity;
-using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
 
-[Authorize(Roles = ApplicationRole.Admin)]
+[Authorize(Roles = RoleName.Admin)]
 [ApiController]
 [Route("admin/seasonstatus")]
 public class SeasonStatusController : ControllerBase

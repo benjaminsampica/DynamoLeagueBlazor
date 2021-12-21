@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DynamoLeagueBlazor.Shared.Infastructure;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin;
 
+[Authorize(Roles = RoleName.Admin)]
 public partial class StartSeason
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;

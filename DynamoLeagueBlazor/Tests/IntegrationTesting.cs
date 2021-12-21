@@ -1,5 +1,6 @@
-﻿using DynamoLeagueBlazor.Server.Areas.Identity;
-using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -146,11 +147,10 @@ internal static class IntegrationTestExtensions
     }
 }
 
-internal record TestHttpResponse<TContent>(HttpResponseMessage Message, TContent? Content) where TContent : class;
-
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string AuthenticationName = "User";
+    public const int TeamId = 1;
 
     public UserAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
@@ -160,7 +160,11 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new[] { new Claim(ClaimTypes.Name, "Test user"), new Claim(ClaimTypes.Role, ApplicationRole.User) };
+        var claims = new[] {
+            new Claim(ClaimTypes.Name, "Test user"),
+            new Claim(ClaimTypes.Role, RoleName.User),
+            new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
+        };
         var identity = new ClaimsIdentity(claims, AuthenticationName);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationName);
@@ -174,6 +178,7 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
 internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string AuthenticationName = "Admin";
+    public const int TeamId = 1;
 
     public AdminAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
@@ -183,7 +188,11 @@ internal class AdminAuthenticationHandler : AuthenticationHandler<Authentication
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new[] { new Claim(ClaimTypes.Name, "Test user"), new Claim(ClaimTypes.Role, ApplicationRole.Admin) };
+        var claims = new[] {
+            new Claim(ClaimTypes.Name, "Test user"),
+            new Claim(ClaimTypes.Role, RoleName.Admin),
+            new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
+        };
         var identity = new ClaimsIdentity(claims, AuthenticationName);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationName);

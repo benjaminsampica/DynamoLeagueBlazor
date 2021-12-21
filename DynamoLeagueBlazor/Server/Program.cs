@@ -1,7 +1,8 @@
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -93,17 +94,12 @@ await using (var scope = app.Services.CreateAsyncScope())
 
     if (app.Environment.IsDevelopment())
     {
-        await applicationDbContext.Database.EnsureDeletedAsync();
-        await applicationDbContext.Database.EnsureCreatedAsync();
-
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         await mediator.Send(new SeedDataCommand());
-        await applicationDbContext.Database.MigrateAsync();
+
     }
-    else if (app.Environment.IsStaging() || app.Environment.IsProduction())
-    {
-        await applicationDbContext.Database.MigrateAsync();
-    }
+
+    await applicationDbContext.Database.MigrateAsync();
 }
 
 await app.RunAsync();
