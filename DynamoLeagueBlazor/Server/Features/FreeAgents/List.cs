@@ -73,6 +73,7 @@ public class ListMappingProfile : Profile
         int currentUserTeamId = 0;
 
         CreateMap<Player, FreeAgentListResult.FreeAgentItem>()
+            .ForMember(d => d.PlayerId, mo => mo.MapFrom(s => s.Id))
             .ForMember(d => d.PlayerTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty))
             .ForMember(d => d.CurrentUserIsHighestBidder, mo => mo.MapFrom(s => s.TeamId == currentUserTeamId))
             .ForMember(d => d.PlayerPosition, mo => mo.MapFrom(s => s.Position))
