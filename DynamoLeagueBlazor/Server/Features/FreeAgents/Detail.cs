@@ -23,8 +23,8 @@ public class DetailController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{playerId}")]
-    public async Task<FreeAgentDetailResult> GetAsync(DetailQuery query)
+    [HttpGet("{PlayerId}")]
+    public async Task<FreeAgentDetailResult> GetAsync([FromRoute] DetailQuery query)
     {
         return await _mediator.Send(query);
     }
@@ -70,7 +70,8 @@ public class DetailMappingProfile : Profile
     public DetailMappingProfile()
     {
         CreateMap<Player, FreeAgentDetailResult>()
-            .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()));
+            .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))

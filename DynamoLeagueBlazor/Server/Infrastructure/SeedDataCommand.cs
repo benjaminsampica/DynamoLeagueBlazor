@@ -92,9 +92,14 @@ public class Handler : IRequestHandler<SeedDataCommand>
                         player.SetToUnrostered();
                     }
                 }
-                else
+                else if (i % 5 == 0)
                 {
                     player.SetToUnsigned();
+                }
+                else
+                {
+                    player.SetToRostered(DateTime.Today.AddYears(-1), 1);
+                    player.SetToFreeAgent(DateTime.Today.AddYears(1));
                 }
 
                 _dbContext.Players.Add(player);

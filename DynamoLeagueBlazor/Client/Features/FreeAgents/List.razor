@@ -20,9 +20,9 @@
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>Actions</MudTh>
-                <MudTh>@nameof(FreeAgentItem.PlayerName)</MudTh>
-                <MudTh>@nameof(FreeAgentItem.PlayerPosition)</MudTh>
-                <MudTh>@nameof(FreeAgentItem.PlayerTeam)</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>Position</MudTh>
+                <MudTh>Team</MudTh>
                 <MudTh>Bidding Ends</MudTh>
                 <MudTh>Highest Bid</MudTh>
             </HeaderContent>
@@ -33,17 +33,17 @@
                     }
                     <MudIconButton Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" Link="@href"/>
                 </MudTd>
-                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerName)>
+                <MudTd DataLabel="Player Name">
                     <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
                 </MudTd>
-                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerPosition)>@context.PlayerPosition</MudTd>
-                <MudTd DataLabel=@nameof(FreeAgentItem.PlayerTeam)>@context.PlayerTeam</MudTd>
+                <MudTd DataLabel="Player Position">@context.PlayerPosition</MudTd>
+                <MudTd DataLabel="Player Team">@context.PlayerTeam</MudTd>
                 <MudTd DataLabel="Bidding Ends">@context.BiddingEnds</MudTd>
                 <MudTd DataLabel="Highest Bid">
                     @context.HighestBid
                     @if (context.CurrentUserIsHighestBidder)
                     {
-                        <MudBadge Color=Color.Success>You!</MudBadge>
+                        <MudChip Color=Color.Success>You!</MudChip>
                     }
                 </MudTd>
             </RowTemplate>

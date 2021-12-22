@@ -10,7 +10,7 @@ public class FreeAgentDetailResult
     public string Team { get; set; }
     public string EndOfFreeAgency { get; set; }
 
-    public List<BidItem> Bids { get; set; } = new List<BidItem>();
+    public IEnumerable<BidItem> Bids { get; set; } = Enumerable.Empty<BidItem>();
 
     public class BidItem
     {

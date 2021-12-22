@@ -94,7 +94,6 @@ await using (var scope = app.Services.CreateAsyncScope())
     {
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         await mediator.Send(new SeedDataCommand());
-
     }
 
     await applicationDbContext.Database.MigrateAsync();
