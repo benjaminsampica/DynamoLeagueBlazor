@@ -40,11 +40,9 @@ jobs:
         Email.Password: ${{ secrets.email_password }}
     # Begin Automated Deployment
     - name: Create app_offline file
-      uses: Amadevus/pwsh-script@v2.0.1
+      shell: pwsh
       if: startsWith(github.ref, 'refs/tags/v')
-      with:
-        # PowerShell script to execute in Actions-hydrated context
-        script: |
+      run: |
           New-Item app_offline.html -ItemType File
           Set-Content app_offline.html `
           '<html xmlns="http://www.w3.org/1999/xhtml">
