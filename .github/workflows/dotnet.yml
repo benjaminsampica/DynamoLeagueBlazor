@@ -3,6 +3,8 @@ name: .NET
 on:
   push:
     branches: [ main ]
+    tags:
+    - 'v*'
     paths-ignore:
       - '**/README.md'
   pull_request:
@@ -32,10 +34,81 @@ jobs:
     - name: Variable Substitution
       uses: microsoft/variable-substitution@v1
       with:
-        files: '**/appsettings.json'
+        files: '**/drop/appsettings.json'
       env:
         ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
         Email.Password: ${{ secrets.email_password }}
+    - name: Create app_offline file
+      # You may pin to the exact commit or the version.
+      # uses: Amadevus/pwsh-script@1f1751bbf3d1a92127bfc6c32403283625880cbf
+      uses: Amadevus/pwsh-script@v2.0.1
+      with:
+        # PowerShell script to execute in Actions-hydrated context
+        script: |
+          New-Item app_offline.html -ItemType File `
+          Set-Content app_offline.html `
+          '<html xmlns="http://www.w3.org/1999/xhtml">
+          <head>
+              <title>
+                  Dynamo League - Site Maintenance
+              </title>
+              <style tyle="text/css">
+                  body {
+                      text-align: center;
+                      padding: 150px;
+                  }
+
+                  h1 {
+                      font-size: 50px;
+                  }
+
+                  body {
+                      font: 20px Helvetica, sans-serif;
+                      color: #333;
+                  }
+
+                  article {
+                      display: block;
+                      text-align: left;
+                      width: 650px;
+                      margin: 0 auto;
+                  }
+
+                  a {
+                      color: #dc8100;
+                      text-decoration: none;
+                  }
+
+                      a:hover {
+                          color: #333;
+                          text-decoration: none;
+                      }
+              </style>
+              <meta content="JavaScript" name="vs_defaultClientScript">
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+          </head>
+          <body>
+              <article>
+                  <h1>We&rsquo;ll be back soon!</h1>
+                  <div>
+                      <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p>
+                  </div>
+              </article>
+          </body>
+          </html>'
+    - name: Take App Offline
+      uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        server: win5184.site4now.net
+        username: ${{ secrets.ftp_username }}
+        password: ${{ secrets.ftp_password }}
+        local-dir: '/'
+        server-dir: '/'
+        exclude: |
+          **/drop/**
+        dry-run: true
     - name: Deploy to Prod
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       if: startsWith(github.ref, 'refs/tags/v')
@@ -46,4 +119,7 @@ jobs:
         local-dir: 'drop/'
         server-dir: '/'
         dry-run: true
-    
+    - name: Bring App Online
+      uses: JesseTG/rm@v1.0.0
+      with:
+        path: app_offline.html
