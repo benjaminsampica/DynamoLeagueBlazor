@@ -46,7 +46,7 @@ jobs:
         # PowerShell script to execute in Actions-hydrated context
         script: |
           New-Item app_offline.html -ItemType File
-          Set-Content app_offline.html
+          Set-Content app_offline.html `
           '<html xmlns="http://www.w3.org/1999/xhtml">
           <head>
               <title>
