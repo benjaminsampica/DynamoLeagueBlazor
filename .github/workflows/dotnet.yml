@@ -38,10 +38,10 @@ jobs:
       env:
         ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
         Email.Password: ${{ secrets.email_password }}
+    # Begin Automated Deployment
     - name: Create app_offline file
-      # You may pin to the exact commit or the version.
-      # uses: Amadevus/pwsh-script@1f1751bbf3d1a92127bfc6c32403283625880cbf
       uses: Amadevus/pwsh-script@v2.0.1
+      if: startsWith(github.ref, 'refs/tags/v')
       with:
         # PowerShell script to execute in Actions-hydrated context
         script: |
@@ -121,5 +121,6 @@ jobs:
         dry-run: true
     - name: Bring App Online
       uses: JesseTG/rm@v1.0.0
+      if: startsWith(github.ref, 'refs/tags/v')
       with:
         path: app_offline.html
