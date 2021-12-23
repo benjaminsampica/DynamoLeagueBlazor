@@ -102,7 +102,7 @@ jobs:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        local-dir: '/'
+        local-dir: 'DynamoLeagueBlazor/'
         server-dir: '/'
         exclude: |
           **/drop/**
