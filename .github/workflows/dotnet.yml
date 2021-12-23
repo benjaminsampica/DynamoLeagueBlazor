@@ -28,7 +28,14 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c Release -o 'drop' 
+      run: dotnet publish -c Release -o 'drop'
+    - name: Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: appsettings.json
+      env:
+        ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
+        Email.Password: ${{ secrets.email_password }}
     - name: Deploy to Prod
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       if: github.ref == 'refs/heads/main'
