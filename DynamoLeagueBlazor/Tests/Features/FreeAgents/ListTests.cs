@@ -42,9 +42,9 @@ internal class ListTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-
-        var biddingClosesOn = DateTime.MaxValue;
-        mockPlayer.SetToFreeAgent(biddingClosesOn);
+        mockPlayer.SetToRostered(DateTime.MinValue, int.MaxValue);
+        var biddingEnds = DateTime.MaxValue;
+        mockPlayer.SetToFreeAgent(biddingEnds);
         await application.AddAsync(mockPlayer);
 
         var bidAmount = int.MaxValue;
@@ -65,7 +65,7 @@ internal class ListTests : IntegrationTestBase
         freeAgent.PlayerTeam.Should().Be(mockTeam.TeamName);
         freeAgent.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShot);
         freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
-        freeAgent.BiddingEnds.Should().Be(biddingClosesOn.ToShortDateString());
+        freeAgent.BiddingEnds.Should().Be(biddingEnds.ToShortDateString());
         freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }
 }
