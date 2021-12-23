@@ -38,6 +38,14 @@ public class EmailSender : IEmailSender
     }
 }
 
+public class DevelopmentEmailSender : IEmailSender
+{
+    public Task SendEmailAsync(string email, string subject, string htmlMessage)
+    {
+        return Task.CompletedTask;
+    }
+}
+
 public class EmailSettings
 {
     public const string Email = "Email";

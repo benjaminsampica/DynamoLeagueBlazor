@@ -55,7 +55,16 @@ builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyCont
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
     .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
-builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddSingleton<IEmailSender, EmailSender>();
+}
+else
+{
+    builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
+}
+
 
 var app = builder.Build();
 
