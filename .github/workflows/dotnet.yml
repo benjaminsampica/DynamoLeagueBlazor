@@ -38,7 +38,7 @@ jobs:
         Email.Password: ${{ secrets.email_password }}
     - name: Deploy to Prod
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
-      if: github.ref == 'refs/heads/main'
+      if: startsWith(github.ref, 'refs/tags/v')
       with:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
