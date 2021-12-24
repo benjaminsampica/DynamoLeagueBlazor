@@ -101,7 +101,7 @@ public static class PlayerExtensions
 {
     public static IQueryable<Player> WhereIsRostered(this IQueryable<Player> players)
         => players.Where(p => p.Rostered
-            && p.ContractLength > DateTime.Today.Year
+            && p.ContractLength >= DateTime.Today.Year
             && p.EndOfFreeAgency == null);
     public static IQueryable<Player> WhereIsUnrostered(this IQueryable<Player> players)
         => players.Where(p => p.Rostered == false
