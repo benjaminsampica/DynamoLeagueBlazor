@@ -44,7 +44,7 @@ jobs:
       run: |
           New-Item offline_files -ItemType Directory
           New-Item offline_files/app_offline.html -ItemType File
-          Set-Content app_offline.html `
+          Set-Content offline_files/app_offline.html `
           '<html xmlns="http://www.w3.org/1999/xhtml">
           <head>
               <title>
