@@ -49,7 +49,7 @@ public class IntegrationTesting
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null, int userTeamId = 1)
         => CreateApplication(options)
             .WithWebHostBuilder(builder =>
             {
@@ -147,7 +147,7 @@ internal static class IntegrationTestExtensions
 
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AuthenticationName = "User";
+    public const string AuthenticationName = RoleName.User;
     public const int TeamId = 1;
 
     public UserAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -159,7 +159,7 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] {
-            new Claim(ClaimTypes.Name, "Test user"),
+            new Claim(ClaimTypes.Name, RandomString),
             new Claim(ClaimTypes.Role, RoleName.User),
             new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
         };
@@ -175,7 +175,7 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
 internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AuthenticationName = "Admin";
+    public const string AuthenticationName = RoleName.Admin;
     public const int TeamId = 1;
 
     public AdminAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -187,7 +187,7 @@ internal class AdminAuthenticationHandler : AuthenticationHandler<Authentication
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] {
-            new Claim(ClaimTypes.Name, "Test user"),
+            new Claim(ClaimTypes.Name, RandomString),
             new Claim(ClaimTypes.Role, RoleName.Admin),
             new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
         };
