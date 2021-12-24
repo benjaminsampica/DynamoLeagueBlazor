@@ -98,9 +98,7 @@ jobs:
         password: ${{ secrets.ftp_password }}
         local-dir: 'offline_files/'
         server-dir: '/'
-        dry-run: true
-        exclude: |
-          **/drop/**
+        exclude: **/drop/**
     - name: Deploy to Prod
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
@@ -109,10 +107,5 @@ jobs:
         password: ${{ secrets.ftp_password }}
         local-dir: 'drop/'
         server-dir: '/'
-        dry-run: true
-        exclude: |
-          **/offline_files/**
-    - name: Bring App Online
-      uses: JesseTG/rm@v1.0.0
-      with:
-        path: app_offline.html
+        dangerous-clean-slate: true
+        exclude: **/offline_files/**
