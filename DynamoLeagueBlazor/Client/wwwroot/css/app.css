@@ -1,16 +1,6 @@
 ﻿/* TODO: Add local version for offline */
 @import url('https://fonts.googleapis.com/css?family=Graduate|Open+Sans:300&display=swap');
 
-@keyframes spin-animation {
-    0% {
-        transform: rotate(360deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
-
 .grow {
     transition: all .2s ease-in-out;
 }
@@ -21,17 +11,6 @@
 
 .grow:hover .mud-card {
     box-shadow: 0px 0px 10px 0px rgba(89,74,226,0.55);
-}
-
-/* MudBlazor overrides */
-
-.mud-card-header .mud-card-header-actions {
-    align-self: initial !important;
-}
-
-.mud-nav-link-text {
-    font-family: "Graduate", sans-serif;
-    text-transform: uppercase;
 }
 
 html, body {
@@ -55,7 +34,7 @@ html, body {
 #loading > img {
     width: 80%;
     height: auto;
-    max-width: 900px;
+    max-width: 400px;
 }
 
 .loader {
@@ -75,4 +54,15 @@ html, body {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* MudBlazor overrides */
+
+.mud-card-header .mud-card-header-actions {
+    align-self: initial !important;
+}
+
+.mud-nav-link-text {
+    font-family: "Graduate", sans-serif;
+    text-transform: uppercase;
 }

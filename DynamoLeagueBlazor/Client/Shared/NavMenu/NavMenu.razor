@@ -1,4 +1,4 @@
-﻿<MudDrawer @bind-Open="Show" Elevation="3" Variant=DrawerVariant.Persistent Anchor=Anchor.End ClipMode="DrawerClipMode.Always">
+﻿<MudDrawer Open=Open Elevation="3" Variant=DrawerVariant.Temporary ClipMode=DrawerClipMode.Always Anchor=Anchor.End OpenChanged=@OnOpenChanged>
     <MudNavMenu>
         <MudNavLink Href="/" Match=NavLinkMatch.All>Dashboard</MudNavLink>
         <MudNavLink Href="/teams">Teams</MudNavLink>
@@ -17,11 +17,7 @@
 
 @code 
 {
-    [Parameter, EditorRequired] public bool Show { get; set; }
-
-    void DrawerToggle()
-    {
-        Show = !Show;
-    }
+    [Parameter, EditorRequired] public bool Open { get; set; }
+    [Parameter, EditorRequired] public EventCallback<bool> OnOpenChanged { get; set; }
 }
 
