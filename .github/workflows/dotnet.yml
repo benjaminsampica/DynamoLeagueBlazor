@@ -97,6 +97,7 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         local-dir: 'offline_files/'
+        dangerous-clean-slate: false
         server-dir: '/'
         exclude: | 
           **/drop/**
