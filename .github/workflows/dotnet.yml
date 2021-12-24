@@ -98,7 +98,8 @@ jobs:
         password: ${{ secrets.ftp_password }}
         local-dir: 'offline_files/'
         server-dir: '/'
-        exclude: **/drop/**
+        exclude: | 
+          **/drop/**
     - name: Deploy to Prod
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
@@ -108,4 +109,5 @@ jobs:
         local-dir: 'drop/'
         server-dir: '/'
         dangerous-clean-slate: true
-        exclude: **/offline_files/**
+        exclude: |
+          **/offline_files/**
