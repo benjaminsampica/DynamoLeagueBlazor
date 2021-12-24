@@ -38,9 +38,7 @@ public class IntegrationTesting
 
         var application = new TestWebApplicationFactory(_configuration);
 
-        var serviceProvider = application.Services;
-
-        using var scope = serviceProvider.CreateScope();
+        using var scope = application.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         await dbContext.Database.MigrateAsync();

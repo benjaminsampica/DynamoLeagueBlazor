@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
@@ -50,7 +51,7 @@ public class AddBidHandler : IRequestHandler<AddBidQuery, int>
     {
         var player = (await _dbContext.Players.FindAsync(new object?[] { request.PlayerId }, cancellationToken));
 
-        var currentUserTeamId = int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(nameof(Player.TeamId))!.Value);
+        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
         var bid = player!.AddBid(request.Amount, currentUserTeamId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);

@@ -50,7 +50,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
 
     public async Task<FreeAgentListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = int.Parse(_httpContextAccessor.HttpContext!.User.FindFirst(nameof(ApplicationUser.TeamId))!.Value);
+        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
         var freeAgents = await _dbContext.Players
             .Include(p => p.Team)
