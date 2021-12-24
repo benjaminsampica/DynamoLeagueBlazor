@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Infastructure;
+﻿namespace DynamoLeagueBlazor.Shared.Infastructure.Identity;
 
 public static class RoleName
 {

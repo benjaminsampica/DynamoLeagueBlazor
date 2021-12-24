@@ -1,4 +1,4 @@
-﻿using DynamoLeagueBlazor.Shared.Infastructure;
+﻿using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
