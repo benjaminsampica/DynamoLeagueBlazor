@@ -17,3 +17,9 @@ public record Bid : BaseEntity
     public Team Team { get; private set; } = null!;
     public Player Player { get; private set; } = null!;
 }
+
+public static class BidExtensions
+{
+    public static Bid GetHighestBidder(this ICollection<Bid> bids)
+        => bids.OrderByDescending(b => b.Amount).First();
+}

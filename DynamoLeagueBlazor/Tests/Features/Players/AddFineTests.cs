@@ -34,7 +34,7 @@ internal class AddFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_GivenAValidFine_ThenSavesIt()
+    public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
     {
         var application = CreateUserAuthenticatedApplication();
         var client = application.CreateClient();
@@ -56,7 +56,7 @@ internal class AddFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_GivenAnInvalidFine_ThenReturnsBadRequestWithErrors()
+    public async Task GivenAnyAuthenticatedUser_WhenAnInvalidFine_ThenReturnsBadRequestWithErrors()
     {
         var application = CreateUserAuthenticatedApplication();
 

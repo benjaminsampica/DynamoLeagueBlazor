@@ -22,6 +22,7 @@ public class FreeAgentDetailResult
 
 public class AddBidRequest
 {
+    public int PlayerId { get; set; }
     public int Amount { get; set; }
 }
 
@@ -29,7 +30,7 @@ public class AddBidRequestValidator : AbstractValidator<AddBidRequest>
 {
     public AddBidRequestValidator()
     {
-        RuleFor(x => x.Amount)
-            .GreaterThan(0);
+        RuleFor(x => x.PlayerId).GreaterThan(0);
+        RuleFor(x => x.Amount).GreaterThan(0);
     }
 }

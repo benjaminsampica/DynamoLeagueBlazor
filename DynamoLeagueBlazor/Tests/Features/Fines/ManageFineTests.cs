@@ -33,7 +33,7 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_GivenFineIsApproved_ThenUpdatesIt()
+    public async Task GivenAnyAuthenticatedUser_WhenFineIsApproved_ThenUpdatesIt()
     {
         var application = CreateUserAuthenticatedApplication();
         var client = application.CreateClient();
@@ -56,7 +56,7 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_GivenFineIsNotApproved_ThenDeletesIt()
+    public async Task GivenAnyAuthenticatedUser_WhenFineIsNotApproved_ThenDeletesIt()
     {
         var application = CreateUserAuthenticatedApplication();
         var client = application.CreateClient();
@@ -78,7 +78,7 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_GivenAnInvalidFine_ThenReturnsBadRequestWithErrors()
+    public async Task GivenAnyAuthenticatedUser_WhenAnInvalidFine_ThenReturnsBadRequestWithErrors()
     {
         var application = CreateUserAuthenticatedApplication();
 

@@ -77,15 +77,15 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.PlayerTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.TeamName : string.Empty))
             .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Name))
             .ForMember(d => d.CurrentUserIsHighestBidder, mo => mo.MapFrom(s =>
-                s.Bids.Any()
-                && s.Bids.OrderByDescending(b => b.Amount).First().TeamId == currentUserTeamId)
+                s.Bids.Any() &&
+                s.Bids.GetHighestBidder().TeamId == currentUserTeamId)
             )
             .ForMember(d => d.PlayerPosition, mo => mo.MapFrom(s => s.Position))
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.HeadShot))
             .ForMember(d => d.HighestBid, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.OrderByDescending(b => b.Amount).First().Amount.ToString("C0")
+                ? s.Bids.GetHighestBidder().Amount.ToString("C0")
                 : string.Empty)
             );
     }
