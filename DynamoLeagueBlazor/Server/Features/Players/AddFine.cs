@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
@@ -45,12 +44,12 @@ public class AddFineHandler : IRequestHandler<AddFineQuery, int>
 
     public async Task<int> Handle(AddFineQuery request, CancellationToken cancellationToken)
     {
-        var contractValue = (await _dbContext.Players.FindAsync(new object?[] { request.PlayerId }, cancellationToken))!.ContractValue;
+        var player = (await _dbContext.Players.FindAsync(new object?[] { request.PlayerId }, cancellationToken));
 
-        var amount = FineUtilities.CalculateFineAmount(contractValue);
-        var fine = new Fine(amount, request.FineReason, request.PlayerId);
+        var amount = FineUtilities.CalculateFineAmount(player!.ContractValue);
 
-        _dbContext.Fines.Add(fine);
+        var fine = player.AddFine(amount, request.FineReason);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return fine.Id;

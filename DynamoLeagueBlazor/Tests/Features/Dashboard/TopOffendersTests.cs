@@ -25,9 +25,8 @@ internal class TopOffendersTests : IntegrationTestBase
         var application = CreateUserAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
-        var mockFine = CreateFakeFine();
+        var mockFine = CreateFakeFine(mockPlayer.Id);
         mockFine.Status = true;
-        mockFine.PlayerId = mockPlayer.Id;
         await application.AddAsync(mockFine);
 
         var client = application.CreateClient();
@@ -52,8 +51,7 @@ internal class TopOffendersTests : IntegrationTestBase
             var mockPlayer = CreateFakePlayer();
             await application.AddAsync(mockPlayer);
 
-            var mockFine = CreateFakeFine();
-            mockFine.PlayerId = mockPlayer.Id;
+            var mockFine = CreateFakeFine(mockPlayer.Id);
             mockFine.Status = true;
             mockFine.FineAmount = int.MaxValue;
             await application.AddAsync(mockFine);
@@ -62,8 +60,7 @@ internal class TopOffendersTests : IntegrationTestBase
         var sixthPlayer = CreateFakePlayer();
         await application.AddAsync(sixthPlayer);
 
-        var lowestFine = CreateFakeFine();
-        lowestFine.PlayerId = sixthPlayer.Id;
+        var lowestFine = CreateFakeFine(sixthPlayer.Id);
         lowestFine.Status = true;
         lowestFine.FineAmount = 1;
         await application.AddAsync(lowestFine);

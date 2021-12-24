@@ -86,6 +86,15 @@ public record Player : BaseEntity
 
         return bid;
     }
+
+    public Fine AddFine(decimal amount, string fineReason)
+    {
+        var fine = new Fine(amount, fineReason, Id);
+
+        Fines.Add(fine);
+
+        return fine;
+    }
 }
 
 public static class PlayerExtensions

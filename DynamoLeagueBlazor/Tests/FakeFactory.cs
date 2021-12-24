@@ -36,11 +36,12 @@ internal class FakeFactory
         return faker.Generate();
     }
 
-    public static Fine CreateFakeFine()
+    public static Fine CreateFakeFine(int playerId)
     {
         var faker = new AutoFaker<Fine>()
             .Ignore(f => f.Id)
-            .Ignore(f => f.Player);
+            .Ignore(f => f.Player)
+            .RuleFor(f => f.PlayerId, playerId);
 
         return faker.Generate();
     }
@@ -56,4 +57,6 @@ internal class FakeFactory
 
         return faker.Generate();
     }
+
+    public static string RandomString => AutoFaker.Generate<string>();
 }

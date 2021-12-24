@@ -6,7 +6,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
 internal class DetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "/teams/";
+    private const string _endpoint = "/teams";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()

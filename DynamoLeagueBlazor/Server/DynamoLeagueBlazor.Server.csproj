@@ -36,10 +36,4 @@
 	<ProjectReference Include="..\Client\DynamoLeagueBlazor.Client.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Offline_Files\app_offline.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
