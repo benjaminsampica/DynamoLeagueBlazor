@@ -49,7 +49,9 @@ public class AddBidHandler : IRequestHandler<AddBidQuery, int>
 
     public async Task<int> Handle(AddBidQuery request, CancellationToken cancellationToken)
     {
-        var player = (await _dbContext.Players.FindAsync(new object?[] { request.PlayerId }, cancellationToken));
+        var player = await _dbContext.Players
+            .AsTracking()
+            .SingleAsync(p => p.Id == request.PlayerId, cancellationToken);
 
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
         var bid = player!.AddBid(request.Amount, currentUserTeamId);

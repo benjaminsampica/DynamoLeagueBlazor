@@ -1,5 +1,6 @@
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
+using DynamoLeagueBlazor.Server.Features.Fines;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Players;
@@ -60,7 +61,11 @@ try
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
     builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-    builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>());
+    builder.Services.AddFluentValidation(fv =>
+    {
+        fv.RegisterValidatorsFromAssemblyContaining<AddBidRequestValidator>();
+        fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
+    });
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
         .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
@@ -110,13 +115,13 @@ try
     {
         var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+        await applicationDbContext.Database.MigrateAsync();
+
         if (app.Environment.IsDevelopment())
         {
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             await mediator.Send(new SeedDataCommand());
         }
-
-        await applicationDbContext.Database.MigrateAsync();
     }
 
     await app.RunAsync();

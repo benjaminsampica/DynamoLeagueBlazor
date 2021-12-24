@@ -42,7 +42,7 @@ else
                     <MudText Typo=Typo.h6>Submit A New Bid</MudText>
                     <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
                         <FluentValidationValidator />
-                        <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" Class="mb-2"/>
+                        <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)"/>
                         <MudButton Color="Color.Success" Variant=Variant.Outlined StartIcon=@Icons.Outlined.Check OnClick="OnValidSubmitAsync" Disabled="@_processingForm">
                             @if (_processingForm)
                             {

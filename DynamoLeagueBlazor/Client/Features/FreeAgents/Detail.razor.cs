@@ -22,14 +22,7 @@ public partial class Detail : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"freeagents/{PlayerId}", _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        await RefreshPageStateAsync();
     }
 
     private async Task OnValidSubmitAsync()
@@ -42,7 +35,8 @@ public partial class Detail : IDisposable
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Successfully added fine.", Severity.Success);
+                await RefreshPageStateAsync();
+                SnackBar.Add("Successfully added bid.", Severity.Success);
             }
             else
             {
@@ -55,6 +49,20 @@ public partial class Detail : IDisposable
         }
 
         _processingForm = false;
+    }
+
+    private async Task RefreshPageStateAsync()
+    {
+        _form = new() { PlayerId = PlayerId };
+
+        try
+        {
+            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"freeagents/{PlayerId}", _cts.Token);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 
     public void Dispose()
