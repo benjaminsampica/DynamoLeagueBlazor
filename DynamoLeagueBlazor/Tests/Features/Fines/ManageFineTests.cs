@@ -40,15 +40,16 @@ internal class ManageFineTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
 
-        mockPlayer.AddFine(int.MaxValue, RandomString);
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await application.UpdateAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = true;
+        mockRequest.FineId = mockFine.Id;
 
         var response = await client.PostAsJsonAsync(_endpoint, mockRequest);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         var fine = await application.FirstOrDefaultAsync<Fine>();
         fine.Should().NotBeNull();
@@ -63,15 +64,16 @@ internal class ManageFineTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
 
-        mockPlayer.AddFine(int.MaxValue, RandomString);
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await application.UpdateAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = false;
+        mockRequest.FineId = mockFine.Id;
 
         var response = await client.PostAsJsonAsync(_endpoint, mockRequest);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         var fine = await application.FirstOrDefaultAsync<Fine>();
         fine.Should().BeNull();

@@ -5,6 +5,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
@@ -44,7 +45,9 @@ public class AddFineHandler : IRequestHandler<AddFineQuery, int>
 
     public async Task<int> Handle(AddFineQuery request, CancellationToken cancellationToken)
     {
-        var player = (await _dbContext.Players.FindAsync(new object?[] { request.PlayerId }, cancellationToken));
+        var player = (await _dbContext.Players
+            .AsTracking()
+            .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
 
         var amount = FineUtilities.CalculateFineAmount(player!.ContractValue);
 

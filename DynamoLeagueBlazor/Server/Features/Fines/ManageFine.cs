@@ -4,6 +4,7 @@ using DynamoLeagueBlazor.Shared.Features.Fines;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
@@ -45,7 +46,9 @@ public class ManageFineHandler : IRequestHandler<ManageFineQuery>
 
     public async Task<Unit> Handle(ManageFineQuery request, CancellationToken cancellationToken)
     {
-        var fine = await _dbContext.Fines.FindAsync(new object?[] { request.FineId }, cancellationToken);
+        var fine = await _dbContext.Fines
+            .AsTracking()
+            .SingleAsync(f => f.Id == request.FineId, cancellationToken);
 
         if (!request.Approved) _dbContext.Fines.Remove(fine!);
         else fine!.Status = request.Approved;

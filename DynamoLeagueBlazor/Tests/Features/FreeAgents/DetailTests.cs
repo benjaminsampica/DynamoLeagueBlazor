@@ -5,7 +5,7 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 internal class DetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "/freeagents";
+    private const string _endpoint = "/freeagents/";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -35,6 +35,7 @@ internal class DetailTests : IntegrationTestBase
         var mockFreeAgent = CreateFakePlayer()
             .SetToRostered(DateTime.Today.AddYears(-1), int.MaxValue)
             .SetToFreeAgent(DateTime.MaxValue);
+        mockFreeAgent.TeamId = mockTeam.Id;
         await application.AddAsync(mockFreeAgent);
 
         var bidAmount = int.MaxValue;
@@ -55,7 +56,8 @@ internal class DetailTests : IntegrationTestBase
 
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
+        bid.Team.Should().Be(mockTeam.TeamName);
         bid.Amount.Should().Be(bidAmount.ToString("C0"));
-        bid.Date.Should().NotBeNullOrEmpty();
+        DateTime.Parse(bid.Date).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }
