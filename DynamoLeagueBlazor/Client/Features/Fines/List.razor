@@ -1,6 +1,6 @@
 ﻿@page "/fines"
 
-@using static DynamoLeagueBlazor.Shared.Features.Players.FineListResult
+@using static DynamoLeagueBlazor.Shared.Features.Fines.FineListResult
 
 <Title>
     @_title
@@ -13,12 +13,16 @@
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
+        <MudTh>Actions</MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Reason</MudTh>
         <MudTh>Amount</MudTh>
         <MudTh>Status</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd DataLabel=Actions>
+            <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(context.FineId)" />
+        </MudTd>
         <MudTd DataLabel=Name>
             <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
         </MudTd>

@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Features.Players;
+﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
 public class FineListResult
 {
@@ -6,6 +6,7 @@ public class FineListResult
 
     public class FineItem
     {
+        public int FineId { get; set; }
         public string PlayerHeadShotUrl { get; set; }
         public string PlayerName { get; set; }
         public string FineReason { get; set; }

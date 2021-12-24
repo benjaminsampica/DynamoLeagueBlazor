@@ -1,6 +1,7 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Fines;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Fines;
@@ -8,6 +9,7 @@ namespace DynamoLeagueBlazor.Client.Features.Fines;
 public partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
 
     private FineListResult _result = new();
     private bool _loading;
@@ -36,6 +38,16 @@ public partial class List : IDisposable
         if ($"{item.PlayerName} {item.FineReason} {item.FineAmount} {item.FineStatus}".Contains(_searchValue))
             return true;
         return false;
+    }
+
+    private void OpenManageFineDialog(int fineId)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(Manage.FineId), fineId }
+        };
+
+        DialogService.Show<Manage>("Manage Fine", parameters);
     }
 
     public void Dispose()

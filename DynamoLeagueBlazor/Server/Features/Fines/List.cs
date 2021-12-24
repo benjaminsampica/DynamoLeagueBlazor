@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Features.Fines;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +61,7 @@ public class ListMappingProfile : Profile
     public ListMappingProfile()
     {
         CreateMap<Fine, FineListResult.FineItem>()
+            .ForMember(d => d.FineId, mo => mo.MapFrom(s => s.Id))
             .ForMember(d => d.FineStatus, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
             .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Player.Name))
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShot))
