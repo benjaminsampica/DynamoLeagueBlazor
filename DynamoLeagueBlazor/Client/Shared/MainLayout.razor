@@ -6,12 +6,14 @@
     <MudAppBar Elevation=3>
         <a href="/" class="d-flex">
             <img src="logo.PNG" height="30"/>
-            <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
+            <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+                <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
+            </MudHidden>
         </a>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleNavMenu())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
     </MudAppBar>
-    <NavMenu Show=_showNavMenu/>
+    <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
     <MudMainContent>
         <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
             <ErrorBoundary @ref=_errorBoundary>
@@ -72,15 +74,15 @@
     };
 
     private ErrorBoundary? _errorBoundary;
-    private bool _showNavMenu = true;
+    private bool _showNavMenu;
 
     protected override void OnParametersSet()
     {
         _errorBoundary?.Recover();
     }
 
-    private void ToggleNavMenu()
+    public void OnOpenChanged(bool open = true)
     {
-        _showNavMenu = !_showNavMenu;
+        _showNavMenu = open;
     }
 }
