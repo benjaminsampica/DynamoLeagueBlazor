@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Shared.Features.Fines;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Authorize]
+[Authorize(Roles = RoleName.Admin)]
 [Route("fines/manage")]
 [ApiController]
 public class ManageFineController : ControllerBase

@@ -33,9 +33,22 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenFineIsApproved_ThenUpdatesIt()
+    public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
+
+        var client = application.CreateClient();
+
+        var stubRequest = CreateFakeValidRequest();
+        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Test]
+    public async Task GivenAuthenticatedAdmin_WhenFineIsApproved_ThenUpdatesIt()
+    {
+        var application = CreateAdminAuthenticatedApplication();
         var client = application.CreateClient();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
@@ -57,9 +70,9 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenFineIsNotApproved_ThenDeletesIt()
+    public async Task GivenAuthenticatedAdmin_WhenFineIsNotApproved_ThenDeletesIt()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = CreateAdminAuthenticatedApplication();
         var client = application.CreateClient();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
@@ -80,9 +93,9 @@ internal class ManageFineTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenAnInvalidFine_ThenReturnsBadRequestWithErrors()
+    public async Task GivenAuthenticatedAdmin_WhenAnInvalidFine_ThenReturnsBadRequestWithErrors()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = CreateAdminAuthenticatedApplication();
 
         var client = application.CreateClient();
 

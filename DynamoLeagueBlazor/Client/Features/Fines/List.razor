@@ -1,4 +1,5 @@
 ﻿@page "/fines"
+@using DynamoLeagueBlazor.Shared.Infastructure.Identity
 
 @using static DynamoLeagueBlazor.Shared.Features.Fines.FineListResult
 
@@ -6,14 +7,18 @@
     @_title
 </Title>
 
-<MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)"> 
+<MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)" Context=fineItem> 
     <ToolBarContent>
         <MudText Typo="Typo.h6">@_title</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Actions</MudTh>
+        <AuthorizeView Roles=@RoleName.Admin>
+            <Authorized>
+                <MudTh>Actions</MudTh>
+            </Authorized>
+        </AuthorizeView>
         <MudTh>Name</MudTh>
         <MudTh>Reason</MudTh>
         <MudTh>Amount</MudTh>
@@ -21,16 +26,20 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel=Actions>
-            <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(context.FineId)" />
+            <AuthorizeView Roles=@RoleName.Admin>
+                <Authorized>
+                    <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.FineId)" />
+                </Authorized>
+            </AuthorizeView>
         </MudTd>
         <MudTd DataLabel=Name>
-            <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
+            <PlayerNameWithHeadShot Name="@fineItem.PlayerName" HeadShotUrl="@fineItem.PlayerHeadShotUrl" />
         </MudTd>
-        <MudTd DataLabel=Reason>@context.FineReason</MudTd>
-        <MudTd DataLabel=Amount>@context.FineAmount</MudTd>
+        <MudTd DataLabel=Reason>@fineItem.FineReason</MudTd>
+        <MudTd DataLabel=Amount>@fineItem.FineAmount</MudTd>
         <MudTd DataLabel=Status>
             @{
-                RenderFragment status = context.FineStatus switch
+                RenderFragment status = fineItem.FineStatus switch
                 {
                     "Approved" => @<MudIcon Icon=@Icons.Outlined.CheckCircle Color=Color.Success />,
                     "Pending" => @<MudIcon Icon=@Icons.Outlined.Info Color=Color.Info />,
