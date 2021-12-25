@@ -20,7 +20,6 @@ try
 
     Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.FromLogContext()
         .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
         .CreateLogger();
 
