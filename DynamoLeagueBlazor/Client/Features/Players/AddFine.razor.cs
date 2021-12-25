@@ -49,7 +49,7 @@ public partial class AddFine : IDisposable
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Successfully added fine.", Severity.Success);
+                SnackBar.Add("Successfully added a fine. An administrator will either approve or deny the fine.", Severity.Success);
             }
             else
             {

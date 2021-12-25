@@ -19,6 +19,11 @@ public partial class List : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
         try
         {
             _loading = true;
@@ -44,7 +49,8 @@ public partial class List : IDisposable
     {
         var parameters = new DialogParameters
         {
-            { nameof(Manage.FineId), fineId }
+            { nameof(Manage.FineId), fineId },
+            { nameof(Manage.OnManageButtonClick), EventCallback.Factory.Create(this, () => LoadDataAsync())}
         };
 
         DialogService.Show<Manage>("Manage Fine", parameters);
