@@ -27,23 +27,23 @@ else
             <MudGrid>
                 <MudItem lg=3 xs=12 Class="d-flex flex-column align-center">
                     <img src="@_result.TeamLogoUrl" style="max-width: 200px;"/>
-                    <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
-                    <MudText Typo="Typo.h4">@_result.TeamName</MudText>
-                    <MudChip Color="Color.Success" Variant="Variant.Text" Icon=@Icons.Outlined.ReduceCapacity Size=Size.Large>
-                        @_result.CapSpace
-                    </MudChip>
-                    <MudBadge Origin=Origin.CenterRight Content=_result.RosteredPlayers.Count() Color=Color.Secondary>
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PersonAdd OnClick=ShowRosteredPlayers>
+                    <MudDivider Class="mt-2" Style="max-width:250px; width: 100%"/>
+                    <MudText Typo="Typo.h4" Align=Align.Center>@_result.TeamName</MudText>
+                    <MudText Typo=Typo.body1>Remaining Cap Space</MudText>
+                    <MudText Typo=Typo.h6 Color=Color.Success>@_result.CapSpace</MudText>
+                    <MudDivider Class="mt-2" Style="max-width:250px; width: 100%"/>
+                    <MudBadge Origin=Origin.CenterRight Content=_result.RosteredPlayers.Count() Color=Color.Primary>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon=@Icons.Outlined.PersonAdd OnClick=ShowRosteredPlayers>
                             Rostered Players
                         </MudButton>
                     </MudBadge>
-                    <MudBadge Origin=Origin.CenterRight Content=_result.UnrosteredPlayers.Count() Color=Color.Secondary>
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PersonOff OnClick=ShowUnrosteredPlayers>
+                    <MudBadge Origin=Origin.CenterRight Content=_result.UnrosteredPlayers.Count() Color=Color.Primary>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon=@Icons.Outlined.PersonOff OnClick=ShowUnrosteredPlayers>
                             Unrostered Players
                         </MudButton>
                     </MudBadge>
-                    <MudBadge Origin=Origin.CenterRight Content=_result.UnsignedPlayers.Count() Color=Color.Secondary>
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon=@Icons.Outlined.PendingActions OnClick=ShowUnsignedPlayers>
+                    <MudBadge Origin=Origin.CenterRight Content=_result.UnsignedPlayers.Count() Color=Color.Primary>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon=@Icons.Outlined.PendingActions OnClick=ShowUnsignedPlayers>
                             Unsigned Players
                         </MudButton>
                     </MudBadge>

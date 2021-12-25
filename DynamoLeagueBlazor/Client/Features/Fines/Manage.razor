@@ -5,12 +5,9 @@
             Do you want to approve this fine?
         </DialogContent>
         <DialogActions>
-            <MudGrid>
-                <MudItem xs=12 md=4>
-                     <MudButton Color="Color.Transparent" Variant=Variant.Text OnClick="Cancel">Cancel</MudButton>
-                </MudItem>
-                <MudItem xs=12 md=4>
-                    <MudButton Color="Color.Error" Variant=Variant.Outlined StartIcon=@Icons.Outlined.Delete ButtonType=ButtonType.Submit Disabled="@_processingForm">
+            <MudGrid Spacing=1>
+                <MudItem xs=12>
+                    <MudButton Color="Color.Error" Variant=Variant.Text StartIcon=@Icons.Outlined.Delete ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
                         @if (_processingForm)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -22,8 +19,8 @@
                         }
                     </MudButton>
                 </MudItem>
-                <MudItem xs=12 md=4>
-                    <MudButton Color="Color.Success" Variant=Variant.Outlined StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm">
+                <MudItem xs=12>
+                    <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true  Size=Size.Large>
                         @if (_processingForm)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

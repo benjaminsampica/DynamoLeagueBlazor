@@ -28,7 +28,7 @@
         <MudTd DataLabel=Actions>
             <AuthorizeView Roles=@RoleName.Admin>
                 <Authorized>
-                    <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.FineId)" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.Approval" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.FineId)" />
                 </Authorized>
             </AuthorizeView>
         </MudTd>

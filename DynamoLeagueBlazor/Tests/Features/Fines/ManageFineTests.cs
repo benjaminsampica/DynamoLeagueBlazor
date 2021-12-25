@@ -42,7 +42,7 @@ internal class ManageFineTests : IntegrationTestBase
         var stubRequest = CreateFakeValidRequest();
         var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Test]

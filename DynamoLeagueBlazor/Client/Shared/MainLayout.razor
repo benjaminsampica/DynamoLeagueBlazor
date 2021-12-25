@@ -2,35 +2,37 @@
 @using DynamoLeagueBlazor.Client.Shared.NavMenu
 
 <MudLayout>
-    <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;"></MudIcon>
-    <MudAppBar Elevation=3>
-        <a href="/" class="d-flex">
-            <img src="logo.PNG" height="30"/>
-            <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
-                <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
-            </MudHidden>
-        </a>
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
-    </MudAppBar>
-    <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
-    <MudMainContent>
-        <MudContainer MaxWidth=MaxWidth.False Class="px-8 pt-8">
-            <ErrorBoundary @ref=_errorBoundary>
-                <ChildContent>
+    <ErrorBoundary @ref=_errorBoundary>
+        <ChildContent>
+       <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
+            <MudAppBar Elevation=3>
+                <a href="/" class="d-flex">
+                    <img src="logo.PNG" height="30"/>
+                    <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+                        <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
+                    </MudHidden>
+                </a>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
+            </MudAppBar>
+            <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
+            <MudMainContent>
+                <MudContainer MaxWidth=MaxWidth.Large Class="pt-4">
                     @Body
-                    <MudDialogProvider/>
-                    <MudSnackbarProvider/>
-                </ChildContent>
-                <ErrorContent>
-                    <MudAlert Severity=Severity.Error>
-                        An Error Occured...
-                    </MudAlert>
-                </ErrorContent>
-            </ErrorBoundary>
-        </MudContainer>
-    </MudMainContent>
+                </MudContainer>
+            </MudMainContent>
+        </ChildContent>
+        <ErrorContent>
+            <MudAlert Severity=Severity.Error>
+                An Error Occured...
+            </MudAlert>
+        </ErrorContent>
+    </ErrorBoundary>
+    
 </MudLayout>
+<MudDialogProvider CloseButton=true/>
+
+<MudSnackbarProvider/>
 <MudThemeProvider Theme=darkTheme/>
 
 @code {
