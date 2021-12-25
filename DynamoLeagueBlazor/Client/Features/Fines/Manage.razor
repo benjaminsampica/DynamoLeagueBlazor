@@ -7,7 +7,9 @@
         <DialogActions>
             <MudGrid Spacing=1>
                 <MudItem xs=12>
-                    <MudButton Color="Color.Error" Variant=Variant.Text StartIcon=@Icons.Outlined.Delete ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
+                    <MudButton Color="Color.Error" Variant=Variant.Text StartIcon=@Icons.Outlined.Delete 
+                    ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true 
+                    Size=Size.Large OnClick="@(() => IsApproved(false))">
                         @if (_processingForm)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -20,7 +22,10 @@
                     </MudButton>
                 </MudItem>
                 <MudItem xs=12>
-                    <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true  Size=Size.Large>
+                    <MudButton 
+                        Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check 
+                        ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true 
+                        Size=Size.Large OnClick="@(() => IsApproved(true))">
                         @if (_processingForm)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

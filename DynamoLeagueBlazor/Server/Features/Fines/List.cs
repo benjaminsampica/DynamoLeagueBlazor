@@ -46,6 +46,7 @@ public class ListHandler : IRequestHandler<ListQuery, FineListResult>
     {
         var fines = await _dbContext.Fines
             .Include(p => p.Player)
+            .OrderBy(f => f.Status)
             .ProjectTo<FineListResult.FineItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

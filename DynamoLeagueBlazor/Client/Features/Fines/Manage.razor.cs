@@ -12,6 +12,7 @@ public partial class Manage : IDisposable
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int FineId { get; set; }
+    [Parameter, EditorRequired] public EventCallback OnManageButtonClick { get; set; }
 
     private ManageFineRequest _form = null!;
     private bool _processingForm;
@@ -33,6 +34,7 @@ public partial class Manage : IDisposable
             if (response.IsSuccessStatusCode)
             {
                 SnackBar.Add("Successfully updated fine.", Severity.Success);
+                await OnManageButtonClick.InvokeAsync();
             }
             else
             {
@@ -48,7 +50,10 @@ public partial class Manage : IDisposable
         MudDialogInstance.Close();
     }
 
-    private void Cancel() => MudDialogInstance.Close();
+    private void IsApproved(bool approved)
+    {
+        _form.Approved = approved;
+    }
 
     public void Dispose()
     {
