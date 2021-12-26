@@ -25,9 +25,9 @@ public class DetailController : ControllerBase
     }
 
     [HttpGet("{teamId}")]
-    public async Task<TeamDetailResult> GetAsync(int teamId)
+    public async Task<TeamDetailResult> GetAsync(int teamId, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new DetailQuery(teamId));
+        return await _mediator.Send(new DetailQuery(teamId), cancellationToken);
     }
 }
 

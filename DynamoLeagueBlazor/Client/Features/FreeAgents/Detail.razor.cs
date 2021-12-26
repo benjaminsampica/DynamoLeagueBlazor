@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
@@ -12,16 +13,21 @@ public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject]
+    private IBidAmountValidator BidAmountValidator { get; set; } = null!;
     [Parameter] public int PlayerId { get; set; }
 
     private FreeAgentDetailResult? _result;
     private AddBidRequest _form = new();
     private bool _processingForm;
     private const string _title = "Free Agent Details";
+    private AddBidRequestValidator _validator = null!;
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
+        _validator = new(BidAmountValidator);
+
         await RefreshPageStateAsync();
     }
 
@@ -69,5 +75,26 @@ public partial class Detail : IDisposable
     {
         _cts.Cancel();
         _cts.Dispose();
+    }
+}
+
+public class BidAmountValidator : IBidAmountValidator
+{
+    private readonly HttpClient _httpClient;
+
+    public BidAmountValidator(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
+    {
+        var uri = QueryHelpers.AddQueryString("freeagents/addbid", new Dictionary<string, string>
+        {
+            { nameof(AddBidRequest.PlayerId), request.PlayerId.ToString() },
+            { nameof(AddBidRequest.Amount), request.Amount.ToString() }
+        });
+
+        return await _httpClient.GetFromJsonAsync<bool>(uri, cancellationToken);
     }
 }

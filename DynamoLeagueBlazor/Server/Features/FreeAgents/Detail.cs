@@ -24,9 +24,9 @@ public class DetailController : ControllerBase
     }
 
     [HttpGet("{PlayerId}")]
-    public async Task<FreeAgentDetailResult> GetAsync([FromRoute] DetailQuery query)
+    public async Task<FreeAgentDetailResult> GetAsync([FromRoute] DetailQuery query, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(query);
+        return await _mediator.Send(query, cancellationToken);
     }
 }
 
@@ -46,7 +46,7 @@ public class DetailHandler : IRequestHandler<DetailQuery, FreeAgentDetailResult>
     public async Task<FreeAgentDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
         var result = await _dbContext.Players
-            .Include(p => p.Bids.OrderByDescending(b => b.DateTime))
+            .Include(p => p.Bids)
                 .ThenInclude(b => b.Team)
             .Where(p => p.Id == request.PlayerId)
             .ProjectTo<FreeAgentDetailResult>(_mapper.ConfigurationProvider)
@@ -71,7 +71,8 @@ public class DetailMappingProfile : Profile
     {
         CreateMap<Player, FreeAgentDetailResult>()
             .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
-            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName));
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName))
+            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.OrderByDescending(b => b.DateTime)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))

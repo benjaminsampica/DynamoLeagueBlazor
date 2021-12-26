@@ -21,9 +21,9 @@ public class StartSeasonController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync()
+    public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
     {
-        await _mediator.Send(new StartSeasonQuery());
+        await _mediator.Send(new StartSeasonQuery(), cancellationToken);
 
         return NoContent();
     }

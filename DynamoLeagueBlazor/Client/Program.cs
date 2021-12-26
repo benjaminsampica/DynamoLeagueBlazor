@@ -1,5 +1,7 @@
 using DynamoLeagueBlazor.Client;
 using DynamoLeagueBlazor.Client.Areas.Identity;
+using DynamoLeagueBlazor.Client.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -28,6 +30,8 @@ try
     {
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
     });
+
+    builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
 
     var host = builder.Build();
 

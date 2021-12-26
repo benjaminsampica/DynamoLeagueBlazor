@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿namespace DynamoLeagueBlazor.Shared.Features.FreeAgents;
 
 public class FreeAgentDetailResult
 {
@@ -17,20 +15,5 @@ public class FreeAgentDetailResult
         public string Team { get; set; }
         public string Amount { get; set; }
         public string Date { get; set; }
-    }
-}
-
-public class AddBidRequest
-{
-    public int PlayerId { get; set; }
-    public int Amount { get; set; }
-}
-
-public class AddBidRequestValidator : AbstractValidator<AddBidRequest>
-{
-    public AddBidRequestValidator()
-    {
-        RuleFor(x => x.PlayerId).GreaterThan(0);
-        RuleFor(x => x.Amount).GreaterThan(0);
     }
 }
