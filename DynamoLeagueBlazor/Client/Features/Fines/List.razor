@@ -25,13 +25,13 @@
         <MudTh>Status</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel=Actions>
-            <AuthorizeView Roles=@RoleName.Admin>
+        <AuthorizeView Roles=@RoleName.Admin>
+            <MudTd DataLabel=Actions>
                 <Authorized>
                     <MudIconButton Icon="@Icons.Material.Outlined.Approval" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.FineId)" />
                 </Authorized>
-            </AuthorizeView>
-        </MudTd>
+            </MudTd>
+        </AuthorizeView>
         <MudTd DataLabel=Name>
             <PlayerNameWithHeadShot Name="@fineItem.PlayerName" HeadShotUrl="@fineItem.PlayerHeadShotUrl" />
         </MudTd>
