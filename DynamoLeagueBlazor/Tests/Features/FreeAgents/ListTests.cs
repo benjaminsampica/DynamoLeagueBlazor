@@ -63,7 +63,7 @@ internal class ListTests : IntegrationTestBase
         freeAgent.Name.Should().Be(mockPlayer.Name);
         freeAgent.Position.Should().Be(mockPlayer.Position);
         freeAgent.Team.Should().Be(mockTeam.Name);
-        freeAgent.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
+        freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
         freeAgent.BiddingEnds.Should().Be(biddingEnds.ToShortDateString());
     }
