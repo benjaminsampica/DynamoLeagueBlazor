@@ -1,6 +1,5 @@
 ﻿@page "/fines"
 @using DynamoLeagueBlazor.Shared.Infastructure.Identity
-
 @using static DynamoLeagueBlazor.Shared.Features.Fines.FineListResult
 
 <Title>
@@ -25,21 +24,21 @@
         <MudTh>Status</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel=Actions>
-            <AuthorizeView Roles=@RoleName.Admin>
-                <Authorized>
-                    <MudIconButton Icon="@Icons.Material.Outlined.Approval" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.FineId)" />
-                </Authorized>
-            </AuthorizeView>
-        </MudTd>
+        <AuthorizeView Roles=@RoleName.Admin>
+            <Authorized>
+                <MudTd DataLabel=Actions>
+                        <MudIconButton Icon="@Icons.Material.Outlined.Approval" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenManageFineDialog(fineItem.Id)" />
+                </MudTd>
+            </Authorized>
+        </AuthorizeView>
         <MudTd DataLabel=Name>
             <PlayerNameWithHeadShot Name="@fineItem.PlayerName" HeadShotUrl="@fineItem.PlayerHeadShotUrl" />
         </MudTd>
         <MudTd DataLabel=Reason>@fineItem.FineReason</MudTd>
-        <MudTd DataLabel=Amount>@fineItem.FineAmount</MudTd>
+        <MudTd DataLabel=Amount>@fineItem.Amount</MudTd>
         <MudTd DataLabel=Status>
             @{
-                RenderFragment status = fineItem.FineStatus switch
+                RenderFragment status = fineItem.Status switch
                 {
                     "Approved" => @<MudIcon Icon=@Icons.Outlined.CheckCircle Color=Color.Success />,
                     "Pending" => @<MudIcon Icon=@Icons.Outlined.Info Color=Color.Info />,

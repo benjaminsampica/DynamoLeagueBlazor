@@ -71,11 +71,11 @@ public class DetailMappingProfile : Profile
     {
         CreateMap<Player, FreeAgentDetailResult>()
             .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
-            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName))
-            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.OrderByDescending(b => b.DateTime)));
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
+            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.OrderByDescending(b => b.CreatedOn)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
-            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.TeamName))
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))
-            .ForMember(d => d.Date, mo => mo.MapFrom(s => s.DateTime.ToShortDateString()));
+            .ForMember(d => d.CreatedOn, mo => mo.MapFrom(s => s.CreatedOn.ToShortDateString()));
     }
 }

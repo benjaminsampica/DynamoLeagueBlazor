@@ -49,7 +49,7 @@ internal class AddFineTests : IntegrationTestBase
         fine.Should().NotBeNull();
         fine!.PlayerId.Should().Be(stubRequest.PlayerId);
         fine.Status.Should().BeFalse();
-        fine.FineReason.Should().Be(stubRequest.FineReason);
-        fine.FineAmount.Should().Be(FineUtilities.CalculateFineAmount(mockPlayer.ContractValue));
+        fine.Reason.Should().Be(stubRequest.FineReason);
+        fine.Amount.Should().Be(FineUtilities.CalculateFineAmount(mockPlayer.ContractValue));
     }
 }

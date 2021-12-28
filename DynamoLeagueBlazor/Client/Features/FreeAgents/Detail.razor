@@ -25,7 +25,7 @@ else
         <MudCardContent>
             <MudGrid>
                 <MudItem sm=3 xs=12 Class="d-flex flex-column align-center">
-                    <MudAvatar Image=@_result.HeadShot Size=Size.Large></MudAvatar>
+                    <MudAvatar Image=@_result.HeadShotUrl Size=Size.Large></MudAvatar>
                     <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
                     <MudText Typo=Typo.h4>@_result.Name</MudText>
                     <MudText Typo=Typo.h6>Team Owner</MudText>
@@ -62,14 +62,14 @@ else
                             }
                             <MudTimelineItem Icon=@Icons.Outlined.Money Size=Size.Large Color=Color.Success>
                                 <MudAlert Severity="Severity.Success">
-                                    @firstBid!.Team is winning with a bid of <b>@firstBid.Amount</b> on @(firstBid.Date)!
+                                    @firstBid!.Team is winning with a bid of <b>@firstBid.Amount</b> on @(firstBid.CreatedOn)!
                                 </MudAlert>
                             </MudTimelineItem>
                             @foreach(var bid in _result.Bids.Skip(1))
                             {
                                 <MudTimelineItem Icon=@Icons.Outlined.Money>
                                     <ItemContent>
-                                        @bid!.Team bid @bid.Amount on @(bid.Date).
+                                        @bid!.Team bid @bid.Amount on @(bid.CreatedOn).
                                     </ItemContent>
                                 </MudTimelineItem>
                             }

@@ -50,14 +50,14 @@ internal class DetailTests : IntegrationTestBase
         response.Should().NotBeNull();
         response!.Name.Should().Be(mockFreeAgent.Name);
         response.Position.Should().Be(mockFreeAgent.Position);
-        response.Team.Should().Be(mockTeam.TeamName);
-        response.HeadShot.Should().Be(mockFreeAgent.HeadShot);
+        response.Team.Should().Be(mockTeam.Name);
+        response.HeadShotUrl.Should().Be(mockFreeAgent.HeadShotUrl);
         response.EndOfFreeAgency.Should().Be(mockFreeAgent.EndOfFreeAgency!.Value.ToShortDateString());
 
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
-        bid.Team.Should().Be(mockTeam.TeamName);
+        bid.Team.Should().Be(mockTeam.Name);
         bid.Amount.Should().Be(bidAmount.ToString("C0"));
-        DateTime.Parse(bid.Date).Should().BeExactly(TimeSpan.FromSeconds(0));
+        DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }

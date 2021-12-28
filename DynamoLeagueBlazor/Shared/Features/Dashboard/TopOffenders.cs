@@ -6,8 +6,8 @@ public class TopOffendersResult
 
     public class PlayerItem
     {
-        public string PlayerHeadShotUrl { get; set; }
-        public string PlayerName { get; set; }
+        public string HeadShotUrl { get; set; }
+        public string Name { get; set; }
         public string TotalFineAmount { get; set; }
     }
 }

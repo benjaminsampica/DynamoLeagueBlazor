@@ -12,7 +12,7 @@ public record Bid : BaseEntity
     public int Amount { get; private set; }
     public int PlayerId { get; private set; }
     public int TeamId { get; private set; }
-    public DateTime DateTime { get; private set; } = DateTime.Now;
+    public DateTime CreatedOn { get; private set; } = DateTime.Now;
 
     public Team Team { get; private set; } = null!;
     public Player Player { get; private set; } = null!;

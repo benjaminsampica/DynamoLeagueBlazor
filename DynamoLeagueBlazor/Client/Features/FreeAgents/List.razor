@@ -29,15 +29,15 @@
             <RowTemplate>
                 <MudTd DataLabel="Actions">
                     @{
-                        var href = $"freeagents/{context.PlayerId}";
+                        var href = $"freeagents/{context.Id}";
                     }
                     <MudIconButton Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" Link="@href"/>
                 </MudTd>
                 <MudTd DataLabel="Player Name">
-                    <PlayerNameWithHeadShot Name="@context.PlayerName" HeadShotUrl="@context.PlayerHeadShotUrl" />
+                    <PlayerNameWithHeadShot Name="@context.Name" HeadShotUrl="@context.HeadShotUrl" />
                 </MudTd>
-                <MudTd DataLabel="Player Position">@context.PlayerPosition</MudTd>
-                <MudTd DataLabel="Player Team">@context.PlayerTeam</MudTd>
+                <MudTd DataLabel="Player Position">@context.Position</MudTd>
+                <MudTd DataLabel="Player Team">@context.Team</MudTd>
                 <MudTd DataLabel="Bidding Ends">@context.BiddingEnds</MudTd>
                 <MudTd DataLabel="Highest Bid">
                     @context.HighestBid

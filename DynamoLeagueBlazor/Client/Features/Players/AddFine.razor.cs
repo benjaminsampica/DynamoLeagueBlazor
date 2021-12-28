@@ -15,7 +15,7 @@ public partial class AddFine : IDisposable
     [Parameter, EditorRequired] public int PlayerId { get; set; }
 
     private AddFineRequest _form = null!;
-    private FineDetailResult _fineDetail = new();
+    private FineDetailResult? _fineDetail;
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 

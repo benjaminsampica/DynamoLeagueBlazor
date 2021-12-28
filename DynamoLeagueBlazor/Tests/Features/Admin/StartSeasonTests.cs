@@ -35,7 +35,7 @@ internal class StartSeasonTests : IntegrationTestBase
     {
         var application = CreateAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.ContractLength = null;
+        mockPlayer.YearContractExpires = null;
         await application.AddAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -54,7 +54,7 @@ internal class StartSeasonTests : IntegrationTestBase
     {
         var application = CreateAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.ContractLength = int.MaxValue;
+        mockPlayer.YearContractExpires = int.MaxValue;
         mockPlayer.EndOfFreeAgency = null;
         await application.AddAsync(mockPlayer);
 
