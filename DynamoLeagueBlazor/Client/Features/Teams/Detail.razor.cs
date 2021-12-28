@@ -24,7 +24,7 @@ public partial class Detail : IDisposable
         try
         {
             _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"teams/{TeamId}", _cts.Token);
-            _title = $"Team Detail - {_result!.TeamName}";
+            _title = $"Team Detail - {_result!.Name}";
             ShowRosteredPlayers();
         }
         catch (AccessTokenNotAvailableException exception)

@@ -51,7 +51,7 @@ internal class DetailTests : IntegrationTestBase
         var response = await client.GetFromJsonAsync<TeamDetailResult>(endpoint);
 
         response.Should().NotBeNull();
-        response!.TeamName.Should().Be(stubTeam.Name);
+        response!.Name.Should().Be(stubTeam.Name);
         response.CapSpace.Should().Be(CapSpaceUtilities.CalculateCurrentCapSpace(mockRosteredPlayer.ContractValue, mockUnrosteredPlayer.ContractValue, mockUnsignedPlayer.ContractValue).ToString("C0"));
         response.RosteredPlayers.Should().NotBeEmpty();
         response.UnrosteredPlayers.Should().NotBeEmpty();

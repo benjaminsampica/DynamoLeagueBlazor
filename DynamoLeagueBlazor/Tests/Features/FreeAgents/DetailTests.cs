@@ -51,7 +51,7 @@ internal class DetailTests : IntegrationTestBase
         response!.Name.Should().Be(mockFreeAgent.Name);
         response.Position.Should().Be(mockFreeAgent.Position);
         response.Team.Should().Be(mockTeam.Name);
-        response.HeadShot.Should().Be(mockFreeAgent.HeadShotUrl);
+        response.HeadShotUrl.Should().Be(mockFreeAgent.HeadShotUrl);
         response.EndOfFreeAgency.Should().Be(mockFreeAgent.EndOfFreeAgency!.Value.ToShortDateString());
 
         response!.Bids.Should().HaveCount(1);
