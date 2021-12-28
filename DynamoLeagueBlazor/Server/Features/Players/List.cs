@@ -23,9 +23,9 @@ public class ListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<PlayerListResult> GetAsync()
+    public async Task<PlayerListResult> GetAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new ListQuery());
+        return await _mediator.Send(new ListQuery(), cancellationToken);
     }
 }
 

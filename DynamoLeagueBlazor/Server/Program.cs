@@ -3,6 +3,7 @@ using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Fines;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -62,9 +63,10 @@ try
     builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
     builder.Services.AddFluentValidation(fv =>
     {
-        fv.RegisterValidatorsFromAssemblyContaining<AddBidRequestValidator>();
         fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     });
+
+    builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
         .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);

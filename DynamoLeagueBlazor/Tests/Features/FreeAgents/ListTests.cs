@@ -66,5 +66,6 @@ internal class ListTests : IntegrationTestBase
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
         freeAgent.BiddingEnds.Should().Be(biddingEnds.ToShortDateString());
+        freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }
 }

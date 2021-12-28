@@ -20,9 +20,9 @@ public class SeasonStatusController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<bool> GetAsync()
+    public async Task<bool> GetAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new SeasonStatusQuery());
+        return await _mediator.Send(new SeasonStatusQuery(), cancellationToken);
     }
 }
 

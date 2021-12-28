@@ -24,9 +24,9 @@ public class ListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<FreeAgentListResult> GetAsync()
+    public async Task<FreeAgentListResult> GetAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new ListQuery());
+        return await _mediator.Send(new ListQuery(), cancellationToken);
     }
 }
 

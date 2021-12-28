@@ -23,9 +23,9 @@ public class TopOffendersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<TopOffendersResult> GetAsync()
+    public async Task<TopOffendersResult> GetAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new TopOffendersQuery());
+        return await _mediator.Send(new TopOffendersQuery(), cancellationToken);
     }
 }
 
