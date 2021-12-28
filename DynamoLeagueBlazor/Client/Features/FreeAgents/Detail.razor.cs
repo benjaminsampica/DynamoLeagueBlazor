@@ -13,8 +13,7 @@ public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject]
-    private IBidAmountValidator BidAmountValidator { get; set; } = null!;
+    [Inject] private IBidAmountValidator BidAmountValidator { get; set; } = null!;
     [Parameter] public int PlayerId { get; set; }
 
     private FreeAgentDetailResult? _result;
