@@ -90,11 +90,11 @@ public class BidAmountValidator : IBidAmountValidator
 
     public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
-        var noHigherBidWasFound = await _dbContext.Players
+        var isHighestBid = await _dbContext.Players
             .Where(p => p.Id == request.PlayerId
                 && p.Bids.All(b => request.Amount > b.Amount))
             .AnyAsync(cancellationToken);
 
-        return noHigherBidWasFound;
+        return isHighestBid;
     }
 }
