@@ -52,7 +52,7 @@ internal class DetailTests : IntegrationTestBase
 
         response.Should().NotBeNull();
         response!.TeamName.Should().Be(stubTeam.TeamName);
-        response.CapSpace.Should().Be(CapSpaceUtilities.CalculateCurrentCapSpace(mockRosteredPlayer.ContractValue, mockUnrosteredPlayer.ContractValue, mockUnsignedPlayer.ContractValue).ToString("C0"));
+        response.CapSpace.Should().Be(CapSpaceUtilities.CalculateCurrentCapSpace(DateOnly.FromDateTime(DateTime.Today), mockRosteredPlayer.ContractValue, mockUnrosteredPlayer.ContractValue, mockUnsignedPlayer.ContractValue).ToString("C0"));
         response.RosteredPlayers.Should().NotBeEmpty();
         response.UnrosteredPlayers.Should().NotBeEmpty();
         response.UnsignedPlayers.Should().NotBeEmpty();
