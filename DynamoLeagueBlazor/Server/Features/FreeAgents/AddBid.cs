@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
 using MediatR;
@@ -18,19 +17,29 @@ public class AddBidController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IBidAmountValidator _bidAmountValidator;
 
-    public AddBidController(IMediator mediator, IMapper mapper)
+    public AddBidController(IMediator mediator, IMapper mapper, IBidAmountValidator bidAmountValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
+        _bidAmountValidator = bidAmountValidator;
+    }
+
+    [HttpGet]
+    public async Task<bool> GetAsync([FromQuery] int playerId, int amount, CancellationToken cancellationToken)
+    {
+        var isValidBid = await _bidAmountValidator.IsHighestBidAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
+
+        return isValidBid;
     }
 
     [HttpPost]
-    public async Task<int> PostAsync([FromBody] AddBidRequest request)
+    public async Task<int> PostAsync([FromBody] AddBidRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<AddBidQuery>(request);
 
-        return await _mediator.Send(query);
+        return await _mediator.Send(query, cancellationToken);
     }
 }
 
@@ -70,18 +79,22 @@ public class AddBidMappingProfile : Profile
     }
 }
 
-public class AddBidRequestValidator : AbstractValidator<AddBidRequest>
+public class BidAmountValidator : IBidAmountValidator
 {
-    public AddBidRequestValidator(ApplicationDbContext dbContext)
-    {
-        RuleFor(x => x.Amount).MustAsync(async (request, value, context, cancellationToken) =>
-        {
-            var player = await dbContext.Players
-                .Where(p => p.Id == request.PlayerId
-                    && p.Bids.GetHighestBidder().Amount > value)
-                .SingleOrDefaultAsync(cancellationToken);
+    private readonly ApplicationDbContext _dbContext;
 
-            return player != null;
-        });
+    public BidAmountValidator(ApplicationDbContext dbContext)
+    {
+        this._dbContext = dbContext;
+    }
+
+    public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
+    {
+        var isHighestBid = await _dbContext.Players
+            .Where(p => p.Id == request.PlayerId
+                && p.Bids.All(b => request.Amount > b.Amount))
+            .AnyAsync(cancellationToken);
+
+        return isHighestBid;
     }
 }

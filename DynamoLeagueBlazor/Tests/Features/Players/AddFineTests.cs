@@ -2,9 +2,7 @@
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
@@ -51,23 +49,7 @@ internal class AddFineTests : IntegrationTestBase
         fine.Should().NotBeNull();
         fine!.PlayerId.Should().Be(stubRequest.PlayerId);
         fine.Status.Should().BeFalse();
-        fine.FineReason.Should().Be(stubRequest.FineReason);
-        fine.FineAmount.Should().Be(FineUtilities.CalculateFineAmount(mockPlayer.ContractValue));
-    }
-
-    [Test]
-    public async Task GivenAnyAuthenticatedUser_WhenAnInvalidFine_ThenReturnsBadRequestWithErrors()
-    {
-        var application = CreateUserAuthenticatedApplication();
-
-        var client = application.CreateClient();
-
-        var badRequest = new AddFineRequest { PlayerId = -1, FineReason = string.Empty };
-        var response = await client.PostAsJsonAsync(_endpoint, badRequest);
-
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var details = await JsonSerializer.DeserializeAsync<ValidationProblemDetails>(await response.Content.ReadAsStreamAsync());
-        details.Should().NotBeNull();
-        details!.Errors.Should().NotBeEmpty();
+        fine.Reason.Should().Be(stubRequest.FineReason);
+        fine.Amount.Should().Be(FineUtilities.CalculateFineAmount(mockPlayer.ContractValue));
     }
 }

@@ -2,14 +2,14 @@
 
 public record Team : BaseEntity
 {
-    public Team(string teamName, string teamLogoUrl)
+    public Team(string name, string logoUrl)
     {
-        TeamName = teamName;
-        TeamLogoUrl = teamLogoUrl;
+        Name = name;
+        LogoUrl = logoUrl;
     }
 
-    public string TeamName { get; private set; }
-    public string TeamLogoUrl { get; private set; }
+    public string Name { get; private set; }
+    public string LogoUrl { get; private set; }
 
     public ICollection<Player> Players { get; private set; } = new HashSet<Player>();
 

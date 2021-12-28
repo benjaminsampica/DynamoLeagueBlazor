@@ -24,11 +24,11 @@ public class ManageFineController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync([FromBody] ManageFineRequest request)
+    public async Task<IActionResult> PostAsync([FromBody] ManageFineRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<ManageFineQuery>(request);
 
-        await _mediator.Send(query);
+        await _mediator.Send(query, cancellationToken);
 
         return NoContent();
     }

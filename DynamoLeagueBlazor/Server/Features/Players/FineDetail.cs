@@ -20,9 +20,9 @@ public class FineDetailController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<FineDetailResult> GetAsync([FromQuery] FineDetailRequest request)
+    public async Task<FineDetailResult> GetAsync([FromQuery] FineDetailRequest request, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new FineDetailQuery(request.PlayerId));
+        return await _mediator.Send(new FineDetailQuery(request.PlayerId), cancellationToken);
     }
 }
 

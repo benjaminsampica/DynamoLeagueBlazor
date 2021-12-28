@@ -148,16 +148,24 @@ internal static class IntegrationTestExtensions
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string AuthenticationName = RoleName.User;
-    public const int TeamId = 1;
+    public static int TeamId = 1;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public UserAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+    public UserAuthenticationHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        ApplicationDbContext applicationDbContext)
         : base(options, logger, encoder, clock)
     {
+        _applicationDbContext = applicationDbContext;
     }
 
-    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
+
         var claims = new[] {
             new Claim(ClaimTypes.Name, RandomString),
             new Claim(ClaimTypes.Role, RoleName.User),
@@ -169,23 +177,31 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
         var result = AuthenticateResult.Success(ticket);
 
-        return Task.FromResult(result);
+        return result;
     }
 }
 
 internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string AuthenticationName = RoleName.Admin;
-    public const int TeamId = 1;
+    public static int TeamId = 1;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public AdminAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+    public AdminAuthenticationHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        ApplicationDbContext applicationDbContext)
         : base(options, logger, encoder, clock)
     {
+        _applicationDbContext = applicationDbContext;
     }
 
-    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
+
         var claims = new[] {
             new Claim(ClaimTypes.Name, RandomString),
             new Claim(ClaimTypes.Role, RoleName.Admin),
@@ -197,6 +213,6 @@ internal class AdminAuthenticationHandler : AuthenticationHandler<Authentication
 
         var result = AuthenticateResult.Success(ticket);
 
-        return Task.FromResult(result);
+        return result;
     }
 }

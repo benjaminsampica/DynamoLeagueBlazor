@@ -23,9 +23,9 @@ public class TopOffendersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<TopOffendersResult> GetAsync()
+    public async Task<TopOffendersResult> GetAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new TopOffendersQuery());
+        return await _mediator.Send(new TopOffendersQuery(), cancellationToken);
     }
 }
 
@@ -46,7 +46,7 @@ public class TopOffendersHandler : IRequestHandler<TopOffendersQuery, TopOffende
     {
         var players = await _dbContext.Players
             .Where(p => p.Fines.Any(f => f.Status))
-            .OrderByDescending(p => p.Fines.Sum(f => f.FineAmount))
+            .OrderByDescending(p => p.Fines.Sum(f => f.Amount))
             .Take(10)
             .ProjectTo<TopOffendersResult.PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
@@ -63,8 +63,6 @@ public class TopOffendersMappingProfile : Profile
     public TopOffendersMappingProfile()
     {
         CreateMap<Player, TopOffendersResult.PlayerItem>()
-            .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.HeadShot))
-            .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Name))
-            .ForMember(d => d.TotalFineAmount, mo => mo.MapFrom(s => s.Fines.Sum(f => f.FineAmount).ToString("C0")));
+            .ForMember(d => d.TotalFineAmount, mo => mo.MapFrom(s => s.Fines.Sum(f => f.Amount).ToString("C0")));
     }
 }

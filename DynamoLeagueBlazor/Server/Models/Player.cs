@@ -2,17 +2,17 @@
 
 public record Player : BaseEntity
 {
-    public Player(string name, string position, string headShot)
+    public Player(string name, string position, string headShotUrl)
     {
         Name = name;
         Position = position;
-        HeadShot = headShot;
+        HeadShotUrl = headShotUrl;
     }
 
     public string Name { get; private set; }
     public string Position { get; private set; }
-    public string HeadShot { get; private set; }
-    public int? ContractLength { get; set; } // TODO: Change to a DateTime
+    public string HeadShotUrl { get; private set; }
+    public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
     public bool Rostered { get; set; }
@@ -27,7 +27,7 @@ public record Player : BaseEntity
     public Player SetToRostered(DateTime contractedToDate, int contractValue)
     {
         Rostered = true;
-        ContractLength = contractedToDate.Year;
+        YearContractExpires = contractedToDate.Year;
         EndOfFreeAgency = null;
         ContractValue = contractValue;
 
@@ -45,7 +45,7 @@ public record Player : BaseEntity
     public Player SetToUnsigned()
     {
         Rostered = false;
-        ContractLength = null;
+        YearContractExpires = null;
         EndOfFreeAgency = null;
         YearAcquired = DateTime.Today.Year;
 
@@ -87,9 +87,9 @@ public record Player : BaseEntity
         return bid;
     }
 
-    public Fine AddFine(decimal amount, string fineReason)
+    public Fine AddFine(decimal amount, string reason)
     {
-        var fine = new Fine(amount, fineReason, Id);
+        var fine = new Fine(amount, reason, Id);
 
         Fines.Add(fine);
 
@@ -101,23 +101,23 @@ public static class PlayerExtensions
 {
     public static IQueryable<Player> WhereIsRostered(this IQueryable<Player> players)
         => players.Where(p => p.Rostered
-            && p.ContractLength >= DateTime.Today.Year
+            && p.YearContractExpires >= DateTime.Today.Year
             && p.EndOfFreeAgency == null);
     public static IQueryable<Player> WhereIsUnrostered(this IQueryable<Player> players)
         => players.Where(p => p.Rostered == false
-            && p.ContractLength != null
+            && p.YearContractExpires != null
             && p.EndOfFreeAgency == null);
 
     public static IQueryable<Player> WhereIsUnsigned(this IQueryable<Player> players)
         => players.Where(p => p.Rostered == false
-            && p.ContractLength == null
+            && p.YearContractExpires == null
             && p.EndOfFreeAgency == null
             && p.YearAcquired == DateTime.Today.Year);
 
     public static IQueryable<Player> WhereIsEligibleForFreeAgency(this IQueryable<Player> players)
-        => players.Where(p => p.ContractLength < DateTime.Today.Year);
+        => players.Where(p => p.YearContractExpires < DateTime.Today.Year);
 
     public static IQueryable<Player> WhereIsFreeAgent(this IQueryable<Player> players)
-        => players.Where(p => p.ContractLength < DateTime.Today.Year
+        => players.Where(p => p.YearContractExpires < DateTime.Today.Year
             && p.EndOfFreeAgency >= DateTime.Now);
 }
