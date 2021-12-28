@@ -62,10 +62,9 @@ public class ListMappingProfile : Profile
     public ListMappingProfile()
     {
         CreateMap<Fine, FineListResult.FineItem>()
-            .ForMember(d => d.FineId, mo => mo.MapFrom(s => s.Id))
-            .ForMember(d => d.FineStatus, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
+            .ForMember(d => d.Status, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
             .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Player.Name))
-            .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShot))
-            .ForMember(d => d.FineAmount, mo => mo.MapFrom(s => s.FineAmount.ToString("C2")));
+            .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShotUrl))
+            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C2")));
     }
 }

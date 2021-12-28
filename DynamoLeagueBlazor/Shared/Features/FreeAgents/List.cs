@@ -6,10 +6,10 @@ public class FreeAgentListResult
 
     public class FreeAgentItem
     {
-        public int PlayerId { get; set; }
-        public string PlayerName { get; set; }
-        public string PlayerPosition { get; set; }
-        public string PlayerTeam { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public string Team { get; set; }
         public string PlayerHeadShotUrl { get; set; }
         public string BiddingEnds { get; set; }
         public string HighestBid { get; set; }

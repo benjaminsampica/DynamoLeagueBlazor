@@ -16,7 +16,7 @@ public class FreeAgentDetailResult
     {
         public string Team { get; set; }
         public string Amount { get; set; }
-        public string Date { get; set; }
+        public string CreatedOn { get; set; }
     }
 }
 
