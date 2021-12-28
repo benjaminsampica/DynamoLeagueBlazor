@@ -6,7 +6,7 @@ public class FreeAgentDetailResult
 {
     public string Name { get; set; }
     public string Position { get; set; }
-    public string HeadShot { get; set; }
+    public string HeadShotUrl { get; set; }
     public string Team { get; set; }
     public string EndOfFreeAgency { get; set; }
 
@@ -16,7 +16,7 @@ public class FreeAgentDetailResult
     {
         public string Team { get; set; }
         public string Amount { get; set; }
-        public string Date { get; set; }
+        public string CreatedOn { get; set; }
     }
 }
 

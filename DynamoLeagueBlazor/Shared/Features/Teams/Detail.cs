@@ -2,8 +2,8 @@
 
 public class TeamDetailResult
 {
-    public string TeamLogoUrl { get; set; }
-    public string TeamName { get; set; }
+    public string LogoUrl { get; set; }
+    public string Name { get; set; }
     public string CapSpace { get; set; }
 
     public List<PlayerItem> RosteredPlayers { get; init; } = new List<PlayerItem>();

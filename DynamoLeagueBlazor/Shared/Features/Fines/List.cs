@@ -6,11 +6,11 @@ public class FineListResult
 
     public class FineItem
     {
-        public int FineId { get; set; }
+        public int Id { get; set; }
         public string PlayerHeadShotUrl { get; set; }
         public string PlayerName { get; set; }
         public string FineReason { get; set; }
-        public string FineAmount { get; set; }
-        public string FineStatus { get; set; }
+        public string Amount { get; set; }
+        public string Status { get; set; }
     }
 }

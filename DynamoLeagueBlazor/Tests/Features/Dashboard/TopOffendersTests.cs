@@ -37,9 +37,9 @@ internal class TopOffendersTests : IntegrationTestBase
         result!.Players.Should().HaveCount(1);
 
         var firstPlayer = result.Players.First();
-        firstPlayer.TotalFineAmount.Should().Be(mockFine.FineAmount.ToString("C0"));
-        firstPlayer.PlayerName.Should().Be(mockPlayer.Name);
-        firstPlayer.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShot);
+        firstPlayer.TotalFineAmount.Should().Be(mockFine.Amount.ToString("C0"));
+        firstPlayer.Name.Should().Be(mockPlayer.Name);
+        firstPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
     }
 
     [Test]
@@ -53,7 +53,7 @@ internal class TopOffendersTests : IntegrationTestBase
 
             var mockFine = CreateFakeFine(mockPlayer.Id);
             mockFine.Status = true;
-            mockFine.FineAmount = int.MaxValue;
+            mockFine.Amount = int.MaxValue;
             await application.AddAsync(mockFine);
         }
 
@@ -62,7 +62,7 @@ internal class TopOffendersTests : IntegrationTestBase
 
         var lowestFine = CreateFakeFine(sixthPlayer.Id);
         lowestFine.Status = true;
-        lowestFine.FineAmount = 1;
+        lowestFine.Amount = 1;
         await application.AddAsync(lowestFine);
 
         var client = application.CreateClient();
@@ -71,6 +71,6 @@ internal class TopOffendersTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);
-        result.Players.Should().OnlyContain(p => p.TotalFineAmount != lowestFine.FineAmount.ToString("C0"));
+        result.Players.Should().OnlyContain(p => p.TotalFineAmount != lowestFine.Amount.ToString("C0"));
     }
 }

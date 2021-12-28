@@ -59,11 +59,11 @@ internal class ListTests : IntegrationTestBase
         result!.FreeAgents.Should().HaveCount(1);
 
         var freeAgent = result.FreeAgents.First();
-        freeAgent.PlayerId.Should().Be(mockPlayer.Id);
-        freeAgent.PlayerName.Should().Be(mockPlayer.Name);
-        freeAgent.PlayerPosition.Should().Be(mockPlayer.Position);
-        freeAgent.PlayerTeam.Should().Be(mockTeam.TeamName);
-        freeAgent.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShot);
+        freeAgent.Id.Should().Be(mockPlayer.Id);
+        freeAgent.Name.Should().Be(mockPlayer.Name);
+        freeAgent.Position.Should().Be(mockPlayer.Position);
+        freeAgent.Team.Should().Be(mockTeam.Name);
+        freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
         freeAgent.BiddingEnds.Should().Be(biddingEnds.ToShortDateString());
     }

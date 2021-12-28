@@ -125,7 +125,7 @@ namespace DynamoLeagueBlazor.Server.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId, code, returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -133,7 +133,7 @@ namespace DynamoLeagueBlazor.Server.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                     }
                     else
                     {
@@ -155,7 +155,7 @@ namespace DynamoLeagueBlazor.Server.Areas.Identity.Pages.Account
         private void SetPageModel(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            Teams = new SelectList(_dbContext.Teams, nameof(Team.Id), nameof(Team.TeamName));
+            Teams = new SelectList(_dbContext.Teams, nameof(Team.Id), nameof(Team.Name));
         }
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
