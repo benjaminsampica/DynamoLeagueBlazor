@@ -101,6 +101,6 @@ internal class AddBidTests : IntegrationTestBase
         bid!.Amount.Should().Be(request.Amount);
         bid.PlayerId.Should().Be(request.PlayerId);
         bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
-        bid.DateTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+        bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
     }
 }
