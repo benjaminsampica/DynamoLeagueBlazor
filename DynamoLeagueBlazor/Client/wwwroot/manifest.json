@@ -13,9 +13,9 @@
       "sizes": "512x512"
     },
     {
-      "src": "icon-128.png",
+      "src": "icon-192.png",
       "type": "image/png",
-      "sizes": "128x128"
+      "sizes": "192x192"
     }
   ]
 }
