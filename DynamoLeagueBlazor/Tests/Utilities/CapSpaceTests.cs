@@ -6,176 +6,28 @@ namespace DynamoLeagueBlazor.Tests.Utilities
     [TestFixture]
     internal class CapSpaceTest
     {
-        private Team? stubTeam;
-        private int rosteredPlayersContractValue;
-        private int unrosteredPlayersContractValue;
-        private int unsignedPlayersContractValue;
-
-        [SetUp]
-        public void Init()
+        [TestCase(0, 0, 0, ExpectedResult = 1050, Description = "Team has no players at all.")]
+        [TestCase(500, 0, 0, ExpectedResult = 550, Description = "Team has rostered players with a total value of 500.")]
+        [TestCase(0, 200, 0, ExpectedResult = 950, Description = "Team has unrostered players with a total value of 200.")]
+        [TestCase(0, 0, 100, ExpectedResult = 950, Description = "Team has unsigned players with a total value of 100.")]
+        [TestCase(600, 200, 100, ExpectedResult = 250, Description = "Team has rostered, unrostered, and unsigned players with a total value of 900.")]
+        public int GivenDifferentPlayerValuesForToday_ThenReturnsExpectedRemainingCapSpace(int rostered, int unrostered, int dropped)
         {
-            stubTeam = CreateFakeTeam();
+            var today = new DateOnly(2021, 01, 01);
 
-            var mockRosteredPlayer = CreateFakePlayer();
-            mockRosteredPlayer.TeamId = stubTeam.Id;
-            mockRosteredPlayer.SetToRostered(DateTime.MaxValue, 1);
-            mockRosteredPlayer.ContractValue = 100;
-            stubTeam.Players.Add(mockRosteredPlayer);
-
-            var mockRosteredPlayer2 = CreateFakePlayer();
-            mockRosteredPlayer2.TeamId = stubTeam.Id;
-            mockRosteredPlayer2.SetToRostered(DateTime.MaxValue, 1);
-            mockRosteredPlayer2.ContractValue = 200;
-            stubTeam.Players.Add(mockRosteredPlayer2);
-
-            var mockRosteredPlayer3 = CreateFakePlayer();
-            mockRosteredPlayer3.TeamId = stubTeam.Id;
-            mockRosteredPlayer3.SetToRostered(DateTime.MaxValue, 1);
-            mockRosteredPlayer3.ContractValue = 200;
-            stubTeam.Players.Add(mockRosteredPlayer3);
-
-            rosteredPlayersContractValue = stubTeam.Players.Where(p => p.Rostered).Sum(cv => cv.ContractValue);
-
-            var mockUnrosteredPlayer = CreateFakePlayer();
-            mockUnrosteredPlayer.TeamId = stubTeam.Id;
-            mockUnrosteredPlayer.SetToUnrostered();
-            mockUnrosteredPlayer.ContractValue = 100;
-            stubTeam.Players.Add(mockUnrosteredPlayer);
-
-            var mockUnrosteredPlayer2 = CreateFakePlayer();
-            mockUnrosteredPlayer2.TeamId = stubTeam.Id;
-            mockUnrosteredPlayer2.SetToUnrostered();
-            mockUnrosteredPlayer2.ContractValue = 100;
-            stubTeam.Players.Add(mockUnrosteredPlayer2);
-
-            unrosteredPlayersContractValue = stubTeam.Players.Where(p => !p.Rostered).Sum(cv => cv.ContractValue);
-
-            var mockUnsignedPlayer = CreateFakePlayer();
-            mockUnsignedPlayer.TeamId = stubTeam.Id;
-            mockUnsignedPlayer.SetToUnsigned();
-            mockUnsignedPlayer.ContractValue = 40;
-            stubTeam.Players.Add(mockUnsignedPlayer);
-
-            var mockUnsignedPlayer2 = CreateFakePlayer();
-            mockUnsignedPlayer2.TeamId = stubTeam.Id;
-            mockUnsignedPlayer2.SetToUnsigned();
-            mockUnsignedPlayer2.ContractValue = 10;
-            stubTeam.Players.Add(mockUnsignedPlayer2);
-
-            unsignedPlayersContractValue = stubTeam.Players.Where(p => (!p.Rostered) && (p.YearContractExpires is null) && (p.YearAcquired == DateTime.Today.Year)).Sum(cv => cv.ContractValue);
+            return CapSpaceUtilities.CalculateCurrentCapSpace(today, rostered, unrostered, dropped);
         }
 
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2020_ThenReturn1050()
+        [TestCase("01/01/2021", ExpectedResult = 1050, Description = "2021 Salary Cap")]
+        [TestCase("01/01/2022", ExpectedResult = 1100, Description = "2022 Salary Cap")]
+        [TestCase("01/01/2023", ExpectedResult = 1100, Description = "2023 Salary Cap")]
+        [TestCase("01/01/2024", ExpectedResult = 1150, Description = "2024 Salary Cap")]
+        [TestCase("01/01/2025", ExpectedResult = 1150, Description = "2025 Salary Cap")]
+        public int GivenLeagueYear_ThenReturnExpectedSalaryCap(string dateString)
         {
-            var date = new DateOnly(2020, 01, 01);
-            var expectedResult = 1050;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2021_ThenReturn1050()
-        {
-            var date = new DateOnly(2021, 01, 01);
-            var expectedResult = 1050;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2022_ThenReturn1100()
-        {
-            var date = new DateOnly(2022, 01, 01);
-            var expectedResult = 1100;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2023_ThenReturn1100()
-        {
-            var date = new DateOnly(2023, 01, 01);
-            var expectedResult = 1100;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2050_ThenReturn1800()
-        {
-            var date = new DateOnly(2050, 01, 01);
-            var expectedResult = 1800;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenCurrentSalaryCap_WhenYearIs2051_ThenReturn1800()
-        {
-            var date = new DateOnly(2051, 01, 01);
-            var expectedResult = 1800;
-            var result = CapSpaceUtilities.GetCurrentCapValue(date);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenRosteredPlayers_WhenTheYearIs2021AndRosteredContractIs500_ThenReturnRemaingCapOf550()
-        {
-            var date = new DateOnly(2021, 01, 01);
-
-            var expectedResult = 550;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, 0, 0);
-            result.Should().Be(expectedResult);
-        }
-        [Test]
-        public void GivenRosteredAndUnrosteredPlayers_WhenTheYearIs2021AndRosteredContractIs500AndUnrosteredContractIs200_ThenReturnRemaingCapOf450()
-        {
-            var date = new DateOnly(2021, 01, 01);
-
-            var expectedResult = 450;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, unrosteredPlayersContractValue, 0);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenAllPlayerTypes_WhenTheYearIs2021AndRosteredContractIs500AndUnrosteredContractIs200AndUnsignedContractIs50_ThenReturnRemaingCapOf400()
-        {
-            var date = new DateOnly(2021, 01, 01);
-
-            var expectedResult = 400;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenRosteredPlayers_WhenTheYearIs2022AndRosteredContractIs500_ThenReturnRemaingCapOf600()
-        {
-            var date = new DateOnly(2022, 01, 01);
-
-            var expectedResult = 600;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, 0, 0);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenRosteredAndUnrosteredPlayers_WhenTheYearIs2022AndRosteredContractIs500AndUnrosteredContractIs200_ThenReturnRemaingCapOf500()
-        {
-            var date = new DateOnly(2022, 01, 01);
-
-            var expectedResult = 500;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, unrosteredPlayersContractValue, 0);
-            result.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void GivenAllPlayerTypes_WhenTheYearIs2022AndRosteredContractIs500AndUnrosteredContractIs200AndUnsignedContractIs50_ThenReturnRemaingCapOf450()
-        {
-            var date = new DateOnly(2022, 01, 01);
-
-            var expectedResult = 450;
-            var result = CapSpaceUtilities.CalculateCurrentCapSpace(date, rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue);
-            result.Should().Be(expectedResult);
+            var date = DateOnly.Parse(dateString);
+ 
+            return CapSpaceUtilities.GetCurrentCapValue(date);
         }
     }
 }
