@@ -15,7 +15,7 @@ namespace DynamoLeagueBlazor.Tests.Utilities
         {
             var today = new DateOnly(2021, 01, 01);
 
-            return CapSpaceUtilities.CalculateCurrentCapSpace(today, rostered, unrostered, dropped);
+            return CapSpaceUtilities.GetRemainingCapSpace(today, rostered, unrostered, dropped);
         }
 
         [TestCase("01/01/2021", ExpectedResult = 1050, Description = "2021 Salary Cap")]
@@ -27,7 +27,7 @@ namespace DynamoLeagueBlazor.Tests.Utilities
         {
             var date = DateOnly.Parse(dateString);
  
-            return CapSpaceUtilities.GetCurrentCapValue(date);
+            return CapSpaceUtilities.GetCurrentSalaryCap(date);
         }
     }
 }
