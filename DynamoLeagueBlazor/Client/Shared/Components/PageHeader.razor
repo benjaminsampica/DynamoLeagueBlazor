@@ -1,0 +1,7 @@
+﻿<MudText Typo=Typo.h3 Align=Align.Center>
+    @ChildContent
+</MudText>
+
+@code {
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+}

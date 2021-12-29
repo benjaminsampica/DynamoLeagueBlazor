@@ -6,10 +6,12 @@
     @_title
 </Title>
 
+<PageHeader>
+    @_title
+</PageHeader>
+
 <MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)" Context=fineItem> 
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@_title</MudText>
-        <MudSpacer />
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
