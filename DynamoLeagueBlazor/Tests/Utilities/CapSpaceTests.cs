@@ -3,7 +3,6 @@ using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Tests.Utilities
 {
-    [TestFixture]
     internal class CapSpaceTest
     {
         [TestCase(0, 0, 0, ExpectedResult = 1050, Description = "Team has no players at all.")]
