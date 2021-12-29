@@ -46,7 +46,7 @@ public class IntegrationTesting
     }
 
     [OneTimeTearDown]
-    public async Task RunAfterAnyTestsAsync()
+    public async Task RunAfterAllTestsAsync()
     {
         await _setupApplication.DisposeAsync();
     }
