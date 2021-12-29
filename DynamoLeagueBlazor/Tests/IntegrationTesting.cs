@@ -21,6 +21,7 @@ public class IntegrationTesting
 {
     private static Checkpoint _checkpoint = null!;
     private static IConfiguration _configuration = null!;
+    internal static WebApplicationFactory<Program> _setupApplication = null!;
 
     [OneTimeSetUp]
     public async Task RunBeforeAnyTestsAsync()
@@ -36,12 +37,18 @@ public class IntegrationTesting
             TablesToIgnore = new[] { "__EFMigrationsHistory" }
         };
 
-        var application = new TestWebApplicationFactory(_configuration);
+        _setupApplication = new TestWebApplicationFactory(_configuration);
 
-        using var scope = application.Services.CreateScope();
+        using var scope = _setupApplication.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         await dbContext.Database.MigrateAsync();
+    }
+
+    [OneTimeTearDown]
+    public async Task RunAfterAllTestsAsync()
+    {
+        await _setupApplication.DisposeAsync();
     }
 
     public static async Task ResetStateAsync()

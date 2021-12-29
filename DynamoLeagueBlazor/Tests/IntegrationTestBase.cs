@@ -3,7 +3,7 @@
 public class IntegrationTestBase
 {
     [SetUp]
-    public async Task SetUp()
+    public async Task SetUpBase()
     {
         await ResetStateAsync();
     }

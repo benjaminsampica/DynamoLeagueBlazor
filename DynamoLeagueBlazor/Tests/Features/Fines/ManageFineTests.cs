@@ -90,3 +90,25 @@ internal class ManageFineTests : IntegrationTestBase
         fine.Should().BeNull();
     }
 }
+
+internal class ManageFineRequestValidatorTests
+{
+    private ManageFineRequestValidator _validator = null!;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _validator = new ManageFineRequestValidator();
+    }
+
+    [TestCase(0, ExpectedResult = false)]
+    [TestCase(1, ExpectedResult = true)]
+    public bool GivenDifferentRequests_ThenReturnsExpectedResult(int fineId)
+    {
+        var request = new ManageFineRequest { FineId = fineId };
+
+        var result = _validator.Validate(request);
+
+        return result.IsValid;
+    }
+}
