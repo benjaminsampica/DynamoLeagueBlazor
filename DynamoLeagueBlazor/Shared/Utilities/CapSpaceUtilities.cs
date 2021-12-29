@@ -6,10 +6,10 @@ public static class CapSpaceUtilities
     const int BaseCapSpace = 1050;
     const int BiYearlyCapIncrease = 50;
 
-    public static int GetCurrentCapValue(DateOnly date)
+    public static int GetCurrentSalaryCap(DateOnly date)
         => (date.Year - StartYear) / 2 * BiYearlyCapIncrease + BaseCapSpace;
 
-    public static int CalculateCurrentCapSpace(int rosteredPlayersContractValue, int unrosteredPlayersContractValue, int unsignedPlayeredContractValue)
-        => rosteredPlayersContractValue + unsignedPlayeredContractValue + (unrosteredPlayersContractValue / 2);
+    public static int GetRemainingCapSpace(DateOnly date, int rosteredPlayersContractValue, int unrosteredPlayersContractValue, int unsignedPlayeredContractValue)
+        => GetCurrentSalaryCap(date) - (rosteredPlayersContractValue + unsignedPlayeredContractValue + (unrosteredPlayersContractValue / 2));
 
 }
