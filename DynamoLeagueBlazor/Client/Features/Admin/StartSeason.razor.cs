@@ -14,6 +14,7 @@ public partial class StartSeason
 
     private bool _isDisabled = true;
     private bool _isProcessing;
+    private string _title = "Start Season";
 
     protected override async Task OnInitializedAsync()
     {

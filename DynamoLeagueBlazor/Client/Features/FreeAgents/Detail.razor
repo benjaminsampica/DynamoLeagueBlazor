@@ -24,7 +24,7 @@ else
     <MudCard>
         <MudCardContent>
             <MudGrid>
-                <MudItem sm=3 xs=12 Class="d-flex flex-column align-center">
+                <MudItem md=3 xs=12 Class="d-flex flex-column align-center">
                     <MudAvatar Image=@_result.HeadShotUrl Size=Size.Large></MudAvatar>
                     <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
                     <MudText Typo=Typo.h4>@_result.Name</MudText>
@@ -32,14 +32,15 @@ else
                     <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Team</MudText>
                     <MudText Typo=Typo.h6>Position</MudText>
                     <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Position</MudText>
-                    <MudDivider DividerType=DividerType.Middle/>
+                    <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
+                    <MudText Typo=Typo.h6 Color=Color.Warning Align=Align.Center>Bidding Ends on @_result.EndOfFreeAgency</MudText>
                 </MudItem>
                 <MudItem md=9 xs=12>
                     <MudText Typo=Typo.h6>Submit A New Bid</MudText>
                     <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
                         <FluentValidationValidator Validator=_validator/>
                         <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)"/>
-                        <MudButton Color="Color.Success" Variant=Variant.Outlined StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true>
+                        <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true>
                             @if (_processingForm)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -51,9 +52,9 @@ else
                             }
                         </MudButton>
                     </EditForm>
-                    <MudText Typo=Typo.h6 Color=Color.Warning>Bidding Ends on @_result.EndOfFreeAgency</MudText>
                 </MudItem>
                 <MudItem xs=12>
+                    <MudText Typo=Typo.h6 Align=Align.Center>Bid History</MudText>
                     @if(_result.Bids.Any())
                     {
                         <MudTimeline>
