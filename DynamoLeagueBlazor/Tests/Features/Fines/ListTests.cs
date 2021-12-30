@@ -25,8 +25,8 @@ internal class ListTests : IntegrationTestBase
         var application = CreateUserAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         await application.AddAsync(mockPlayer);
-        var mockFine = CreateFakeFine(mockPlayer.Id);
-        await application.AddAsync(mockFine);
+        var mockFine = mockPlayer.AddFine(1, RandomString);
+        await application.UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
