@@ -40,7 +40,7 @@ public partial class List : IDisposable
     {
         if (string.IsNullOrWhiteSpace(_searchValue))
             return true;
-        if ($"{item.PlayerName} {item.FineReason} {item.Amount} {item.Status}".Contains(_searchValue))
+        if ($"{item.PlayerName} {item.Reason} {item.Amount} {item.Status}".Contains(_searchValue))
             return true;
         return false;
     }
