@@ -103,6 +103,10 @@ internal class AddBidTests : IntegrationTestBase
         bid.PlayerId.Should().Be(request.PlayerId);
         bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
         bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+
+        // Verify the end of free agency is increased.
+        var player = await application.FirstOrDefaultAsync<Player>();
+        player!.EndOfFreeAgency.Should().BeAfter(mockPlayer.EndOfFreeAgency.Value);
     }
 }
 
