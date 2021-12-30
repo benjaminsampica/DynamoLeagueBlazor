@@ -40,7 +40,7 @@ internal class ListTests : IntegrationTestBase
         fine.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         fine.PlayerName.Should().Be(mockPlayer.Name);
         fine.Status.Should().Be("Pending");
-        fine.Amount.Should().Be(mockFine.Amount.ToString("C0"));
+        fine.Amount.Should().Be(mockFine.Amount.ToString("C2"));
         fine.Reason.Should().Be(mockFine.Reason);
     }
 }
