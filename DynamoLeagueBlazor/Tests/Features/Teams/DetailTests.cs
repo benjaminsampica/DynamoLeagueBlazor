@@ -61,19 +61,25 @@ internal class DetailTests : IntegrationTestBase
 
         response.RosteredPlayers.Should().NotBeEmpty();
         var rosteredPlayer = response.RosteredPlayers.First();
-        rosteredPlayer.Should().BeEquivalentTo(mockRosteredPlayer);
+        rosteredPlayer.HeadShotUrl.Should().Be(mockRosteredPlayer.HeadShotUrl);
+        rosteredPlayer.Name.Should().Be(mockRosteredPlayer.Name);
+        rosteredPlayer.Position.Should().Be(mockRosteredPlayer.Position);
         rosteredPlayer.YearContractExpires.Should().Be(mockRosteredPlayer.YearContractExpires.ToString());
         rosteredPlayer.ContractValue.Should().Be(mockRosteredPlayer.ContractValue.ToString("C0"));
 
         response.UnrosteredPlayers.Should().NotBeEmpty();
         var unrosteredPlayer = response.UnrosteredPlayers.First();
-        unrosteredPlayer.Should().BeEquivalentTo(mockUnrosteredPlayer);
+        unrosteredPlayer.HeadShotUrl.Should().Be(mockUnrosteredPlayer.HeadShotUrl);
+        unrosteredPlayer.Name.Should().Be(mockUnrosteredPlayer.Name);
+        unrosteredPlayer.Position.Should().Be(mockUnrosteredPlayer.Position);
         unrosteredPlayer.YearContractExpires.Should().Be(mockUnrosteredPlayer.YearContractExpires.ToString());
         unrosteredPlayer.ContractValue.Should().Be(mockUnrosteredPlayer.ContractValue.ToString("C0"));
 
         response.UnsignedPlayers.Should().NotBeEmpty();
         var unsignedPlayer = response.UnsignedPlayers.First();
-        unsignedPlayer.Should().BeEquivalentTo(mockUnsignedPlayer);
+        unsignedPlayer.HeadShotUrl.Should().Be(mockUnsignedPlayer.HeadShotUrl);
+        unsignedPlayer.Name.Should().Be(mockUnsignedPlayer.Name);
+        unsignedPlayer.Position.Should().Be(mockUnsignedPlayer.Position);
         unsignedPlayer.YearContractExpires.Should().Be(mockUnsignedPlayer.YearContractExpires.ToString());
         unsignedPlayer.ContractValue.Should().Be(mockUnsignedPlayer.ContractValue.ToString("C0"));
     }

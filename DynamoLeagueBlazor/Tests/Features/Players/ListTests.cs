@@ -37,7 +37,10 @@ internal class ListTests : IntegrationTestBase
         result!.Players.Should().HaveCount(1);
 
         var player = result.Players.First();
-        player.Should().BeEquivalentTo(mockPlayer);
+        player.Name.Should().Be(mockPlayer.Name);
+        player.Id.Should().Be(mockPlayer.Id);
+        player.Position.Should().Be(mockPlayer.Position);
+        player.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         player.Team.Should().Be(mockPlayer.Team.Name);
         player.YearContractExpires.Should().Be(mockPlayer.YearContractExpires.ToString());
         player.ContractValue.Should().Be(mockPlayer.ContractValue.ToString("C0"));
