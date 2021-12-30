@@ -92,7 +92,8 @@ public class DetailMappingProfile : Profile
     public DetailMappingProfile()
     {
         CreateMap<Player, PlayerItem>()
-            .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")));
+            .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")))
+            .ForMember(d => d.YearContractExpires, mo => mo.MapFrom(s => s.YearContractExpires.ToString()));
 
         CreateMap<Team, TeamDetailResult>();
     }
