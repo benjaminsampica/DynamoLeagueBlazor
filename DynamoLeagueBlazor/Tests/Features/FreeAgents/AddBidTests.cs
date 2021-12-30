@@ -129,7 +129,7 @@ internal class AddBidRequestValidatorTests : IntegrationTestBase
 
     [TestCase(1, ExpectedResult = false, Description = "Bid is exactly the same amount")]
     [TestCase(2, ExpectedResult = true, Description = "Bid is one dollar higher")]
-    public async Task<bool> GivenDifferentBidAmounts_WhenAPlayerHasOutstandingBidOfOneDollar_ThenReturnsExpectedResult(int amount)
+    public async Task<bool> GivenDifferentBidAmounts_WhenAPlayerAlreadyHasBidOfOneDollar_ThenReturnsExpectedResult(int amount)
     {
         var stubTeam = CreateFakeTeam();
         await _setupApplication.AddAsync(stubTeam);

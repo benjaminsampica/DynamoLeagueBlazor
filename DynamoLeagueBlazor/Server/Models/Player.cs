@@ -82,6 +82,11 @@ public record Player : BaseEntity
     {
         var bid = new Bid(amount, teamIdOfBidder, Id);
 
+        if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
+        {
+            GrantExtensionToFreeAgency();
+        }
+
         Bids.Add(bid);
 
         return bid;
