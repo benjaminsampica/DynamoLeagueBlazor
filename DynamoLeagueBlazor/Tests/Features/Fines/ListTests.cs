@@ -34,5 +34,12 @@ internal class ListTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Fines.Should().HaveCount(1);
+
+        var fine = result!.Fines.First();
+        fine.Should().BeEquivalentTo(mockFine);
+        fine.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
+        fine.PlayerName.Should().Be(mockPlayer.Name);
+        fine.Status.Should().Be("Pending");
+        fine.Amount.Should().Be(mockFine.Amount.ToString("C0"));
     }
 }

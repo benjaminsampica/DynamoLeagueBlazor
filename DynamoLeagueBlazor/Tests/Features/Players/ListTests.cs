@@ -23,7 +23,10 @@ internal class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayer_ThenReturnsOnePlayer()
     {
         var application = CreateUserAuthenticatedApplication();
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = mockTeam.Id;
         await application.AddAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -32,5 +35,11 @@ internal class ListTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(1);
+
+        var player = result.Players.First();
+        player.Should().BeEquivalentTo(mockPlayer);
+        player.Team.Should().Be(mockPlayer.Team.Name);
+        player.YearContractExpires.Should().Be(mockPlayer.YearContractExpires.ToString());
+        player.ContractValue.Should().Be(mockPlayer.ContractValue.ToString("C0"));
     }
 }

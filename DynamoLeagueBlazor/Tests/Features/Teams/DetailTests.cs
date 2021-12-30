@@ -52,9 +52,29 @@ internal class DetailTests : IntegrationTestBase
 
         response.Should().NotBeNull();
         response!.Name.Should().Be(stubTeam.Name);
-        response.CapSpace.Should().Be(CapSpaceUtilities.GetRemainingCapSpace(DateOnly.FromDateTime(DateTime.Today), mockRosteredPlayer.ContractValue, mockUnrosteredPlayer.ContractValue, mockUnsignedPlayer.ContractValue).ToString("C0"));
+        var expectedCapSpace = CapSpaceUtilities.GetRemainingCapSpace(
+            DateOnly.FromDateTime(DateTime.Today),
+            mockRosteredPlayer.ContractValue,
+            mockUnrosteredPlayer.ContractValue,
+            mockUnsignedPlayer.ContractValue).ToString("C0");
+        response.CapSpace.Should().Be(expectedCapSpace);
+
         response.RosteredPlayers.Should().NotBeEmpty();
+        var rosteredPlayer = response.RosteredPlayers.First();
+        rosteredPlayer.Should().BeEquivalentTo(mockRosteredPlayer);
+        rosteredPlayer.YearContractExpires.Should().Be(mockRosteredPlayer.YearContractExpires.ToString());
+        rosteredPlayer.ContractValue.Should().Be(mockRosteredPlayer.ContractValue.ToString("C0"));
+
         response.UnrosteredPlayers.Should().NotBeEmpty();
+        var unrosteredPlayer = response.UnrosteredPlayers.First();
+        unrosteredPlayer.Should().BeEquivalentTo(mockUnrosteredPlayer);
+        unrosteredPlayer.YearContractExpires.Should().Be(mockUnrosteredPlayer.YearContractExpires.ToString());
+        unrosteredPlayer.ContractValue.Should().Be(mockUnrosteredPlayer.ContractValue.ToString("C0"));
+
         response.UnsignedPlayers.Should().NotBeEmpty();
+        var unsignedPlayer = response.UnsignedPlayers.First();
+        unsignedPlayer.Should().BeEquivalentTo(mockUnsignedPlayer);
+        unsignedPlayer.YearContractExpires.Should().Be(mockUnsignedPlayer.YearContractExpires.ToString());
+        unsignedPlayer.ContractValue.Should().Be(mockUnsignedPlayer.ContractValue.ToString("C0"));
     }
 }

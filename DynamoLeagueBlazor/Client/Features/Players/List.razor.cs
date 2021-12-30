@@ -37,7 +37,7 @@ public partial class List : IDisposable
     {
         if (string.IsNullOrWhiteSpace(_searchValue))
             return true;
-        if ($"{item.Name} {item.Position} {item.ContractValue} {item.ContractLength} {item.Team}".Contains(_searchValue))
+        if ($"{item.Name} {item.Position} {item.ContractValue} {item.YearContractExpires} {item.Team}".Contains(_searchValue))
             return true;
         return false;
     }
