@@ -8,7 +8,7 @@
 <PageHeader>
     @_title
 </PageHeader>
-
+<MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Add" aria-label="add" Link="/admin/addplayer"/>
 <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
     <ToolBarContent>
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0" />

@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Client.Features.Admin;
+using DynamoLeagueBlazor.Shared.Features.Players;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
