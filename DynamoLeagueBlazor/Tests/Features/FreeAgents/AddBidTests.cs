@@ -103,10 +103,6 @@ internal class AddBidTests : IntegrationTestBase
         bid.PlayerId.Should().Be(request.PlayerId);
         bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
         bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
-
-        // Verify the end of free agency is increased.
-        var player = await application.FirstOrDefaultAsync<Player>();
-        player!.EndOfFreeAgency.Should().BeAfter(mockPlayer.EndOfFreeAgency.Value);
     }
 }
 
@@ -133,7 +129,7 @@ internal class AddBidRequestValidatorTests : IntegrationTestBase
 
     [TestCase(1, ExpectedResult = false, Description = "Bid is exactly the same amount")]
     [TestCase(2, ExpectedResult = true, Description = "Bid is one dollar higher")]
-    public async Task<bool> GivenDifferentBidAmounts_WhenAPlayerHasOutstandingBidOfOneDollar_ThenReturnsExpectedResult(int amount)
+    public async Task<bool> GivenDifferentBidAmounts_WhenAPlayerAlreadyHasBidOfOneDollar_ThenReturnsExpectedResult(int amount)
     {
         var stubTeam = CreateFakeTeam();
         await _setupApplication.AddAsync(stubTeam);
