@@ -1,26 +1,27 @@
 ﻿@inherits LayoutComponentBase
 @using DynamoLeagueBlazor.Client.Shared.NavMenu
+@using MudBlazor.Services
 
 <MudLayout>
     <ErrorBoundary @ref=_errorBoundary>
         <ChildContent>
-       <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
-            <MudAppBar Elevation=3>
-                <a href="/" class="d-flex">
-                    <img src="logo.PNG" height="30"/>
-                    <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+            <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
+            <MudBreakpointProvider OnBreakpointChanged=@((breakpoint) => IsDesktopSize(breakpoint))>
+                <MudAppBar Elevation=3 Bottom=_appBarBottom>
+                    <a href="/" class="d-flex">
+                        <img src="logo.PNG" height="30"/>
                         <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
-                    </MudHidden>
-                </a>
-                <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
-            </MudAppBar>
-            <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
-            <MudMainContent>
-                <MudContainer MaxWidth=MaxWidth.Large Class="pt-4">
-                    @Body
-                </MudContainer>
-            </MudMainContent>
+                    </a>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
+                </MudAppBar>
+                <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
+                <MudMainContent Class=@_mainContentPaddingTop>
+                    <MudContainer MaxWidth=MaxWidth.Large>
+                        @Body
+                    </MudContainer>
+                </MudMainContent>
+            </MudBreakpointProvider>
         </ChildContent>
         <ErrorContent>
             <MudAlert Severity=Severity.Error>
@@ -32,6 +33,7 @@
 </MudLayout>
 <MudDialogProvider CloseButton=true/>
 
+<MudBreakpointProvider />
 <MudSnackbarProvider/>
 <MudThemeProvider Theme=darkTheme/>
 
@@ -77,14 +79,29 @@
 
     private ErrorBoundary? _errorBoundary;
     private bool _showNavMenu;
+    private bool _appBarBottom;
+    private string _mainContentPaddingTop = string.Empty;
 
     protected override void OnParametersSet()
     {
         _errorBoundary?.Recover();
     }
 
-    public void OnOpenChanged(bool open = true)
+    private void OnOpenChanged(bool open = true) => _showNavMenu = open;
+
+    private void IsDesktopSize(Breakpoint breakPoint)
     {
-        _showNavMenu = open;
+        var isMobile = breakPoint < Breakpoint.Md;
+
+        if(isMobile)
+        {
+            _appBarBottom = true;
+            _mainContentPaddingTop = "pt-4";
+        }
+        else
+        {
+            _appBarBottom = false;
+            _mainContentPaddingTop = "pt-20";
+        }
     }
 }
