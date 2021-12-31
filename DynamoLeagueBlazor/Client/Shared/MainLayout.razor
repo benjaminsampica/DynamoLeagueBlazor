@@ -1,26 +1,34 @@
 ﻿@inherits LayoutComponentBase
 @using DynamoLeagueBlazor.Client.Shared.NavMenu
+@using MudBlazor.Services
 
 <MudLayout>
     <ErrorBoundary @ref=_errorBoundary>
         <ChildContent>
-       <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
-            <MudAppBar Elevation=3>
+            <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
+            <MudAppBar Color=Color.Transparent Elevation=0>
                 <a href="/" class="d-flex">
-                    <img src="logo.PNG" height="30"/>
-                    <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
-                        <MudText Typo="Typo.h5" Class="ml-3">Fantasy Football</MudText>
-                    </MudHidden>
+                    <img src="logo.PNG" height="50"/>
                 </a>
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) />
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) Size=Size.Large />
             </MudAppBar>
             <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
             <MudMainContent>
-                <MudContainer MaxWidth=MaxWidth.Large Class="pt-4">
+                <MudContainer MaxWidth=MaxWidth.Large Style="padding-bottom: 95px;">
                     @Body
                 </MudContainer>
             </MudMainContent>
+            <MudHidden Breakpoint=Breakpoint.LgAndUp>
+                <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center" Style="height: 73px;">
+                    <MudToolBar>
+                        <MudIconButton Icon=@Icons.Outlined.SupervisedUserCircle Link="/teams" Size=Size.Large Color=Color.Primary/>
+                        <MudIconButton Icon=@Icons.Outlined.People Link="/players" Size=Size.Large Color=Color.Primary />
+                        <MudIconButton Icon=@Icons.Outlined.MoneyOff Link="/fines" Size=Size.Large Color=Color.Primary />
+                        <MudIconButton Icon=@Icons.Outlined.FreeCancellation Link="/freeagents" Size=Size.Large Color=Color.Primary />
+                    </MudToolBar>
+                </MudAppBar>
+            </MudHidden>
         </ChildContent>
         <ErrorContent>
             <MudAlert Severity=Severity.Error>
@@ -32,6 +40,7 @@
 </MudLayout>
 <MudDialogProvider CloseButton=true/>
 
+<MudBreakpointProvider />
 <MudSnackbarProvider/>
 <MudThemeProvider Theme=darkTheme/>
 
@@ -58,7 +67,7 @@
             ActionDisabledBackground = "rgba(255,255,255, 0.12)",
             Divider = "rgba(255,255,255, 0.12)",
             DividerLight = "rgba(255,255,255, 0.06)",
-            TableLines = "rgba(255,255,255, 0.12)",
+            TableLines = "rgba(0,0,0,0)",
             LinesDefault = "rgba(255,255,255, 0.12)",
             LinesInputs = "rgba(255,255,255, 0.3)",
             TextDisabled = "rgba(255,255,255, 0.2)"
@@ -83,8 +92,5 @@
         _errorBoundary?.Recover();
     }
 
-    public void OnOpenChanged(bool open = true)
-    {
-        _showNavMenu = open;
-    }
+    private void OnOpenChanged(bool open = true) => _showNavMenu = open;
 }

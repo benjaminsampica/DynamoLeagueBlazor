@@ -43,7 +43,7 @@
                 RenderFragment status = fineItem.Status switch
                 {
                     "Approved" => @<MudIcon Icon=@Icons.Outlined.CheckCircle Color=Color.Success />,
-                    "Pending" => @<MudIcon Icon=@Icons.Outlined.Info Color=Color.Info />,
+                    "Pending" => @<MudIcon Icon=@Icons.Outlined.Pending Color=Color.Info />,
                     _ => throw new ArgumentOutOfRangeException("Fine Status not found")
                 };
             }
