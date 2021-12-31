@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +17,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _dbContext;
 
         public AddPlayerController(IMediator mediator, IMapper mapper)
         {
@@ -28,5 +32,14 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
 
             return 1;
         }
+
+        [HttpGet]
+        public async Task<TeamListResult> GetAsync(CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(new ListQuery(), cancellationToken);
+        }
     }
+
+    public record ListQuery : IRequest<TeamListResult> { }
+}
 }
