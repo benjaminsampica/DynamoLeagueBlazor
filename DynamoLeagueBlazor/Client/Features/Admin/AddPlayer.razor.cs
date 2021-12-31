@@ -1,7 +1,7 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
@@ -11,12 +11,22 @@ public partial class AddPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-
+    private TeamNameListResult _teamList = new TeamNameListResult();
     private AddPlayerRequest _form = new AddPlayerRequest();
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
-
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("admin/addplayer", _cts.Token);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
     private async Task OnValidSubmitAsync()
     {
         _processingForm = true;
@@ -41,7 +51,6 @@ public partial class AddPlayer : IDisposable
 
         _processingForm = false;
     }
-
     public void Dispose()
     {
         _cts.Cancel();

@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Utilities;
+﻿using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Tests.Utilities
 {
@@ -25,7 +24,7 @@ namespace DynamoLeagueBlazor.Tests.Utilities
         public int GivenLeagueYear_ThenReturnExpectedSalaryCap(string dateString)
         {
             var date = DateOnly.Parse(dateString);
- 
+
             return CapSpaceUtilities.GetCurrentSalaryCap(date);
         }
     }

@@ -27,13 +27,18 @@
         <MudTextField @bind-Value="_form.Position" HelperText="Position" Variant="Variant.Text" />
     </MudItem>
     <MudItem xs="12" sm="6" md="4">
-        <MudSelect @bind-Value="_form.TeamId" />
+            <MudSelect   Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.TeamId">
+                     @foreach (var team in _teamList.Teams)
+                     {
+                         <MudSelectItem Value="@team.Name" />
+                     }
+             </MudSelect>
     </MudItem>
-    <MudItem xs="12" sm="12" md="12">
-        <MudTextField @bind-Value="_form.Headshot" Label="Picture URL" Variant="Variant.Filled" />
-    </MudItem>
-</MudGrid>
-                 <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
+     <MudItem xs="12" sm="12" md="12">
+         <MudTextField @bind-Value="_form.Headshot" Label="Picture URL" Variant="Variant.Filled" />
+     </MudItem>
+ </MudGrid>
+  <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
                     @if (_processingForm)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

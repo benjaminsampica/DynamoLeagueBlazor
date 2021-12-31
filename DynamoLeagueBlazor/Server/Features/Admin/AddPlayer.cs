@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Players;
@@ -7,6 +8,8 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Shared.Features.Teams.TeamNameListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin
 {
@@ -34,12 +37,46 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
         }
 
         [HttpGet]
-        public async Task<TeamListResult> GetAsync(CancellationToken cancellationToken)
+        public async Task<TeamNameListResult> GetAsync(CancellationToken cancellationToken)
         {
             return await _mediator.Send(new ListQuery(), cancellationToken);
         }
     }
 
-    public record ListQuery : IRequest<TeamListResult> { }
+
 }
+public record ListQuery : IRequest<TeamNameListResult> { }
+public class ListHandler : IRequestHandler<ListQuery, TeamNameListResult>
+{
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContext;
+    private readonly IMapper _mapper;
+
+    public ListHandler(IDbContextFactory<ApplicationDbContext> dbContext, IMapper mapper)
+    {
+        _dbContext = dbContext;
+        _mapper = mapper;
+    }
+
+    public async Task<TeamNameListResult> Handle(ListQuery request, CancellationToken cancellationToken)
+    {
+        List<TeamNameItem> teams = new();
+        using (var dbContext = await _dbContext.CreateDbContextAsync(cancellationToken))
+        {
+            teams = await dbContext.Teams
+                .ProjectTo<TeamNameItem>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        };
+
+        return new TeamNameListResult
+        {
+            Teams = teams
+        };
+    }
+}
+public class ListMappingProfile : Profile
+{
+    public ListMappingProfile()
+    {
+        CreateMap<Team, TeamNameItem>();
+    }
 }
