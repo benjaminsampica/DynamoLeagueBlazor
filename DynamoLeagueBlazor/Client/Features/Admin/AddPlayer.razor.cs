@@ -21,6 +21,7 @@ public partial class AddPlayer : IDisposable
         try
         {
             _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("admin/addplayer", _cts.Token);
+            
         }
         catch (AccessTokenNotAvailableException exception)
         {
