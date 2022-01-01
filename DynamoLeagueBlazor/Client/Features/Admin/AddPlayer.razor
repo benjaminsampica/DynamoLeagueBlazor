@@ -25,9 +25,9 @@
     </MudItem>
     <MudItem xs="12" sm="6" md="2">
            <MudSelect   Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.Position">
-                     @foreach (var pos in Enum.GetValues(typeof(DynamoLeagueBlazor.Shared.Enums.Position)))
+                     @foreach (DynamoLeagueBlazor.Shared.Enums.Position pos in DynamoLeagueBlazor.Shared.Enums.Position.List)
                      {
-                         <MudSelectItem Value="@pos">@pos</MudSelectItem>
+                         <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
                      }
              </MudSelect>
     </MudItem>
