@@ -26,15 +26,15 @@ public class AddFineController : ControllerBase
     [HttpPost]
     public async Task<int> PostAsync([FromBody] AddFineRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<AddFineQuery>(request);
+        var query = _mapper.Map<AddFineCommand>(request);
 
         return await _mediator.Send(query, cancellationToken);
     }
 }
 
-public record AddFineQuery(int PlayerId, string FineReason) : IRequest<int> { }
+public record AddFineCommand(int PlayerId, string FineReason) : IRequest<int> { }
 
-public class AddFineHandler : IRequestHandler<AddFineQuery, int>
+public class AddFineHandler : IRequestHandler<AddFineCommand, int>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -43,7 +43,7 @@ public class AddFineHandler : IRequestHandler<AddFineQuery, int>
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(AddFineQuery request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddFineCommand request, CancellationToken cancellationToken)
     {
         var player = (await _dbContext.Players
             .AsTracking()
@@ -63,6 +63,6 @@ public class AddFineMappingProfile : Profile
 {
     public AddFineMappingProfile()
     {
-        CreateMap<AddFineRequest, AddFineQuery>();
+        CreateMap<AddFineRequest, AddFineCommand>();
     }
 }

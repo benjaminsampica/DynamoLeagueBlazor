@@ -23,15 +23,15 @@ public class StartSeasonController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
     {
-        await _mediator.Send(new StartSeasonQuery(), cancellationToken);
+        await _mediator.Send(new StartSeasonCommand(), cancellationToken);
 
         return NoContent();
     }
 }
 
-public record StartSeasonQuery : IRequest<Unit> { }
+public record StartSeasonCommand : IRequest<Unit> { }
 
-public class StartSeasonHandler : IRequestHandler<StartSeasonQuery>
+public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly DateTime _boundaryStartDate = new(DateTime.Today.Year, 6, 25);
@@ -42,7 +42,7 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonQuery>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(StartSeasonQuery request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(StartSeasonCommand request, CancellationToken cancellationToken)
     {
         var random = new Random();
 
