@@ -1,14 +1,17 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin;
-
+[Authorize(Roles = RoleName.Admin)]
 public partial class AddPlayer : IDisposable
 {
+
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     private TeamNameListResult _teamList = new TeamNameListResult();

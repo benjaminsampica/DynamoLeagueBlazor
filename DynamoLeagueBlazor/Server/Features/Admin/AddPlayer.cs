@@ -31,9 +31,8 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
         [HttpPost]
         public async Task<int> PostAsync([FromBody] AddPlayerRequest request, CancellationToken cancellationToken)
         {
-
-
-            return 1;
+            var command = _mapper.Map<AddPlayerCommand>(request);
+            return await _mediator.Send(command, cancellationToken);
         }
 
         [HttpGet]
@@ -45,6 +44,32 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
 
 
 }
+public record AddPlayerCommand(string Name, string Position,string Headshot,int TeamId,int ContractValue) : IRequest<int> { }
+
+public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
+{
+    private readonly ApplicationDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public AddPlayerHandler(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    {
+        _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
+    }
+    public async Task<int> Handle(AddPlayerCommand request, CancellationToken cancellationToken)
+    {
+        var player = new Player(request.Name, request.Position, request.Headshot)
+        {
+            ContractValue = request.ContractValue,
+            TeamId = request.TeamId
+        };
+        player.SetToUnsigned();
+        _dbContext.SaveChanges();
+        return  player.Id;
+    }
+}
+
+
+
 public record ListQuery : IRequest<TeamNameListResult> { }
 public class ListHandler : IRequestHandler<ListQuery, TeamNameListResult>
 {
@@ -78,5 +103,12 @@ public class ListMappingProfile : Profile
     public ListMappingProfile()
     {
         CreateMap<Team, TeamNameItem>();
+    }
+}
+public class AddPlayerMappingProfile : Profile
+{
+    public AddPlayerMappingProfile()
+    {
+        CreateMap<AddPlayerRequest, AddPlayerCommand>();
     }
 }

@@ -8,7 +8,6 @@ public record Player : BaseEntity
         Position = position;
         HeadShotUrl = headShotUrl;
     }
-
     public string Name { get; private set; }
     public string Position { get; private set; }
     public string HeadShotUrl { get; private set; }
@@ -58,7 +57,13 @@ public record Player : BaseEntity
 
         return this;
     }
+    public Player SetToTeam(int teamId,int contractValue)
+    {
+        TeamId = teamId;
+        ContractValue = contractValue;
 
+        return this;
+    }
     public void GrantExtensionToFreeAgency()
     {
         EndOfFreeAgency = EndOfFreeAgency?.AddDays(1);
@@ -91,7 +96,17 @@ public record Player : BaseEntity
 
         return bid;
     }
-
+    public Player AddPlayer(string Name, string Position, string Headshot, int TeamId, int ContractValue)
+    {
+        var player = new Player(Name,Position,Headshot)
+        {
+                 ContractValue = ContractValue,
+                 TeamId = TeamId
+        };
+        player.SetToUnsigned();
+        return player;
+    }
+       
     public Fine AddFine(decimal amount, string reason)
     {
         var fine = new Fine(amount, reason, Id);
