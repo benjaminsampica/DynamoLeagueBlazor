@@ -37,15 +37,15 @@ public class AddBidController : ControllerBase
     [HttpPost]
     public async Task<int> PostAsync([FromBody] AddBidRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<AddBidQuery>(request);
+        var query = _mapper.Map<AddBidCommand>(request);
 
         return await _mediator.Send(query, cancellationToken);
     }
 }
 
-public record AddBidQuery(int PlayerId, int Amount) : IRequest<int> { }
+public record AddBidCommand(int PlayerId, int Amount) : IRequest<int> { }
 
-public class AddBidHandler : IRequestHandler<AddBidQuery, int>
+public class AddBidHandler : IRequestHandler<AddBidCommand, int>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -56,7 +56,7 @@ public class AddBidHandler : IRequestHandler<AddBidQuery, int>
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<int> Handle(AddBidQuery request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddBidCommand request, CancellationToken cancellationToken)
     {
         var player = await _dbContext.Players
             .AsTracking()
@@ -75,7 +75,7 @@ public class AddBidMappingProfile : Profile
 {
     public AddBidMappingProfile()
     {
-        CreateMap<AddBidRequest, AddBidQuery>();
+        CreateMap<AddBidRequest, AddBidCommand>();
     }
 }
 

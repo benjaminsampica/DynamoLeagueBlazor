@@ -26,17 +26,17 @@ public class ManageFineController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAsync([FromBody] ManageFineRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<ManageFineQuery>(request);
+        var command = _mapper.Map<ManageFineCommand>(request);
 
-        await _mediator.Send(query, cancellationToken);
+        await _mediator.Send(command, cancellationToken);
 
         return NoContent();
     }
 }
 
-public record ManageFineQuery(int FineId, bool Approved) : IRequest { }
+public record ManageFineCommand(int FineId, bool Approved) : IRequest { }
 
-public class ManageFineHandler : IRequestHandler<ManageFineQuery>
+public class ManageFineHandler : IRequestHandler<ManageFineCommand>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -45,7 +45,7 @@ public class ManageFineHandler : IRequestHandler<ManageFineQuery>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(ManageFineQuery request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ManageFineCommand request, CancellationToken cancellationToken)
     {
         var fine = await _dbContext.Fines
             .AsTracking()
@@ -64,6 +64,6 @@ public class ManageFineMappingProfile : Profile
 {
     public ManageFineMappingProfile()
     {
-        CreateMap<ManageFineRequest, ManageFineQuery>();
+        CreateMap<ManageFineRequest, ManageFineCommand>();
     }
 }
