@@ -57,7 +57,7 @@ public record Player : BaseEntity
 
         return this;
     }
-    public Player SetToTeam(int teamId,int contractValue)
+    public Player SetToTeam(int teamId, int contractValue)
     {
         TeamId = teamId;
         ContractValue = contractValue;
@@ -98,15 +98,15 @@ public record Player : BaseEntity
     }
     public Player AddPlayer(string Name, string Position, string Headshot, int TeamId, int ContractValue)
     {
-        var player = new Player(Name,Position,Headshot)
+        var player = new Player(Name, Position, Headshot)
         {
-                 ContractValue = ContractValue,
-                 TeamId = TeamId
+            ContractValue = ContractValue,
+            TeamId = TeamId
         };
         player.SetToUnsigned();
         return player;
     }
-       
+
     public Fine AddFine(decimal amount, string reason)
     {
         var fine = new Fine(amount, reason, Id);

@@ -44,7 +44,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin
 
 
 }
-public record AddPlayerCommand(string Name, string Position,string Headshot,int TeamId,int ContractValue) : IRequest<int> { }
+public record AddPlayerCommand(string Name, string Position, string Headshot, int TeamId, int ContractValue) : IRequest<int> { }
 
 public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
 {
@@ -65,7 +65,7 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
         player.SetToUnsigned();
         _dbContext.Add(player);
         _dbContext.SaveChanges();
-        return  player.Id;
+        return player.Id;
     }
 }
 
