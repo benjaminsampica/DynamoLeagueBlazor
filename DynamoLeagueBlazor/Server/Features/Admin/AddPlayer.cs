@@ -63,6 +63,7 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
             TeamId = request.TeamId
         };
         player.SetToUnsigned();
+        _dbContext.Add(player);
         _dbContext.SaveChanges();
         return  player.Id;
     }
