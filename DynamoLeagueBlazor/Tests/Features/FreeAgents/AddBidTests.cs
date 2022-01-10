@@ -9,6 +9,8 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 internal class AddBidTests : IntegrationTestBase
 {
+    private const string _endpoint = "/freeagents/addbid";
+
     private static AddBidRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<AddBidRequest>()
@@ -72,9 +74,7 @@ internal class AddBidTests : IntegrationTestBase
         var application = CreateUnauthenticatedApplication();
         var client = application.CreateClient();
 
-        var endpoint = AddBidRouteFactory.CreateRequestUri(CreateFakeValidRequest());
-
-        var response = await client.GetAsync(endpoint);
+        var response = await client.PostAsJsonAsync(_endpoint, CreateFakeValidRequest());
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -91,9 +91,8 @@ internal class AddBidTests : IntegrationTestBase
         await application.AddAsync(mockPlayer);
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
-        var endpoint = AddBidRouteFactory.CreateRequestUri(request);
 
-        var result = await client.PostAsJsonAsync(endpoint, request);
+        var result = await client.PostAsJsonAsync(_endpoint, request);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
 

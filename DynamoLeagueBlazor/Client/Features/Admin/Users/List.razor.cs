@@ -1,6 +1,7 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
@@ -8,6 +9,7 @@ namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 public partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
 
     private UserListResult _result = new();
     private bool _loading;
@@ -41,6 +43,16 @@ public partial class List : IDisposable
         if ($"{item.Email} {item.Team}".Contains(_searchValue))
             return true;
         return false;
+    }
+
+    private void OpenDeleteUserDialog(string userId)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(Delete.UserId), userId }
+        };
+
+        DialogService.Show<Delete>("Delete User", parameters);
     }
 
     public void Dispose()

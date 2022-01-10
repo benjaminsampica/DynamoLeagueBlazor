@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
@@ -41,10 +40,8 @@ internal class ListTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
-        var mockUser = new ApplicationUser(RandomString, mockTeam.Id)
-        {
-            EmailConfirmed = true
-        };
+        var mockUser = CreateFakeUser(mockTeam.Id);
+        mockUser.EmailConfirmed = true;
         await application.AddAsync(mockUser);
 
         var client = application.CreateClient();

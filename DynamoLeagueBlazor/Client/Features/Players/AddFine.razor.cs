@@ -65,8 +65,6 @@ public partial class AddFine : IDisposable
         MudDialogInstance.Close();
     }
 
-    private void Cancel() => MudDialogInstance.Close();
-
     public void Dispose()
     {
         _cts.Cancel();
