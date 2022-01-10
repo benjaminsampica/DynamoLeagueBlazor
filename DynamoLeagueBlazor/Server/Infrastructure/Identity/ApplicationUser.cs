@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DynamoLeagueBlazor.Server.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;
 
@@ -11,4 +12,6 @@ public class ApplicationUser : IdentityUser
     }
 
     public int TeamId { get; set; }
+
+    public Team Team { get; set; } = null!;
 }
