@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Features.Admin.Users;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,7 +48,6 @@ internal class DeleteTests
         var userManager = application.Services.GetRequiredService<UserManager<ApplicationUser>>();
         var mockUser = CreateFakeUser(int.MaxValue);
         await userManager.CreateAsync(mockUser);
-        await userManager.AddToRoleAsync(mockUser, RoleName.Admin);
         var request = new DeleteUserRequest { UserId = mockUser.Id };
         var client = application.CreateClient();
 
