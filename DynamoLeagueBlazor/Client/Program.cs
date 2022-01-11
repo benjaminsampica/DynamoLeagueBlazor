@@ -30,7 +30,6 @@ try
     builder.Services.AddAuthorizationCore(options =>
     {
         options.AddApplicationAuthorizationPolicies();
-        options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
     });
 
     builder.Services.AddMudServices(config =>

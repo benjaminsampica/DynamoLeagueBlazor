@@ -118,7 +118,6 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
             services.AddAuthorization(options =>
             {
                 options.AddApplicationAuthorizationPolicies();
-                options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
             });
         });
     }

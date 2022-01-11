@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DynamoLeagueBlazor.Server.Features;
 
+[AllowAnonymous]
 public class OidcConfigurationController : Controller
 {
     private readonly ILogger<OidcConfigurationController> _logger;

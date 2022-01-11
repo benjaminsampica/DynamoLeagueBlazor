@@ -60,7 +60,6 @@ try
     builder.Services.AddAuthorization(options =>
     {
         options.AddApplicationAuthorizationPolicies();
-        options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
     });
 
     builder.Services.AddControllersWithViews();

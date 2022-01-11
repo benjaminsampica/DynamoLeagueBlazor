@@ -34,6 +34,8 @@ public static class PolicyRequirements
             builder.Combine(GetUserAuthorizationPolicy());
         });
 
+        options.DefaultPolicy = GetUserAuthorizationPolicy();
+
         return options;
     }
 
@@ -42,7 +44,7 @@ public static class PolicyRequirements
         return new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .AddRequirements(new AdminApprovedAuthorizationRequirement())
-                .RequireRole(RoleName.User)
+                .RequireRole(RoleName.User, RoleName.Admin)
                 .Build();
     }
 }
