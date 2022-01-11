@@ -1,9 +1,8 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Utilities;
+﻿using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Tests.Utilities
 {
-    internal class CapSpaceTest
+    internal class CapSpaceUtilitiesTests
     {
         [TestCase(0, 0, 0, ExpectedResult = 1050, Description = "Team has no players at all.")]
         [TestCase(500, 0, 0, ExpectedResult = 550, Description = "Team has rostered players with a total value of 500.")]
@@ -25,7 +24,7 @@ namespace DynamoLeagueBlazor.Tests.Utilities
         public int GivenLeagueYear_ThenReturnExpectedSalaryCap(string dateString)
         {
             var date = DateOnly.Parse(dateString);
- 
+
             return CapSpaceUtilities.GetCurrentSalaryCap(date);
         }
     }

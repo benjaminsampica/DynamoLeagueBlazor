@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.Admin;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
