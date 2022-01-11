@@ -1,10 +1,13 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 
+[Authorize(Policy = PolicyRequirements.Admin)]
 public partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;

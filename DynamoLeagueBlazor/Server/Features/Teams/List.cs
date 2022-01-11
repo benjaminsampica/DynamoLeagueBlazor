@@ -5,14 +5,12 @@ using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
-[Authorize]
 [ApiController]
 [Route("teams")]
 public class ListController : ControllerBase

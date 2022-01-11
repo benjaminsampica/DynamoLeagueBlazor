@@ -24,9 +24,9 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
     public async Task<Unit> Handle(SeedDataCommand request, CancellationToken cancellationToken)
     {
-        await SeedIdentityDataAsync();
+        await SeedApplicationDataAsync(cancellationToken);
 
-        await SeedDataAsync(cancellationToken);
+        await SeedIdentityDataAsync();
 
         return Unit.Value;
     }
@@ -53,7 +53,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
         }
     }
 
-    private async Task SeedDataAsync(CancellationToken cancellationToken)
+    private async Task SeedApplicationDataAsync(CancellationToken cancellationToken)
     {
         if (!await _dbContext.Teams.AnyAsync(cancellationToken))
         {

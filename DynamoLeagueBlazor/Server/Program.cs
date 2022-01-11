@@ -5,6 +5,7 @@ using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -55,6 +56,12 @@ try
 
     builder.Services.AddAuthentication()
         .AddIdentityServerJwt();
+
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddApplicationAuthorizationPolicies();
+        options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
+    });
 
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
@@ -108,8 +115,8 @@ try
     app.UseSerilogIngestion();
     app.UseSerilogRequestLogging();
 
-    app.MapRazorPages();
-    app.MapControllers();
+    app.MapRazorPages().RequireAuthorization();
+    app.MapControllers().RequireAuthorization();
     app.MapFallbackToFile("index.html");
 
     await using (var scope = app.Services.CreateAsyncScope())

@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 public partial class StartSeason
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
@@ -14,7 +14,7 @@ public partial class StartSeason
 
     private bool _isDisabled = true;
     private bool _isProcessing;
-    private string _title = "Start Season";
+    private const string _title = "Start Season";
 
     protected override async Task OnInitializedAsync()
     {

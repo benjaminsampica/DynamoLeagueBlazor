@@ -56,7 +56,7 @@ public class IntegrationTesting
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null, int userTeamId = 1)
+    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
         => CreateApplication(options)
             .WithWebHostBuilder(builder =>
             {
@@ -111,6 +111,15 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureAppConfiguration((builderContext, config) =>
         {
             config.AddConfiguration(_configuration);
+        });
+
+        builder.ConfigureTestServices(services =>
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddApplicationAuthorizationPolicies();
+                options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
+            });
         });
     }
 }
@@ -173,18 +182,7 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
     {
         TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
 
-        var claims = new[] {
-            new Claim(ClaimTypes.Name, RandomString),
-            new Claim(ClaimTypes.Role, RoleName.User),
-            new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
-        };
-        var identity = new ClaimsIdentity(claims, AuthenticationName);
-        var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, AuthenticationName);
-
-        var result = AuthenticateResult.Success(ticket);
-
-        return result;
+        return AuthenticationHandlerUtilities.GetSuccessfulAuthenticateResult(AuthenticationName, TeamId, AuthenticationName);
     }
 }
 
@@ -209,14 +207,23 @@ internal class AdminAuthenticationHandler : AuthenticationHandler<Authentication
     {
         TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
 
+        return AuthenticationHandlerUtilities.GetSuccessfulAuthenticateResult(AuthenticationName, TeamId, AuthenticationName);
+    }
+}
+
+internal static class AuthenticationHandlerUtilities
+{
+    internal static AuthenticateResult GetSuccessfulAuthenticateResult(string role, int teamId, string authenticationName)
+    {
         var claims = new[] {
             new Claim(ClaimTypes.Name, RandomString),
-            new Claim(ClaimTypes.Role, RoleName.Admin),
-            new Claim(nameof(ApplicationUser.TeamId), TeamId.ToString())
+            new Claim(ClaimTypes.Role, role),
+            new Claim(nameof(ApplicationUser.TeamId), teamId.ToString()),
+            new Claim(nameof(ApplicationUser.Approved), bool.TrueString)
         };
-        var identity = new ClaimsIdentity(claims, AuthenticationName);
+        var identity = new ClaimsIdentity(claims, authenticationName);
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, AuthenticationName);
+        var ticket = new AuthenticationTicket(principal, authenticationName);
 
         var result = AuthenticateResult.Success(ticket);
 

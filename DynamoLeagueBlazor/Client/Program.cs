@@ -2,6 +2,7 @@ using DynamoLeagueBlazor.Client;
 using DynamoLeagueBlazor.Client.Areas.Identity;
 using DynamoLeagueBlazor.Client.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -25,6 +26,12 @@ try
 
     builder.Services.AddApiAuthorization()
         .AddAccountClaimsPrincipalFactory<ApplicationUserFactory>();
+
+    builder.Services.AddAuthorizationCore(options =>
+    {
+        options.AddApplicationAuthorizationPolicies();
+        options.DefaultPolicy = PolicyRequirements.GetUserAuthorizationPolicy();
+    });
 
     builder.Services.AddMudServices(config =>
     {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
 [Route("admin/seasonstatus")]
 public class SeasonStatusController : ControllerBase
