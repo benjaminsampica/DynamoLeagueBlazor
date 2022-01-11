@@ -20,8 +20,8 @@ public class DeleteController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpDelete("{userId}")]
-    public async Task DeleteAsync([FromRoute] DeleteUserRequest request, CancellationToken cancellationToken)
+    [HttpDelete]
+    public async Task DeleteAsync([FromQuery] DeleteUserRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(new DeleteCommand(request.UserId), cancellationToken);
     }
@@ -42,7 +42,7 @@ public class DeleteHandler : IRequestHandler<DeleteCommand>
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
 
-        await _userManager.DeleteAsync(user);
+        var result = await _userManager.DeleteAsync(user);
 
         return Unit.Value;
     }

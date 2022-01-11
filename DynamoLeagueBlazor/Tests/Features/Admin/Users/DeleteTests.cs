@@ -43,7 +43,7 @@ internal class DeleteTests
     [Test]
     public async Task GivenAuthenticatedAdmin_WhenThereIsOneUser_ThenDeletesTheUser()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = CreateAdminAuthenticatedApplication();
 
         var userManager = application.Services.GetRequiredService<UserManager<ApplicationUser>>();
         var mockUser = CreateFakeUser(int.MaxValue);
@@ -56,7 +56,6 @@ internal class DeleteTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var user = await userManager.FindByIdAsync(mockUser.Id);
-        user.Should().BeNull();
+        userManager.Users.Should().BeEmpty();
     }
 }

@@ -60,7 +60,7 @@ internal class FakeFactory
     }
 
     public static ApplicationUser CreateFakeUser(int teamId)
-        => new(RandomString, teamId);
+        => new("fake@gmail.com", teamId);
 
     public static string RandomString => AutoFaker.Generate<string>();
 }
