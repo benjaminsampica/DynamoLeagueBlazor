@@ -21,6 +21,8 @@ public static class PolicyRequirements
 
     public static AuthorizationOptions AddApplicationAuthorizationPolicies(this AuthorizationOptions options)
     {
+        // Add two policies - one for admins and one for all authenticated users.
+        // We want to set the user policy as the default. 
         options.AddPolicy(Admin, builder =>
         {
             builder
@@ -44,7 +46,6 @@ public static class PolicyRequirements
         return new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .AddRequirements(new AdminApprovedAuthorizationRequirement())
-                .RequireRole(RoleName.User, RoleName.Admin)
                 .Build();
     }
 }
