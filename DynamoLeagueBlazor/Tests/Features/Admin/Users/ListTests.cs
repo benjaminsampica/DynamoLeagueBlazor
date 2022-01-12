@@ -41,10 +41,8 @@ internal class ListTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
-        var mockUser = new ApplicationUser(RandomString, mockTeam.Id)
-        {
-            EmailConfirmed = true
-        };
+        var mockUser = CreateFakeUser(mockTeam.Id);
+        mockUser.EmailConfirmed = true;
         await application.AddAsync(mockUser);
 
         var client = application.CreateClient();
