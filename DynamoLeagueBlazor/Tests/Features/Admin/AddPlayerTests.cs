@@ -80,8 +80,8 @@ public class AddPlayerRequestValidatorTests
         return hasNoErrors;
     }
     [TestCase(" ", ExpectedResult = false, Description = "HeadShot is blank")]
-    [TestCase(null, ExpectedResult = false, Description = "No HeadShot is given")]
-    [TestCase("Test", ExpectedResult = true, Description = "Valid HeadShot")]
+    [TestCase(null, ExpectedResult = false, Description = "No headShot is given")]
+    [TestCase("Test", ExpectedResult = true, Description = "Valid headShot")]
     public bool GivenDifferentPlayerHeadShots_ThenReturnsExpectedResult(string headShot)
     {
         var request = new AddPlayerRequest() { HeadShot = headShot };
@@ -93,7 +93,7 @@ public class AddPlayerRequestValidatorTests
     }
 
     [TestCase(0, ExpectedResult = false, Description = "Contract value must be greater than 0")]
-    [TestCase(1, ExpectedResult = true, Description = "Valid Contract Value")]
+    [TestCase(1, ExpectedResult = true, Description = "Valid contract value")]
     public bool GivenDifferentPlayerContractValue_ThenReturnsExpectedResult(int contractValue)
     {
         var request = new AddPlayerRequest() { ContractValue = contractValue };
@@ -104,7 +104,7 @@ public class AddPlayerRequestValidatorTests
         return hasNoErrors;
     }
     [TestCase(0, ExpectedResult = false, Description = "Team Id must be greater than")]
-    [TestCase(1, ExpectedResult = true, Description = "Valid Team Id")]
+    [TestCase(1, ExpectedResult = true, Description = "Valid team Id")]
     public bool GivenDifferentPlayerTeamId_ThenReturnsExpectedResult(int teamId)
     {
         var request = new AddPlayerRequest() { TeamId = teamId };
@@ -117,7 +117,8 @@ public class AddPlayerRequestValidatorTests
 
     [TestCase(" ", ExpectedResult = false, Description = "Position is blank")]
     [TestCase(null, ExpectedResult = false, Description = "No position is given")]
-    [TestCase("TE", ExpectedResult = true, Description = "Valid Position")]
+    [TestCase("POE", ExpectedResult = false, Description = "Invalid position")]
+    [TestCase("TE", ExpectedResult = true, Description = "Valid position")]
     public bool GivenDifferentPlayerPosition_ThenReturnsExpectedResult(string position)
     {
         var request = new AddPlayerRequest() { Position = position };
