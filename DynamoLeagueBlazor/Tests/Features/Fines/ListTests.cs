@@ -5,7 +5,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 internal class ListTests : IntegrationTestBase
 {
-    private const string _endpoint = "fines";
+    private const string _endpoint = "api/fines";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()

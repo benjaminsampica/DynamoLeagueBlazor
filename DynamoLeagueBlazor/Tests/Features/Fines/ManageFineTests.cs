@@ -7,7 +7,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 internal class ManageFineTests : IntegrationTestBase
 {
-    private const string _endpoint = "fines/manage";
+    private const string _endpoint = "api/fines/manage";
 
     private static ManageFineRequest CreateFakeValidRequest()
     {

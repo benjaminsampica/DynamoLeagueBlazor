@@ -30,7 +30,7 @@ public partial class AddFine : IDisposable
     {
         try
         {
-            var queryString = QueryHelpers.AddQueryString("players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
+            var queryString = QueryHelpers.AddQueryString("api/players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
             _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
         }
         catch (AccessTokenNotAvailableException exception)
@@ -45,7 +45,7 @@ public partial class AddFine : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("players/addfine", _form);
+            var response = await HttpClient.PostAsJsonAsync("api/players/addfine", _form);
 
             if (response.IsSuccessStatusCode)
             {
