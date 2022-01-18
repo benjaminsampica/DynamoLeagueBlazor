@@ -8,7 +8,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Players;
 
 internal class FineDetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "players/finedetail";
+    private const string _endpoint = "api/players/finedetail";
 
     private static FineDetailRequest CreateFakeRequest()
     {

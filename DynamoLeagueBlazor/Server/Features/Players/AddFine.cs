@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Route("players/addfine")]
+[Route("api/players/addfine")]
 [ApiController]
 public class AddFineController : ControllerBase
 {

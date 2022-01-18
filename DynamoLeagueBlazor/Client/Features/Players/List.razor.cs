@@ -22,7 +22,7 @@ public partial class List : IDisposable
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<PlayerListResult>("players", _cts.Token) ?? new();
+            _result = await HttpClient.GetFromJsonAsync<PlayerListResult>("api/players", _cts.Token) ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)

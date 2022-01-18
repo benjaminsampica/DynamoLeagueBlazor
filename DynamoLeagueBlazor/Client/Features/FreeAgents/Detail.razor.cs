@@ -34,7 +34,7 @@ public partial class Detail : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("freeagents/addbid", _form);
+            var response = await HttpClient.PostAsJsonAsync("api/freeagents/addbid", _form);
 
             if (response.IsSuccessStatusCode)
             {
@@ -60,7 +60,7 @@ public partial class Detail : IDisposable
 
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"freeagents/{PlayerId}", _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"api/freeagents/{PlayerId}", _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -95,7 +95,7 @@ public static class AddBidRouteFactory
 {
     public static string CreateRequestUri(AddBidRequest request)
     {
-        var uri = QueryHelpers.AddQueryString("freeagents/addbid", new Dictionary<string, string>
+        var uri = QueryHelpers.AddQueryString("api/freeagents/addbid", new Dictionary<string, string>
         {
             { nameof(AddBidRequest.PlayerId), request.PlayerId.ToString() },
             { nameof(AddBidRequest.Amount), request.Amount.ToString() }

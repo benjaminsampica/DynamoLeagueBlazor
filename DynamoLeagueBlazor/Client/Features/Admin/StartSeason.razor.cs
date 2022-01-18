@@ -24,7 +24,7 @@ public partial class StartSeason
     private async Task StartSeasonAsync()
     {
         _isProcessing = true;
-        await HttpClient.PostAsync("admin/startseason", null);
+        await HttpClient.PostAsync("api/admin/startseason", null);
 
         SnackBar.Add("A new season has begun!", Severity.Success);
 
@@ -33,5 +33,5 @@ public partial class StartSeason
     }
 
     private async Task<bool> GetSeasonStatusAsync()
-        => await HttpClient.GetFromJsonAsync<bool>("admin/seasonstatus");
+        => await HttpClient.GetFromJsonAsync<bool>("api/admin/seasonstatus");
 }

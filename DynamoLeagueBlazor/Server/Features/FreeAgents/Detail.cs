@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
 
 [ApiController]
-[Route("freeagents/")]
+[Route("api/freeagents/")]
 public class DetailController : ControllerBase
 {
     private readonly IMediator _mediator;

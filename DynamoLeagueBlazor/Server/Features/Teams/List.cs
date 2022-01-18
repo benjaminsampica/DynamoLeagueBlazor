@@ -12,7 +12,7 @@ using static DynamoLeagueBlazor.Shared.Features.Teams.TeamListResult;
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
 [ApiController]
-[Route("teams")]
+[Route("api/teams")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -10,7 +10,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
-[Route("admin/startseason")]
+[Route("api/admin/startseason")]
 public class StartSeasonController : ControllerBase
 {
     private readonly IMediator _mediator;

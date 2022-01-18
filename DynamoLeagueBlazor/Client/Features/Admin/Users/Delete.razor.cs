@@ -1,26 +1,25 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Fines;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
-using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Fines;
+namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 
-public partial class Manage : IDisposable
+public partial class Delete : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int FineId { get; set; }
-    [Parameter, EditorRequired] public EventCallback OnManageButtonClick { get; set; }
+    [Parameter, EditorRequired] public string UserId { get; set; } = null!;
 
-    private ManageFineRequest _form = null!;
+    private DeleteUserRequest _form = null!;
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
     protected override void OnInitialized()
     {
-        _form = new ManageFineRequest { FineId = FineId };
+        _form = new DeleteUserRequest { UserId = UserId };
     }
 
     private async Task OnValidSubmitAsync()
@@ -29,12 +28,12 @@ public partial class Manage : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/fines/manage", _form);
+            var uri = DeleteUserRouteFactory.CreateRequestUri(_form);
+            var response = await HttpClient.DeleteAsync(uri, _cts.Token);
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Successfully updated fine.", Severity.Success);
-                await OnManageButtonClick.InvokeAsync();
+                SnackBar.Add("Successfully deleted the user.", Severity.Success);
             }
             else
             {
@@ -50,14 +49,22 @@ public partial class Manage : IDisposable
         MudDialogInstance.Close();
     }
 
-    private void IsApproved(bool approved)
-    {
-        _form.Approved = approved;
-    }
-
     public void Dispose()
     {
         _cts.Cancel();
         _cts.Dispose();
+    }
+}
+
+public static class DeleteUserRouteFactory
+{
+    public static string CreateRequestUri(DeleteUserRequest request)
+    {
+        var uri = QueryHelpers.AddQueryString("api/admin/users", new Dictionary<string, string>
+        {
+            { nameof(DeleteUserRequest.UserId), request.UserId.ToString() },
+        });
+
+        return uri;
     }
 }

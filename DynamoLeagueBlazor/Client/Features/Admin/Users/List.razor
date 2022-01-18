@@ -15,11 +15,15 @@
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
+        <MudTh>Actions</MudTh>
         <MudTh>Team</MudTh>
         <MudTh>Email</MudTh>
         <MudTh>Confirmed</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd DataLabel=Actions>
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" OnClick="(e) => OpenDeleteUserDialog(userItem.Id)" />
+        </MudTd>
         <MudTd DataLabel=Team>@userItem.Team</MudTd>
         <MudTd DataLabel=Email>@userItem.Email</MudTd>
         <MudTd DataLabel=Confirmed>
