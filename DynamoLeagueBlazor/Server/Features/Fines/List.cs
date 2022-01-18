@@ -12,7 +12,7 @@ namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [Authorize]
 [ApiController]
-[Route("fines")]
+[Route("api/fines")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

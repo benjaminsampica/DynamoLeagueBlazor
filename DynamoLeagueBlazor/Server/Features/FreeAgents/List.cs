@@ -13,7 +13,7 @@ namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
 
 [Authorize]
 [ApiController]
-[Route("freeagents")]
+[Route("api/freeagents")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

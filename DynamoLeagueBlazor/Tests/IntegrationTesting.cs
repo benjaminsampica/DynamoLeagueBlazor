@@ -56,8 +56,8 @@ public class IntegrationTesting
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null, int userTeamId = 1)
-        => CreateApplication(options)
+    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication()
+        => CreateApplication()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -67,8 +67,8 @@ public class IntegrationTesting
                 });
             });
 
-    internal static WebApplicationFactory<Program> CreateAdminAuthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
-        => CreateApplication(options)
+    internal static WebApplicationFactory<Program> CreateAdminAuthenticatedApplication()
+        => CreateApplication()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -78,17 +78,11 @@ public class IntegrationTesting
                 });
             });
 
-    internal static WebApplicationFactory<Program> CreateUnauthenticatedApplication(Action<WebApplicationFactoryClientOptions>? options = null)
-        => CreateApplication(options);
+    internal static WebApplicationFactory<Program> CreateUnauthenticatedApplication()
+        => CreateApplication();
 
-    private static WebApplicationFactory<Program> CreateApplication(Action<WebApplicationFactoryClientOptions>? options = null)
+    private static WebApplicationFactory<Program> CreateApplication()
     {
-        var clientOptions = new WebApplicationFactoryClientOptions();
-        if (options is not null)
-        {
-            options.Invoke(clientOptions);
-        }
-
         var application = new TestWebApplicationFactory(_configuration);
 
         return application;

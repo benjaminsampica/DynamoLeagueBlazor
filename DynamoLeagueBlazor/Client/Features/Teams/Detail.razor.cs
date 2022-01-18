@@ -23,7 +23,7 @@ public partial class Detail : IDisposable
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"teams/{TeamId}", _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"api/teams/{TeamId}", _cts.Token);
             _title = $"Team Detail - {_result!.Name}";
             ShowRosteredPlayers();
         }

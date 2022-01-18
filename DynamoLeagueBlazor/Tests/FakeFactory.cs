@@ -1,4 +1,5 @@
 ﻿using AutoBogus;
+using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Server.Models;
 
 namespace DynamoLeagueBlazor.Tests;
@@ -57,6 +58,9 @@ internal class FakeFactory
 
         return faker.Generate();
     }
+
+    public static ApplicationUser CreateFakeUser(int teamId)
+        => new("fake@gmail.com", teamId);
 
     public static string RandomString => AutoFaker.Generate<string>();
 }
