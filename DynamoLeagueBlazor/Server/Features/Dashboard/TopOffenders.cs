@@ -12,7 +12,7 @@ namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [Authorize]
 [ApiController]
-[Route("dashboard/topoffenders")]
+[Route("api/dashboard/topoffenders")]
 public class TopOffendersController : ControllerBase
 {
     private readonly IMediator _mediator;
