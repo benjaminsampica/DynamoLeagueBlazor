@@ -5,7 +5,7 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 internal class DetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "/freeagents/";
+    private const string _endpoint = "api/freeagents/";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()

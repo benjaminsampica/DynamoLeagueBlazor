@@ -9,7 +9,7 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 internal class AddBidTests : IntegrationTestBase
 {
-    private const string _endpoint = "/freeagents/addbid";
+    private const string _endpoint = "api/freeagents/addbid";
 
     private static AddBidRequest CreateFakeValidRequest()
     {

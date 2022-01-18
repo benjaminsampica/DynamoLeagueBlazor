@@ -27,7 +27,7 @@ public partial class List : IDisposable
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<FineListResult>("fines", _cts.Token) ?? new();
+            _result = await HttpClient.GetFromJsonAsync<FineListResult>("api/fines", _cts.Token) ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)

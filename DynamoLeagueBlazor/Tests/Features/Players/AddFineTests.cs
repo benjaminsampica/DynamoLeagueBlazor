@@ -9,7 +9,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 internal class AddFineTests : IntegrationTestBase
 {
-    private const string _endpoint = "players/addfine";
+    private const string _endpoint = "api/players/addfine";
 
     private static AddFineRequest CreateFakeValidRequest()
     {

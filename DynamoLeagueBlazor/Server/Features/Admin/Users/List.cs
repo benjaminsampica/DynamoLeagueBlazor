@@ -13,7 +13,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin.Users;
 
 [Authorize(Roles = RoleName.Admin)]
 [ApiController]
-[Route("admin/users")]
+[Route("api/admin/users")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

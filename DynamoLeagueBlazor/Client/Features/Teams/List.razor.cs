@@ -19,7 +19,7 @@ public partial class List : IDisposable
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<TeamListResult>("teams", _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<TeamListResult>("api/teams", _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {

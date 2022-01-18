@@ -10,7 +10,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin.Users;
 
 [Authorize(Roles = RoleName.Admin)]
 [ApiController]
-[Route("admin/users")]
+[Route("api/admin/users")]
 public class DeleteController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -42,7 +42,7 @@ public class DeleteHandler : IRequestHandler<DeleteCommand>
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
 
-        var result = await _userManager.DeleteAsync(user);
+        await _userManager.DeleteAsync(user);
 
         return Unit.Value;
     }

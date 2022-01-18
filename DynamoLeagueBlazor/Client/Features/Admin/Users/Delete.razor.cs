@@ -60,7 +60,7 @@ public static class DeleteUserRouteFactory
 {
     public static string CreateRequestUri(DeleteUserRequest request)
     {
-        var uri = QueryHelpers.AddQueryString("admin/users", new Dictionary<string, string>
+        var uri = QueryHelpers.AddQueryString("api/admin/users", new Dictionary<string, string>
         {
             { nameof(DeleteUserRequest.UserId), request.UserId.ToString() },
         });

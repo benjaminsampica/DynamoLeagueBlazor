@@ -12,7 +12,7 @@ namespace DynamoLeagueBlazor.Server.Features.Players;
 
 [Authorize]
 [ApiController]
-[Route("players")]
+[Route("api/players")]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

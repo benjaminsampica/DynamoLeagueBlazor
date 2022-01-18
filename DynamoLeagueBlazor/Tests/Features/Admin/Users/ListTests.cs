@@ -1,12 +1,11 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
 
 internal class ListTests : IntegrationTestBase
 {
-    private const string _endpoint = "admin/users";
+    private const string _endpoint = "api/admin/users";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()

@@ -29,7 +29,7 @@ public partial class Manage : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("fines/manage", _form);
+            var response = await HttpClient.PostAsJsonAsync("api/fines/manage", _form);
 
             if (response.IsSuccessStatusCode)
             {

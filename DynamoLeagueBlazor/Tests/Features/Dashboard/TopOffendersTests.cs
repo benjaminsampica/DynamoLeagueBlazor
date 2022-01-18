@@ -5,7 +5,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Dashboard;
 
 internal class TopOffendersTests : IntegrationTestBase
 {
-    private const string _endpoint = "dashboard/topoffenders";
+    private const string _endpoint = "api/dashboard/topoffenders";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()

@@ -9,7 +9,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin;
 
 [Authorize(Roles = RoleName.Admin)]
 [ApiController]
-[Route("admin/seasonstatus")]
+[Route("api/admin/seasonstatus")]
 public class SeasonStatusController : ControllerBase
 {
     private readonly IMediator _mediator;

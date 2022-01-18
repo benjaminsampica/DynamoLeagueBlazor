@@ -9,7 +9,7 @@ namespace DynamoLeagueBlazor.Server.Features.Players;
 
 [Authorize]
 [ApiController]
-[Route("players/finedetail")]
+[Route("api/players/finedetail")]
 public class FineDetailController : ControllerBase
 {
     private readonly IMediator _mediator;

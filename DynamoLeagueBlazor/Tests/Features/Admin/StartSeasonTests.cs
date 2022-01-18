@@ -4,7 +4,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 internal class StartSeasonTests : IntegrationTestBase
 {
-    private const string _endpoint = "admin/startseason";
+    private const string _endpoint = "api/admin/startseason";
 
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
