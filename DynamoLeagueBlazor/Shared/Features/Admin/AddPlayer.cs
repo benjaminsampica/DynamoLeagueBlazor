@@ -15,7 +15,7 @@ public class AddPlayerRequestValidator : AbstractValidator<AddPlayerRequest>
     public AddPlayerRequestValidator()
     {
         RuleFor(p => p.Name).NotEmpty();
-        RuleFor(p => p.Position).NotEmpty().Must((position)=>  Position.TryFromName(position,out _));
+        RuleFor(p => p.Position).NotEmpty().Must((position) => Position.TryFromName(position, out _));
         RuleFor(p => p.HeadShot).NotEmpty();
         RuleFor(p => p.TeamId).GreaterThan(0).WithMessage("Please select a valid team.");
         RuleFor(p => p.ContractValue).GreaterThan(0);
