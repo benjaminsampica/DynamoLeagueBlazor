@@ -14,4 +14,9 @@ Running & contributing to Dynamo League Blazor requires the following:
 - SQL Server LocalDb to run tests
 
 The latter two are installed automatically with either Visual Studio or Rider IDE's. 
-If you're a brand new contributor an account will need to be created by modifying `SeedDataCommand` and adding a new user with a role using the identity manager.
+
+By default, a test account is created with administrator permissions with the following login information:
+
+Username `test@gmail.com`
+
+Password `hunter2`
