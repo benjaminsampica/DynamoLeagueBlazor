@@ -1,4 +1,4 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -14,8 +14,8 @@ public partial class AddPlayer : IDisposable
 
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    private TeamNameListResult _teamList = new TeamNameListResult();
-    private AddPlayerRequest _form = new AddPlayerRequest();
+    private TeamNameListResult _teamList = new();
+    private AddPlayerRequest _form = new();
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
@@ -23,8 +23,8 @@ public partial class AddPlayer : IDisposable
     {
         try
         {
-            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("admin/addplayer", _cts.Token);
 
+            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("api/admin/addplayer", _cts.Token) ?? new TeamNameListResult();
 
 
         }
@@ -39,11 +39,12 @@ public partial class AddPlayer : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("admin/addplayer", _form);
+            var response = await HttpClient.PostAsJsonAsync("api/admin/addplayer", _form);
 
             if (response.IsSuccessStatusCode)
             {
                 SnackBar.Add("Player Succesfully added", Severity.Success);
+                _form = new();
             }
             else
             {

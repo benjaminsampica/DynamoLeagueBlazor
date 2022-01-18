@@ -1,57 +1,49 @@
 ﻿@page "/admin/addplayer"
-@using static DynamoLeagueBlazor.Shared.Features.Players.AddPlayerRequest
+@using static DynamoLeagueBlazor.Shared.Features.Admin.AddPlayerRequest
+@using Position =  DynamoLeagueBlazor.Shared.Enums.Position
 <PageHeader>
     Add Player
 </PageHeader>
-    <MudDialog>
-            <DialogContent>
-                <MudSkeleton SkeletonType=SkeletonType.Text Width=300px Height=60px/>
-                <MudSkeleton SkeletonType=SkeletonType.Rectangle Width=100% Height=100px />
-            </DialogContent>
-            <DialogActions>
-                <MudSkeleton SkeletonType=SkeletonType.Text Width=100% Height=80px/>
-            </DialogActions>
-        </MudDialog>
 
-
-        <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
-        <FluentValidationValidator />
-        <MudGrid>
-    <MudItem xs="12" sm="12" md="12">
-        <MudTextField @bind-Value="_form.Name"  Label="Player Name" Variant="Variant.Text" />
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4">
-        <MudTextField @bind-Value="_form.ContractValue" Label="Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
-    </MudItem>
-    <MudItem xs="12" sm="6" md="2">
-           <MudSelect   Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.Position">
-                     @foreach (DynamoLeagueBlazor.Shared.Enums.Position pos in DynamoLeagueBlazor.Shared.Enums.Position.List)
-                     {
-                         <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
-                     }
-             </MudSelect>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4">
-            <MudSelect   Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.TeamId">
-                     @foreach (var team in _teamList.Teams)
+<EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
+    <FluentValidationValidator />
+    <MudGrid>
+        <MudItem xs="12">
+         <MudTextField @bind-Value="_form.Name"  Label="Player Name" Variant="Variant.Text" For="@(() => _form.Name)" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+              <MudTextField @bind-Value="_form.ContractValue" Label="Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" For="@(() => _form.ContractValue)" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="2">
+                 <MudSelect   Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.Position" For="@(() => _form.Position)">
+                           @foreach (Position pos in Position.List)
+                           {
+                               <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
+                           }
+                 </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+                  <MudSelect     Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.TeamId" For="@(() => _form.TeamId)">
+                          <MudSelectItem Value="0">-- Select a Team --</MudSelectItem>
+                           @foreach (var team in _teamList.Teams)
                      {
                          <MudSelectItem Value="@team.Id">@team.Name</MudSelectItem>
                      }
-             </MudSelect>
-    </MudItem>
-     <MudItem xs="12" sm="12" md="12">
-         <MudTextField @bind-Value="_form.Headshot" Label="Picture URL" Variant="Variant.Filled" />
-     </MudItem>
- </MudGrid>
-  <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
-                    @if (_processingForm)
-                    {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                        <MudText Class="ms-2">Saving...</MudText>
-                    }
-                    else
-                    {
-                        <MudText>Save</MudText>
-                    }
-                </MudButton>
-    </EditForm> 
+                   </MudSelect>
+        </MudItem>
+         <MudItem xs="12">
+         <MudTextField @bind-Value="_form.HeadShot" Label="Picture URL" Variant="Variant.Filled" For="@(() => _form.HeadShot)"/>
+         </MudItem>
+    </MudGrid>
+     <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
+         @if (_processingForm)
+         {
+             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+             <MudText Class="ms-2">Saving...</MudText>
+         }
+         else
+         {
+             <MudText>Save</MudText>
+         }
+     </MudButton>
+</EditForm> 
