@@ -1,11 +1,14 @@
-﻿using DynamoLeagueBlazor.Server.Models;
+﻿
+using DynamoLeagueBlazor.Client.Features.Admin;
+using DynamoLeagueBlazor.Client.Shared.Components;
+using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.Admin;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin;
 
-public class AddPlayerTests : IntegrationTestBase
+internal class AddPlayerServerTests : IntegrationTestBase
 {
     private const string _endpoint = "api/admin/addplayer";
 
@@ -58,9 +61,22 @@ public class AddPlayerTests : IntegrationTestBase
         player.ContractValue.Should().Be(request.ContractValue);
     }
 }
-public class AddPlayerRequestValidatorTests
+
+internal class AddPlayerUITests : UITestBase
+{
+    [Test]
+    public void GivenValidSetup_ThenComponentRenders()
+    {
+        var cut = RenderComponent<AddPlayer>();
+
+        cut.FindComponents<PageHeader>().Should().NotBeEmpty();
+    }
+}
+
+internal class AddPlayerRequestValidatorTests
 {
     private AddPlayerRequestValidator _validator = null!;
+
     [SetUp]
     public void SetUp()
     {
@@ -79,6 +95,7 @@ public class AddPlayerRequestValidatorTests
 
         return hasNoErrors;
     }
+
     [TestCase(" ", ExpectedResult = false, Description = "HeadShot is blank")]
     [TestCase(null, ExpectedResult = false, Description = "No headShot is given")]
     [TestCase("Test", ExpectedResult = true, Description = "Valid headShot")]
@@ -103,6 +120,7 @@ public class AddPlayerRequestValidatorTests
 
         return hasNoErrors;
     }
+
     [TestCase(0, ExpectedResult = false, Description = "Team Id must be greater than")]
     [TestCase(1, ExpectedResult = true, Description = "Valid team Id")]
     public bool GivenDifferentPlayerTeamId_ThenReturnsExpectedResult(int teamId)

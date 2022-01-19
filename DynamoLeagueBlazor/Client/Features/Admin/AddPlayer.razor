@@ -1,6 +1,7 @@
 ﻿@page "/admin/addplayer"
 @using static DynamoLeagueBlazor.Shared.Features.Admin.AddPlayerRequest
 @using Position =  DynamoLeagueBlazor.Shared.Enums.Position
+
 <PageHeader>
     Add Player
 </PageHeader>
@@ -9,30 +10,30 @@
     <FluentValidationValidator />
     <MudGrid>
         <MudItem xs="12">
-         <MudTextField @bind-Value="_form.Name"  Label="Player Name" Variant="Variant.Text" For="@(() => _form.Name)" />
+            <MudTextField @bind-Value="_form.Name" Label="Player Name" Variant="Variant.Text" For="@(() => _form.Name)" />
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-              <MudTextField @bind-Value="_form.ContractValue" Label="Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" For="@(() => _form.ContractValue)" />
+            <MudTextField @bind-Value="_form.ContractValue" Label="Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" For="@(() => _form.ContractValue)" />
         </MudItem>
         <MudItem xs="12" sm="6" md="2">
-                 <MudSelect   Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.Position" For="@(() => _form.Position)">
-                           @foreach (Position pos in Position.List)
-                           {
-                               <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
-                           }
-                 </MudSelect>
+            <MudSelect Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.Position" For="@(() => _form.Position)">
+                @foreach (Position pos in Position.List)
+                {
+                    <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
+                }
+            </MudSelect>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-                  <MudSelect     Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.TeamId" For="@(() => _form.TeamId)">
-                          <MudSelectItem Value="0">-- Select a Team --</MudSelectItem>
-                           @foreach (var team in _teamList.Teams)
-                     {
-                         <MudSelectItem Value="@team.Id">@team.Name</MudSelectItem>
-                     }
-                   </MudSelect>
+            <MudSelect Label="Teams" AnchorOrigin="Origin.BottomCenter" @bind-Value="_form.TeamId" For="@(() => _form.TeamId)">
+                <MudSelectItem Value="0">-- Select a Team --</MudSelectItem>
+                @foreach (var team in _teamList.Teams)
+                {
+                    <MudSelectItem Value="@team.Id">@team.Name</MudSelectItem>
+                }
+            </MudSelect>
         </MudItem>
          <MudItem xs="12">
-         <MudTextField @bind-Value="_form.HeadShot" Label="Picture URL" Variant="Variant.Filled" For="@(() => _form.HeadShot)"/>
+            <MudTextField @bind-Value="_form.HeadShot" Label="Head Shot Url" Variant="Variant.Filled" For="@(() => _form.HeadShot)"/>
          </MudItem>
     </MudGrid>
      <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
