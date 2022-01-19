@@ -13,7 +13,7 @@ using static DynamoLeagueBlazor.Shared.Features.Teams.TeamNameListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
 [Route("api/admin/addplayer")]
 public class AddPlayerController : ControllerBase
