@@ -15,3 +15,13 @@ public class TeamListResult
         public string CapSpace { get; set; }
     }
 }
+public class TeamNameListResult
+{
+    public IEnumerable<TeamNameItem> Teams { get; init; } = Array.Empty<TeamNameItem>();
+
+    public class TeamNameItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}
