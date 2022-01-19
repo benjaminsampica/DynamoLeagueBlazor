@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 [Route("api/fines/manage")]
 [ApiController]
 public class ManageFineController : ControllerBase

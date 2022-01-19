@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 public partial class AddPlayer : IDisposable
 {
 

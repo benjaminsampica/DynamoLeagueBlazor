@@ -22,6 +22,9 @@ public class ProfileService : IProfileService
         var teamIdClaim = context.Subject.FindFirst(nameof(ApplicationUser.TeamId));
         context.IssuedClaims.Add(teamIdClaim);
 
+        var approvedClaim = context.Subject.FindFirst(nameof(ApplicationUser.Approved));
+        context.IssuedClaims.Add(approvedClaim);
+
         await Task.CompletedTask;
     }
 

@@ -3,13 +3,11 @@ using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Authorize]
 [Route("api/players/addfine")]
 [ApiController]
 public class AddFineController : ControllerBase

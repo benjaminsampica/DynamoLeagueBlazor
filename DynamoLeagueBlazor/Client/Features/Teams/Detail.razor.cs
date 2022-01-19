@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
@@ -7,7 +6,6 @@ using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
-[Authorize]
 public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;

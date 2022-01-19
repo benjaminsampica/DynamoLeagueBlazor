@@ -4,13 +4,11 @@ using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Authorize]
 [Route("api/freeagents/addbid")]
 [ApiController]
 public class AddBidController : ControllerBase

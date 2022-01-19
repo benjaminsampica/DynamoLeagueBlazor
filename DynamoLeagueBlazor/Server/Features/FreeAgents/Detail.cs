@@ -5,13 +5,11 @@ using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
 
-[Authorize]
 [ApiController]
 [Route("api/freeagents/")]
 public class DetailController : ControllerBase

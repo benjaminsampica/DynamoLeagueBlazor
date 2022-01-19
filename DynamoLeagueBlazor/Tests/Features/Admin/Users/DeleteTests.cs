@@ -46,7 +46,10 @@ internal class DeleteTests
         var application = CreateAdminAuthenticatedApplication();
 
         var userManager = application.Services.GetRequiredService<UserManager<ApplicationUser>>();
-        var mockUser = CreateFakeUser(int.MaxValue);
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+        var mockUser = CreateFakeUser(stubTeam.Id);
         await userManager.CreateAsync(mockUser);
         var request = new DeleteUserRequest { UserId = mockUser.Id };
         var client = application.CreateClient();

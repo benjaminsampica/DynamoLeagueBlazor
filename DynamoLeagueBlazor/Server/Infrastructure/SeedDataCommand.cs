@@ -24,9 +24,9 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
     public async Task<Unit> Handle(SeedDataCommand request, CancellationToken cancellationToken)
     {
-        await SeedIdentityDataAsync();
+        await SeedApplicationDataAsync(cancellationToken);
 
-        await SeedDataAsync(cancellationToken);
+        await SeedIdentityDataAsync();
 
         return Unit.Value;
     }
@@ -44,16 +44,16 @@ public class Handler : IRequestHandler<SeedDataCommand>
             await _roleManager.CreateAsync(userRole);
         }
 
-        if (await _userManager.FindByEmailAsync("benjamin.sampica@gmail.com") is null)
+        if (await _userManager.FindByEmailAsync("test@gmail.com") is null)
         {
-            var user = new ApplicationUser("benjamin.sampica@gmail.com", 1) { EmailConfirmed = true };
+            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true };
             await _userManager.CreateAsync(user, "hunter2");
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
         }
     }
 
-    private async Task SeedDataAsync(CancellationToken cancellationToken)
+    private async Task SeedApplicationDataAsync(CancellationToken cancellationToken)
     {
         if (!await _dbContext.Teams.AnyAsync(cancellationToken))
         {

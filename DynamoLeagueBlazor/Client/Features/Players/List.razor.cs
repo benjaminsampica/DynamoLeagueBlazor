@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
@@ -7,7 +6,6 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Players;
 
-[Authorize]
 public partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;

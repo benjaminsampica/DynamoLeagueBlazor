@@ -20,6 +20,7 @@ public class CurrentUserClaimsFactory : UserClaimsPrincipalFactory<ApplicationUs
         var identity = await base.GenerateClaimsAsync(user);
 
         identity.AddClaim(new Claim(nameof(user.TeamId), user.TeamId.ToString()));
+        identity.AddClaim(new Claim(nameof(user.Approved), user.Approved.ToString()));
 
         return identity;
     }

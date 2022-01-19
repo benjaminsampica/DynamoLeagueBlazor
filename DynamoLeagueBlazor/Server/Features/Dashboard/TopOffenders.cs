@@ -4,13 +4,11 @@ using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Dashboard;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Authorize]
 [ApiController]
 [Route("api/dashboard/topoffenders")]
 public class TopOffendersController : ControllerBase

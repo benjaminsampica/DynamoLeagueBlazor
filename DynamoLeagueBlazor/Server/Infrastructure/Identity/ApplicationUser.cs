@@ -12,6 +12,7 @@ public class ApplicationUser : IdentityUser
     }
 
     public int TeamId { get; set; }
+    public bool Approved { get; set; }
 
     public Team Team { get; set; } = null!;
 }

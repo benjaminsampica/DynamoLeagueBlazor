@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin.Users;
 
-[Authorize(Roles = RoleName.Admin)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
 [Route("api/admin/users")]
 public class ListController : ControllerBase
