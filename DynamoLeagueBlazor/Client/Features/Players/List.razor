@@ -6,13 +6,22 @@
 </Title>
 
 <PageHeader>
-    @_title
+    <MudGrid>
+        <MudItem md=2 xs=0/>
+        <MudItem md=8 xs=12>
+            @_title
+        </MudItem>
+        <MudItem md=2 xs=12>
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PersonAdd" Link="/admin/addplayer" FullWidth=true>
+                        Add Player
+                    </MudButton>
+                </Authorized>
+            </AuthorizeView>
+        </MudItem>
+    </MudGrid>
 </PageHeader>
-<AuthorizeView Roles="Admin">
-    <Authorized>
-        <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Add" aria-label="add" Link="/admin/addplayer"/> 
-    </Authorized>
-</AuthorizeView>
 
 <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
     <ToolBarContent>

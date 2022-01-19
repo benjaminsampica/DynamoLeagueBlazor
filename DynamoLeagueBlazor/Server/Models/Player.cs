@@ -57,30 +57,10 @@ public record Player : BaseEntity
 
         return this;
     }
-    public Player SetToTeam(int teamId, int contractValue)
-    {
-        TeamId = teamId;
-        ContractValue = contractValue;
 
-        return this;
-    }
     public void GrantExtensionToFreeAgency()
     {
         EndOfFreeAgency = EndOfFreeAgency?.AddDays(1);
-    }
-
-    public bool IsEligibleForFreeAgencyExtension(int teamId)
-    {
-        var isBidByTheSameTeam = teamId == TeamId;
-        if (isBidByTheSameTeam) return false;
-
-        var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);
-        var isBeforeMaximumExtensionDate = EndOfFreeAgency < maxFreeAgencyExtensionDate;
-
-        const int maxFreeAgencyExtensionDays = 3;
-        var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTime.Now.AddDays(maxFreeAgencyExtensionDays);
-
-        return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
     }
 
     public Bid AddBid(int amount, int teamIdOfBidder)
@@ -96,6 +76,7 @@ public record Player : BaseEntity
 
         return bid;
     }
+
     public Player AddPlayer(string Name, string Position, string Headshot, int TeamId, int ContractValue)
     {
         var player = new Player(Name, Position, Headshot)
@@ -114,6 +95,20 @@ public record Player : BaseEntity
         Fines.Add(fine);
 
         return fine;
+    }
+
+    private bool IsEligibleForFreeAgencyExtension(int teamId)
+    {
+        var isBidByTheSameTeam = teamId == TeamId;
+        if (isBidByTheSameTeam) return false;
+
+        var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);
+        var isBeforeMaximumExtensionDate = EndOfFreeAgency < maxFreeAgencyExtensionDate;
+
+        const int maxFreeAgencyExtensionDays = 3;
+        var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTime.Now.AddDays(maxFreeAgencyExtensionDays);
+
+        return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
     }
 }
 

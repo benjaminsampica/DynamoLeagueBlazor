@@ -8,6 +8,7 @@ using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin;
+
 [Authorize(Roles = RoleName.Admin)]
 public partial class AddPlayer : IDisposable
 {
@@ -23,16 +24,14 @@ public partial class AddPlayer : IDisposable
     {
         try
         {
-
             _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("api/admin/addplayer", _cts.Token) ?? new TeamNameListResult();
-
-
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
     }
+
     private async Task OnValidSubmitAsync()
     {
         _processingForm = true;
@@ -58,6 +57,7 @@ public partial class AddPlayer : IDisposable
 
         _processingForm = false;
     }
+
     public void Dispose()
     {
         _cts.Cancel();
