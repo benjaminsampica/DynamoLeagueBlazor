@@ -46,7 +46,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
         if (await _userManager.FindByEmailAsync("test@gmail.com") is null)
         {
-            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true };
+            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true, Approved = true };
             await _userManager.CreateAsync(user, "hunter2");
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
@@ -68,7 +68,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
                 new Team("J.J. Mafia", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
                 new Team("Natty Lite", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
                 new Team("Starts With a W", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team( "Magic SKOL Bus", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg")
+                new Team("Magic SKOL Bus", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg")
             };
             _dbContext.Teams.AddRange(teams);
             await _dbContext.SaveChangesAsync(cancellationToken);
