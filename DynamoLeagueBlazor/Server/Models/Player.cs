@@ -8,7 +8,6 @@ public record Player : BaseEntity
         Position = position;
         HeadShotUrl = headShotUrl;
     }
-
     public string Name { get; private set; }
     public string Position { get; private set; }
     public string HeadShotUrl { get; private set; }
@@ -64,20 +63,6 @@ public record Player : BaseEntity
         EndOfFreeAgency = EndOfFreeAgency?.AddDays(1);
     }
 
-    public bool IsEligibleForFreeAgencyExtension(int teamId)
-    {
-        var isBidByTheSameTeam = teamId == TeamId;
-        if (isBidByTheSameTeam) return false;
-
-        var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);
-        var isBeforeMaximumExtensionDate = EndOfFreeAgency < maxFreeAgencyExtensionDate;
-
-        const int maxFreeAgencyExtensionDays = 3;
-        var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTime.Now.AddDays(maxFreeAgencyExtensionDays);
-
-        return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
-    }
-
     public Bid AddBid(int amount, int teamIdOfBidder)
     {
         var bid = new Bid(amount, teamIdOfBidder, Id);
@@ -92,6 +77,17 @@ public record Player : BaseEntity
         return bid;
     }
 
+    public Player AddPlayer(string Name, string Position, string Headshot, int TeamId, int ContractValue)
+    {
+        var player = new Player(Name, Position, Headshot)
+        {
+            ContractValue = ContractValue,
+            TeamId = TeamId
+        };
+        player.SetToUnsigned();
+        return player;
+    }
+
     public Fine AddFine(decimal amount, string reason)
     {
         var fine = new Fine(amount, reason, Id);
@@ -99,6 +95,20 @@ public record Player : BaseEntity
         Fines.Add(fine);
 
         return fine;
+    }
+
+    private bool IsEligibleForFreeAgencyExtension(int teamId)
+    {
+        var isBidByTheSameTeam = teamId == TeamId;
+        if (isBidByTheSameTeam) return false;
+
+        var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);
+        var isBeforeMaximumExtensionDate = EndOfFreeAgency < maxFreeAgencyExtensionDate;
+
+        const int maxFreeAgencyExtensionDays = 3;
+        var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTime.Now.AddDays(maxFreeAgencyExtensionDays);
+
+        return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
     }
 }
 
