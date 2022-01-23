@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Respawn;
+using Respawn.Graph;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
@@ -34,7 +35,7 @@ public class IntegrationTesting
 
         _checkpoint = new Checkpoint
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         };
 
         _setupApplication = new TestWebApplicationFactory(_configuration);

@@ -1,14 +1,19 @@
-﻿using JustEat.HttpClientInterception;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MockHttp;
+using MockHttp.Json;
+using MockHttp.Json.Newtonsoft;
+using MockHttp.Language;
 using Moq;
 using MudBlazor;
 using MudBlazor.Services;
 
 namespace DynamoLeagueBlazor.Tests;
 
+[TestFixture]
 internal class UITestBase : TestContextWrapper
 {
-    private Mock<ISnackbar> _mockSnackbar = null!;
+    protected Mock<ISnackbar> MockSnackbar = null!;
+    private MockHttpHandler _mockHttpHandler = null!;
 
     [SetUp]
     public void Setup()
@@ -18,25 +23,41 @@ internal class UITestBase : TestContextWrapper
 
         testContext.Services.AddMudServices();
         testContext.Services.AddSingleton(mockSnackBar.Object);
+        _mockHttpHandler = testContext.Services.AddMockHttpClient();
         testContext.JSInterop.SetupVoid();
 
         TestContext = testContext;
-        _mockSnackbar = mockSnackBar;
+        MockSnackbar = mockSnackBar;
     }
 
     [TearDown]
     public void TearDown() => TestContext?.Dispose();
 
-    private void BuildUnauthorizedRequest()
-    {
-        var options = new HttpClientInterceptorOptions();
-        var builder = new HttpRequestInterceptionBuilder();
+    public MockHttpHandler GetHttpHandler => _mockHttpHandler;
+}
 
-        builder
-            .Requests()
-            .ForGet()
-            .ForHttps()
-            .ForHost("public.je-apis.com")
-            .RegisterWith(options);
+internal static class UITestExtensions
+{
+    public static MockHttpHandler AddMockHttpClient(this TestServiceProvider services)
+    {
+        var mockHttpHandler = new MockHttpHandler();
+        var httpClient = new HttpClient(mockHttpHandler)
+        {
+            BaseAddress = new Uri("http://localhost")
+        };
+
+        services.AddSingleton(httpClient);
+
+        return mockHttpHandler;
     }
+
+    public static IConfiguredRequest When(this MockHttpHandler mockHttpHandler, HttpMethod httpMethod, string uri)
+        => mockHttpHandler.When(matching =>
+            matching
+                .Method(httpMethod)
+                .RequestUri(uri)
+        );
+
+    public static void RespondsWithJson<T>(this IConfiguredRequest request, T value)
+        => request.RespondJson(HttpStatusCode.OK, value);
 }
