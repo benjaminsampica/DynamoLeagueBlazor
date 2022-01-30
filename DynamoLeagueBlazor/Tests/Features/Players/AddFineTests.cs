@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
-internal class AddFineTests : IntegrationTestBase
+public class AddFineTests : IntegrationTestBase
 {
     private const string _endpoint = "api/players/addfine";
 
@@ -19,7 +19,7 @@ internal class AddFineTests : IntegrationTestBase
         return faker.Generate();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -32,7 +32,7 @@ internal class AddFineTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -55,48 +55,49 @@ internal class AddFineTests : IntegrationTestBase
     }
 }
 
-internal class AddFineRequestValidatorTests : IntegrationTestBase
+public class AddFineRequestValidatorTests : IntegrationTestBase
 {
     private AddFineRequestValidator _validator = null!;
 
-    [SetUp]
-    public void SetUp()
+    public AddFineRequestValidatorTests()
     {
         _validator = _setupApplication.Services.GetRequiredService<AddFineRequestValidator>();
+
     }
 
-    [TestCase(0, "Test", ExpectedResult = false, Description = "Invalid player id")]
-    [TestCase(1, "", ExpectedResult = false, Description = "Invalid reason")]
-    [TestCase(1, null, ExpectedResult = false, Description = "Invalid reason")]
-    [TestCase(1, "Test", ExpectedResult = true, Description = "Valid")]
-    public bool GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, string reason)
+    [Theory]
+    [InlineData(0, "Test", false)]
+    [InlineData(1, "", false)]
+    [InlineData(1, null, false)]
+    [InlineData(1, "Test", true)]
+    public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, string reason, bool expectedResult)
     {
         var request = new AddFineRequest { PlayerId = playerId, FineReason = reason };
 
         var result = _validator.Validate(request);
 
-        return result.IsValid;
+        result.IsValid.Should().Be(expectedResult);
     }
 }
 
-internal class FineDetailRequestValidatorTests : IntegrationTestBase
+public class FineDetailRequestValidatorTests : IntegrationTestBase
 {
     private FineDetailRequestValidator _validator = null!;
 
-    [SetUp]
-    public void SetUp()
+    public FineDetailRequestValidatorTests()
     {
         _validator = _setupApplication.Services.GetRequiredService<FineDetailRequestValidator>();
     }
 
-    [TestCase(0, ExpectedResult = false, Description = "Invalid player id")]
-    [TestCase(1, ExpectedResult = true, Description = "Valid")]
-    public bool GivenDifferentRequests_ThenReturnsExpectedResult(int playerId)
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, bool expectedResult)
     {
         var request = new FineDetailRequest { PlayerId = playerId };
 
         var result = _validator.Validate(request);
 
-        return result.IsValid;
+        result.IsValid.Should().Be(expectedResult);
     }
 }

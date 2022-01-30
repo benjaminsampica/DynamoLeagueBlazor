@@ -11,9 +11,9 @@ using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin;
 
-internal class AddPlayerServerTests : IntegrationTestBase
+public class AddPlayerServerTests : IntegrationTestBase
 {
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -25,7 +25,7 @@ internal class AddPlayerServerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -37,7 +37,7 @@ internal class AddPlayerServerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_ThenAddsAPlayer()
     {
         var application = CreateAdminAuthenticatedApplication();
@@ -70,7 +70,7 @@ internal class AddPlayerServerTests : IntegrationTestBase
     }
 }
 
-internal class AddPlayerUITests : UITestBase
+public class AddPlayerUITests : UITestBase
 {
     private static readonly TeamNameItem _teamNameItem = new()
     {
@@ -86,7 +86,7 @@ internal class AddPlayerUITests : UITestBase
         }
     };
 
-    [Test]
+    [Fact]
     public void WhenPageLoads_ThenPopulatesListOfTeams()
     {
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
@@ -100,7 +100,7 @@ internal class AddPlayerUITests : UITestBase
         teamSelectItem.Should().NotBeNull();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
@@ -135,78 +135,82 @@ internal class AddPlayerUITests : UITestBase
     }
 }
 
-internal class AddPlayerRequestValidatorTests
+public class AddPlayerRequestValidatorTests
 {
-    private AddPlayerRequestValidator _validator = null!;
+    private readonly AddPlayerRequestValidator _validator = null!;
 
-    [SetUp]
-    public void SetUp()
+    public AddPlayerRequestValidatorTests()
     {
         _validator = new AddPlayerRequestValidator();
     }
 
-    [TestCase(" ", ExpectedResult = false, Description = "Name is blank")]
-    [TestCase(null, ExpectedResult = false, Description = "No name is given")]
-    [TestCase("Test", ExpectedResult = true, Description = "Valid name")]
-    public bool GivenDifferentPlayerNames_ThenReturnsExpectedResult(string name)
+    [Theory]
+    [InlineData(" ", false)]
+    [InlineData(null, false)]
+    [InlineData("Test", true)]
+    public void GivenDifferentPlayerNames_ThenReturnsExpectedResult(string name, bool expectedResult)
     {
         var request = new AddPlayerRequest() { Name = name };
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.Name));
 
-        return hasNoErrors;
+        hasNoErrors.Should().Be(expectedResult);
     }
 
-    [TestCase(" ", ExpectedResult = false, Description = "HeadShot is blank")]
-    [TestCase(null, ExpectedResult = false, Description = "No headShot is given")]
-    [TestCase("Test", ExpectedResult = true, Description = "Valid headShot")]
-    public bool GivenDifferentPlayerHeadShots_ThenReturnsExpectedResult(string headShot)
+    [Theory]
+    [InlineData(" ", false)]
+    [InlineData(null, false)]
+    [InlineData("Test", true)]
+    public void GivenDifferentPlayerHeadShots_ThenReturnsExpectedResult(string headShot, bool expectedResult)
     {
         var request = new AddPlayerRequest() { HeadShot = headShot };
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.HeadShot));
 
-        return hasNoErrors;
+        hasNoErrors.Should().Be(expectedResult);
     }
 
-    [TestCase(0, ExpectedResult = false, Description = "Contract value must be greater than 0")]
-    [TestCase(1, ExpectedResult = true, Description = "Valid contract value")]
-    public bool GivenDifferentPlayerContractValue_ThenReturnsExpectedResult(int contractValue)
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    public void GivenDifferentPlayerContractValue_ThenReturnsExpectedResult(int contractValue, bool expectedResult)
     {
         var request = new AddPlayerRequest() { ContractValue = contractValue };
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.ContractValue));
 
-        return hasNoErrors;
+        hasNoErrors.Should().Be(expectedResult);
     }
 
-    [TestCase(0, ExpectedResult = false, Description = "Team Id must be greater than")]
-    [TestCase(1, ExpectedResult = true, Description = "Valid team Id")]
-    public bool GivenDifferentPlayerTeamId_ThenReturnsExpectedResult(int teamId)
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    public void GivenDifferentPlayerTeamId_ThenReturnsExpectedResult(int teamId, bool expectedResult)
     {
         var request = new AddPlayerRequest() { TeamId = teamId };
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.TeamId));
 
-        return hasNoErrors;
+        hasNoErrors.Should().Be(expectedResult);
     }
 
-    [TestCase(" ", ExpectedResult = false, Description = "Position is blank")]
-    [TestCase(null, ExpectedResult = false, Description = "No position is given")]
-    [TestCase("POE", ExpectedResult = false, Description = "Invalid position")]
-    [TestCase("TE", ExpectedResult = true, Description = "Valid position")]
-    public bool GivenDifferentPlayerPosition_ThenReturnsExpectedResult(string position)
+    [Theory]
+    [InlineData(" ", false)]
+    [InlineData(null, false)]
+    [InlineData("POE", false)]
+    [InlineData("TE", true)]
+    public void GivenDifferentPlayerPosition_ThenReturnsExpectedResult(string position, bool expectedResult)
     {
         var request = new AddPlayerRequest() { Position = position };
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.Position));
 
-        return hasNoErrors;
+        hasNoErrors.Should().Be(expectedResult);
     }
 
 }

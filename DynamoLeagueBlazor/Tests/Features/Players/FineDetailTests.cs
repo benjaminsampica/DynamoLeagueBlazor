@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
 
-internal class FineDetailTests : IntegrationTestBase
+public class FineDetailTests : IntegrationTestBase
 {
     private const string _endpoint = "api/players/finedetail";
 
@@ -18,7 +18,7 @@ internal class FineDetailTests : IntegrationTestBase
         return faker.Generate();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -33,7 +33,7 @@ internal class FineDetailTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsFound_ThenReturnsExpectedResult()
     {
         var application = CreateUserAuthenticatedApplication();

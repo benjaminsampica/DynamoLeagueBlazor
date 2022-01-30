@@ -3,11 +3,11 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
-internal class ListTests : IntegrationTestBase
+public class ListTests : IntegrationTestBase
 {
     private const string _endpoint = "api/fines";
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -19,7 +19,7 @@ internal class ListTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneFine_ThenReturnsOneFine()
     {
         var application = CreateUserAuthenticatedApplication();

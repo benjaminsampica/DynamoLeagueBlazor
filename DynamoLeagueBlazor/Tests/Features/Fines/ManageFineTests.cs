@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
-internal class ManageFineTests : IntegrationTestBase
+public class ManageFineTests : IntegrationTestBase
 {
     private const string _endpoint = "api/fines/manage";
 
@@ -17,7 +17,7 @@ internal class ManageFineTests : IntegrationTestBase
         return faker.Generate();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -30,7 +30,7 @@ internal class ManageFineTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -43,7 +43,7 @@ internal class ManageFineTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenFineIsApproved_ThenUpdatesIt()
     {
         var application = CreateAdminAuthenticatedApplication();
@@ -67,7 +67,7 @@ internal class ManageFineTests : IntegrationTestBase
         fine!.Status.Should().BeTrue();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenFineIsNotApproved_ThenDeletesIt()
     {
         var application = CreateAdminAuthenticatedApplication();
@@ -91,24 +91,24 @@ internal class ManageFineTests : IntegrationTestBase
     }
 }
 
-internal class ManageFineRequestValidatorTests
+public class ManageFineRequestValidatorTests
 {
-    private ManageFineRequestValidator _validator = null!;
+    private readonly ManageFineRequestValidator _validator = null!;
 
-    [SetUp]
-    public void SetUp()
+    public ManageFineRequestValidatorTests()
     {
         _validator = new ManageFineRequestValidator();
     }
 
-    [TestCase(0, ExpectedResult = false)]
-    [TestCase(1, ExpectedResult = true)]
-    public bool GivenDifferentRequests_ThenReturnsExpectedResult(int fineId)
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    public void GivenDifferentRequests_ThenReturnsExpectedResult(int fineId, bool expectedResult)
     {
         var request = new ManageFineRequest { FineId = fineId };
 
         var result = _validator.Validate(request);
 
-        return result.IsValid;
+        result.IsValid.Should().Be(expectedResult);
     }
 }

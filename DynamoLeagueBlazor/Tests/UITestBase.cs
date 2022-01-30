@@ -9,14 +9,12 @@ using MudBlazor.Services;
 
 namespace DynamoLeagueBlazor.Tests;
 
-[TestFixture]
-internal class UITestBase : TestContextWrapper
+public class UITestBase : TestContextWrapper, IDisposable
 {
     protected Mock<ISnackbar> MockSnackbar = null!;
     private MockHttpHandler _mockHttpHandler = null!;
 
-    [SetUp]
-    public void Setup()
+    public UITestBase()
     {
         var testContext = new Bunit.TestContext();
         var mockSnackBar = new Mock<ISnackbar>();
@@ -30,13 +28,12 @@ internal class UITestBase : TestContextWrapper
         MockSnackbar = mockSnackBar;
     }
 
-    [TearDown]
-    public void TearDown() => TestContext?.Dispose();
+    public void Dispose() => TestContext?.Dispose();
 
     public MockHttpHandler GetHttpHandler => _mockHttpHandler;
 }
 
-internal static class UITestExtensions
+public static class UITestExtensions
 {
     public static MockHttpHandler AddMockHttpClient(this TestServiceProvider services)
     {

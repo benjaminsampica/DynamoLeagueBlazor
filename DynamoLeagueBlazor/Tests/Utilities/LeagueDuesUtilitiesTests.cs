@@ -2,15 +2,16 @@
 
 namespace DynamoLeagueBlazor.Tests.Utilities;
 
-internal class LeagueDuesUtilitiesTests
+public class LeagueDuesUtilitiesTests
 {
-    [TestCase("1/1/2020", ExpectedResult = 105, Description = "Year 2020 dues should be 105")]
-    [TestCase("1/1/2021", ExpectedResult = 105, Description = "Year 2021 dues should be 105")]
-    [TestCase("1/1/2022", ExpectedResult = 110, Description = "Year 2022 dues should be 110")]
-    public int GivenDifferentDates_ThenReturnsExpectedResult(string dateString)
+    [Theory]
+    [InlineData("1/1/2020", 105)]
+    [InlineData("1/1/2021", 105)]
+    [InlineData("1/1/2022", 110)]
+    public void GivenDifferentDates_ThenReturnsExpectedResult(string dateString, int expectedCurrentLeagueDues)
     {
         var date = DateOnly.Parse(dateString);
 
-        return LeagueDuesUtilities.GetCurrentLeagueDues(date);
+        LeagueDuesUtilities.GetCurrentLeagueDues(date).Should().Be(expectedCurrentLeagueDues);
     }
 }

@@ -3,11 +3,11 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Dashboard;
 
-internal class TopOffendersTests : IntegrationTestBase
+public class TopOffendersTests : IntegrationTestBase
 {
     private const string _endpoint = "api/dashboard/topoffenders";
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -19,7 +19,7 @@ internal class TopOffendersTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithAFine_ThenReturnsOnePlayerWithAFine()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -42,7 +42,7 @@ internal class TopOffendersTests : IntegrationTestBase
         firstPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsElevenPlayersWithApprovedFines_ThenReturnsOnlyTopTenByFineAmount()
     {
         var application = CreateUserAuthenticatedApplication();

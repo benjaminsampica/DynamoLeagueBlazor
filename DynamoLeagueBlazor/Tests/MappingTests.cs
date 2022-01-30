@@ -4,7 +4,7 @@ namespace DynamoLeagueBlazor.Tests;
 
 public class MappingTests
 {
-    [Test]
+    [Fact]
     public void AllMappersMapToProperties()
     {
         var allProfiles = typeof(Server.Infrastructure.ApplicationDbContext).Assembly

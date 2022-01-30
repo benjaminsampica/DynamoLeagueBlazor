@@ -4,7 +4,7 @@ using DynamoLeagueBlazor.Server.Models;
 
 namespace DynamoLeagueBlazor.Tests;
 
-internal class FakeFactory
+public class FakeFactory
 {
     public FakeFactory()
     {
