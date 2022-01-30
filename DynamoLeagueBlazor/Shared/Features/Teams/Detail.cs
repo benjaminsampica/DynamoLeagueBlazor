@@ -6,9 +6,9 @@ public class TeamDetailResult
     public string Name { get; set; }
     public string CapSpace { get; set; }
 
-    public List<PlayerItem> RosteredPlayers { get; } = new List<PlayerItem>();
-    public List<PlayerItem> UnrosteredPlayers { get; } = new List<PlayerItem>();
-    public List<PlayerItem> UnsignedPlayers { get; } = new List<PlayerItem>();
+    public List<PlayerItem> RosteredPlayers { get; set; } = new List<PlayerItem>();
+    public List<PlayerItem> UnrosteredPlayers { get; set; } = new List<PlayerItem>();
+    public List<PlayerItem> UnsignedPlayers { get; set; } = new List<PlayerItem>();
 
 
     public class PlayerItem

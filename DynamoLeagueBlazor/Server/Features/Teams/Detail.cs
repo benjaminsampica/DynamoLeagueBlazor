@@ -94,6 +94,8 @@ public class DetailMappingProfile : Profile
             .ForMember(d => d.YearContractExpires, mo => mo.MapFrom(s => s.YearContractExpires.ToString()));
 
         CreateMap<Team, TeamDetailResult>()
-            .IgnoreAllPropertiesWithAnInaccessibleSetter();
+            .ForMember(tdr => tdr.RosteredPlayers, mo => mo.Ignore())
+            .ForMember(tdr => tdr.UnrosteredPlayers, mo => mo.Ignore())
+            .ForMember(tdr => tdr.UnsignedPlayers, mo => mo.Ignore());
     }
 }
