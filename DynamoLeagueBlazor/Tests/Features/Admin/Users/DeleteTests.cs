@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
 
-internal class DeleteTests
+internal class DeleteTests : IntegrationTestBase
 {
     private static DeleteUserRequest CreateFakeValidRequest()
     {
