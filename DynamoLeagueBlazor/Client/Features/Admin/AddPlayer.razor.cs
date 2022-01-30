@@ -12,9 +12,9 @@ namespace DynamoLeagueBlazor.Client.Features.Admin;
 [Authorize(Policy = PolicyRequirements.Admin)]
 public partial class AddPlayer : IDisposable
 {
-
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
+
     private TeamNameListResult _teamList = new();
     private AddPlayerRequest _form = new();
     private bool _processingForm;
@@ -24,7 +24,7 @@ public partial class AddPlayer : IDisposable
     {
         try
         {
-            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>("api/admin/addplayer", _cts.Token) ?? new TeamNameListResult();
+            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.Uri, _cts.Token) ?? new TeamNameListResult();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -38,11 +38,11 @@ public partial class AddPlayer : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/admin/addplayer", _form);
+            var response = await HttpClient.PostAsJsonAsync(AddPlayerRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Player Succesfully added", Severity.Success);
+                SnackBar.Add("Player successfully added.", Severity.Success);
                 _form = new();
             }
             else
@@ -63,4 +63,9 @@ public partial class AddPlayer : IDisposable
         _cts.Cancel();
         _cts.Dispose();
     }
+}
+
+public static class AddPlayerRouteFactory
+{
+    public const string Uri = "api/admin/addplayer";
 }

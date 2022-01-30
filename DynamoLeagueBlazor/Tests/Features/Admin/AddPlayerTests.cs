@@ -1,14 +1,18 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Enums;
+﻿
+using DynamoLeagueBlazor.Client.Features.Admin;
+using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Features.Teams;
+using Moq;
+using MudBlazor;
 using System.Net.Http.Json;
+using static DynamoLeagueBlazor.Shared.Features.Teams.TeamNameListResult;
+using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin;
 
-public class AddPlayerTests : IntegrationTestBase
+internal class AddPlayerServerTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/admin/addplayer";
-
     [Test]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -16,7 +20,7 @@ public class AddPlayerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(_endpoint);
+        var response = await client.GetAsync(AddPlayerRouteFactory.Uri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -28,7 +32,7 @@ public class AddPlayerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(_endpoint);
+        var response = await client.GetAsync(AddPlayerRouteFactory.Uri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -41,11 +45,18 @@ public class AddPlayerTests : IntegrationTestBase
         var team = CreateFakeTeam();
         await application.AddAsync(team);
 
-        var request = new AddPlayerRequest() { Name = RandomString, Position = Position.Defense.Name, HeadShot = RandomString, TeamId = team.Id, ContractValue = int.MaxValue };
+        var request = new AddPlayerRequest
+        {
+            Name = RandomString,
+            Position = Position.Defense.Name,
+            HeadShot = RandomString,
+            TeamId = team.Id,
+            ContractValue = int.MaxValue
+        };
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync(_endpoint, request);
+        var response = await client.PostAsJsonAsync(AddPlayerRouteFactory.Uri, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -58,9 +69,76 @@ public class AddPlayerTests : IntegrationTestBase
         player.ContractValue.Should().Be(request.ContractValue);
     }
 }
-public class AddPlayerRequestValidatorTests
+
+internal class AddPlayerUITests : UITestBase
+{
+    private static readonly TeamNameItem _teamNameItem = new()
+    {
+        Id = int.MaxValue,
+        Name = RandomString
+    };
+
+    private static readonly TeamNameListResult _teamNameListResult = new()
+    {
+        Teams = new List<TeamNameItem>
+        {
+            _teamNameItem
+        }
+    };
+
+    [Test]
+    public void WhenPageLoads_ThenPopulatesListOfTeams()
+    {
+        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
+            .RespondsWithJson(_teamNameListResult);
+
+        var cut = RenderComponent<AddPlayer>();
+
+        var teamSelectItem = cut.FindComponents<MudSelectItem<int>>()
+            .FirstOrDefault(s => s.Instance.Value == _teamNameItem.Id);
+
+        teamSelectItem.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
+    {
+        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
+            .RespondsWithJson(_teamNameListResult);
+
+        GetHttpHandler.When(HttpMethod.Post, AddPlayerRouteFactory.Uri)
+            .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
+            .Verifiable();
+
+        var cut = RenderComponent<AddPlayer>();
+
+        // Fill the form and click submit.
+        var playerName = cut.Find($"#{nameof(AddPlayerRequest.Name)}");
+        playerName.Change(RandomString);
+
+        var contractValue = cut.Find($"#{nameof(AddPlayerRequest.ContractValue)}");
+        contractValue.Change(int.MaxValue);
+
+        var position = cut.FindComponent<MudSelect<string>>();
+        await position.InvokeAsync(async () => await position.Instance.ValueChanged.InvokeAsync(Position.Defense.Name));
+
+        var team = cut.FindComponent<MudSelect<int>>();
+        await team.InvokeAsync(async () => await team.Instance.ValueChanged.InvokeAsync(_teamNameItem.Id));
+
+        var headShot = cut.Find($"#{nameof(AddPlayerRequest.HeadShot)}");
+        headShot.Change(RandomString);
+
+        var submitButton = cut.Find("button");
+        submitButton.Click();
+
+        MockSnackbar.Verify(s => s.Add(It.IsAny<string>(), Severity.Success, It.IsAny<Action<SnackbarOptions>>()));
+    }
+}
+
+internal class AddPlayerRequestValidatorTests
 {
     private AddPlayerRequestValidator _validator = null!;
+
     [SetUp]
     public void SetUp()
     {
@@ -79,6 +157,7 @@ public class AddPlayerRequestValidatorTests
 
         return hasNoErrors;
     }
+
     [TestCase(" ", ExpectedResult = false, Description = "HeadShot is blank")]
     [TestCase(null, ExpectedResult = false, Description = "No headShot is given")]
     [TestCase("Test", ExpectedResult = true, Description = "Valid headShot")]
@@ -103,6 +182,7 @@ public class AddPlayerRequestValidatorTests
 
         return hasNoErrors;
     }
+
     [TestCase(0, ExpectedResult = false, Description = "Team Id must be greater than")]
     [TestCase(1, ExpectedResult = true, Description = "Valid team Id")]
     public bool GivenDifferentPlayerTeamId_ThenReturnsExpectedResult(int teamId)
