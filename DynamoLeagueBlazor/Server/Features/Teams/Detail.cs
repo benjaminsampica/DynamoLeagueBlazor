@@ -93,6 +93,9 @@ public class DetailMappingProfile : Profile
             .ForMember(d => d.ContractValue, mo => mo.MapFrom(s => s.ContractValue.ToString("C0")))
             .ForMember(d => d.YearContractExpires, mo => mo.MapFrom(s => s.YearContractExpires.ToString()));
 
-        CreateMap<Team, TeamDetailResult>();
+        CreateMap<Team, TeamDetailResult>()
+            .ForMember(tdr => tdr.RosteredPlayers, mo => mo.Ignore())
+            .ForMember(tdr => tdr.UnrosteredPlayers, mo => mo.Ignore())
+            .ForMember(tdr => tdr.UnsignedPlayers, mo => mo.Ignore());
     }
 }

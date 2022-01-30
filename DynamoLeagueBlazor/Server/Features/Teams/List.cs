@@ -94,6 +94,9 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
-        CreateMap<Team, TeamItem>();
+        CreateMap<Team, TeamItem>()
+            .ForMember(ti => ti.RosteredPlayerCount, mo => mo.Ignore())
+            .ForMember(ti => ti.UnsignedPlayerCount, mo => mo.Ignore())
+            .ForMember(ti => ti.UnrosteredPlayerCount, mo => mo.Ignore());
     }
 }

@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 namespace DynamoLeagueBlazor.Client.Features.Admin;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
-public partial class StartSeason
+public partial class StartSeason : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
@@ -15,6 +15,7 @@ public partial class StartSeason
     private bool _isDisabled = true;
     private bool _isProcessing;
     private const string _title = "Start Season";
+    private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,5 +34,11 @@ public partial class StartSeason
     }
 
     private async Task<bool> GetSeasonStatusAsync()
-        => await HttpClient.GetFromJsonAsync<bool>("api/admin/seasonstatus");
+        => await HttpClient.GetFromJsonAsync<bool>("api/admin/seasonstatus", _cts.Token);
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
 }

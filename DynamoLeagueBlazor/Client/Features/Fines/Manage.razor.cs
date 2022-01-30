@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Fines;
 
-public partial class Manage : IDisposable
+public partial class Manage
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
@@ -16,7 +16,6 @@ public partial class Manage : IDisposable
 
     private ManageFineRequest _form = null!;
     private bool _processingForm;
-    private readonly CancellationTokenSource _cts = new();
 
     protected override void OnInitialized()
     {
@@ -53,11 +52,5 @@ public partial class Manage : IDisposable
     private void IsApproved(bool approved)
     {
         _form.Approved = approved;
-    }
-
-    public void Dispose()
-    {
-        _cts.Cancel();
-        _cts.Dispose();
     }
 }
