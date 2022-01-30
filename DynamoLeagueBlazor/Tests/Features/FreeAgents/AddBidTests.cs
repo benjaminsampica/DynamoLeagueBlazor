@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
-internal class AddBidTests : IntegrationTestBase
+public class AddBidTests : IntegrationTestBase
 {
     private const string _endpoint = "api/freeagents/addbid";
 
@@ -19,7 +19,7 @@ internal class AddBidTests : IntegrationTestBase
         return faker.Generate();
     }
 
-    [Test]
+    [Fact]
     public async Task GET_GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -31,7 +31,7 @@ internal class AddBidTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GET_GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenReturnsTrue()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -47,7 +47,7 @@ internal class AddBidTests : IntegrationTestBase
         result.Should().BeTrue();
     }
 
-    [Test]
+    [Fact]
     public async Task GET_GivenAnyAuthenticatedUser_WhenIsNotHighestBid_ThenReturnsFalse()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -68,7 +68,7 @@ internal class AddBidTests : IntegrationTestBase
         result.Should().BeFalse();
     }
 
-    [Test]
+    [Fact]
     public async Task POST_GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -79,7 +79,7 @@ internal class AddBidTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenSavesTheBid()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -105,30 +105,31 @@ internal class AddBidTests : IntegrationTestBase
     }
 }
 
-internal class AddBidRequestValidatorTests : IntegrationTestBase
+public class AddBidRequestValidatorTests : IntegrationTestBase
 {
-    private AddBidRequestValidator _validator = null!;
+    private readonly AddBidRequestValidator _validator = null!;
 
-    [SetUp]
-    public void SetUp()
+    public AddBidRequestValidatorTests()
     {
         _validator = _setupApplication.Services.GetRequiredService<AddBidRequestValidator>();
     }
 
-    [TestCase(0, int.MaxValue, ExpectedResult = false, Description = "Invalid player id")]
-    [TestCase(1, 1, ExpectedResult = false, Description = "Invalid amount")]
-    public bool GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int amount)
+    [Theory]
+    [InlineData(0, int.MaxValue, false)]
+    [InlineData(1, 0, false)]
+    public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int amount, bool expectedResult)
     {
         var request = new AddBidRequest { PlayerId = playerId, Amount = amount };
 
         var result = _validator.Validate(request);
 
-        return result.IsValid;
+        result.IsValid.Should().Be(expectedResult);
     }
 
-    [TestCase(1, ExpectedResult = false, Description = "Bid is exactly the same amount")]
-    [TestCase(2, ExpectedResult = true, Description = "Bid is one dollar higher")]
-    public async Task<bool> GivenDifferentBidAmounts_WhenAPlayerAlreadyHasBidOfOneDollar_ThenReturnsExpectedResult(int amount)
+    [Theory]
+    [InlineData(1, false)]
+    [InlineData(2, true)]
+    public async Task GivenDifferentBidAmounts_WhenAPlayerAlreadyHasBidOfOneDollar_ThenReturnsExpectedResult(int amount, bool expectedResult)
     {
         var stubTeam = CreateFakeTeam();
         await _setupApplication.AddAsync(stubTeam);
@@ -141,6 +142,6 @@ internal class AddBidRequestValidatorTests : IntegrationTestBase
 
         var result = _validator.Validate(request);
 
-        return result.IsValid;
+        result.IsValid.Should().Be(expectedResult);
     }
 }

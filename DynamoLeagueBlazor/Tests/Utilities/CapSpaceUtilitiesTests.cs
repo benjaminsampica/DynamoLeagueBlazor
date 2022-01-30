@@ -2,30 +2,32 @@
 
 namespace DynamoLeagueBlazor.Tests.Utilities
 {
-    internal class CapSpaceUtilitiesTests
+    public class CapSpaceUtilitiesTests
     {
-        [TestCase(0, 0, 0, ExpectedResult = 1050, Description = "Team has no players at all.")]
-        [TestCase(500, 0, 0, ExpectedResult = 550, Description = "Team has rostered players with a total value of 500.")]
-        [TestCase(0, 200, 0, ExpectedResult = 950, Description = "Team has unrostered players with a total value of 200.")]
-        [TestCase(0, 0, 100, ExpectedResult = 950, Description = "Team has unsigned players with a total value of 100.")]
-        [TestCase(600, 200, 100, ExpectedResult = 250, Description = "Team has rostered, unrostered, and unsigned players with a total value of 900.")]
-        public int GivenDifferentPlayerValuesForToday_ThenReturnsExpectedRemainingCapSpace(int rostered, int unrostered, int dropped)
+        [Theory]
+        [InlineData(0, 0, 0, 1050)]
+        [InlineData(500, 0, 0, 550)]
+        [InlineData(0, 200, 0, 950)]
+        [InlineData(0, 0, 100, 950)]
+        [InlineData(600, 200, 100, 250)]
+        public void GivenDifferentPlayerValuesForToday_ThenReturnsExpectedRemainingCapSpace(int rostered, int unrostered, int dropped, int expectedRemainingCapSpace)
         {
             var today = new DateOnly(2021, 01, 01);
 
-            return CapSpaceUtilities.GetRemainingCapSpace(today, rostered, unrostered, dropped);
+            CapSpaceUtilities.GetRemainingCapSpace(today, rostered, unrostered, dropped).Should().Be(expectedRemainingCapSpace);
         }
 
-        [TestCase("01/01/2021", ExpectedResult = 1050, Description = "2021 Salary Cap")]
-        [TestCase("01/01/2022", ExpectedResult = 1100, Description = "2022 Salary Cap")]
-        [TestCase("01/01/2023", ExpectedResult = 1100, Description = "2023 Salary Cap")]
-        [TestCase("01/01/2024", ExpectedResult = 1150, Description = "2024 Salary Cap")]
-        [TestCase("01/01/2025", ExpectedResult = 1150, Description = "2025 Salary Cap")]
-        public int GivenLeagueYear_ThenReturnExpectedSalaryCap(string dateString)
+        [Theory]
+        [InlineData("01/01/2021", 1050)]
+        [InlineData("01/01/2022", 1100)]
+        [InlineData("01/01/2023", 1100)]
+        [InlineData("01/01/2024", 1150)]
+        [InlineData("01/01/2025", 1150)]
+        public void GivenLeagueYear_ThenReturnExpectedSalaryCap(string dateString, int expectedSalaryCap)
         {
             var date = DateOnly.Parse(dateString);
 
-            return CapSpaceUtilities.GetCurrentSalaryCap(date);
+            CapSpaceUtilities.GetCurrentSalaryCap(date).Should().Be(expectedSalaryCap);
         }
     }
 }

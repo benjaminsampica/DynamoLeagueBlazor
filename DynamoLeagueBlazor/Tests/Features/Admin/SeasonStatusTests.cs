@@ -2,11 +2,11 @@
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
-internal class SeasonStatusTests : IntegrationTestBase
+public class SeasonStatusTests : IntegrationTestBase
 {
     private const string _endpoint = "api/admin/seasonstatus";
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -18,7 +18,7 @@ internal class SeasonStatusTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -30,7 +30,7 @@ internal class SeasonStatusTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAPlayerIsAFreeAgent_ThenReturnsTrue()
     {
         var application = CreateAdminAuthenticatedApplication();
@@ -45,7 +45,7 @@ internal class SeasonStatusTests : IntegrationTestBase
         result.Should().BeTrue();
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenNoPlayerIsAFreeAgent_ThenReturnsFalse()
     {
         var application = CreateAdminAuthenticatedApplication();

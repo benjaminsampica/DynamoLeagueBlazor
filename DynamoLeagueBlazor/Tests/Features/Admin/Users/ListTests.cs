@@ -3,11 +3,11 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
 
-internal class ListTests : IntegrationTestBase
+public class ListTests : IntegrationTestBase
 {
     private const string _endpoint = "api/admin/users";
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -19,7 +19,7 @@ internal class ListTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -31,7 +31,7 @@ internal class ListTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenThereIsOneUser_ThenReturnsOneUser()
     {
         var application = CreateAdminAuthenticatedApplication();

@@ -3,11 +3,11 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
-internal class ListTests : IntegrationTestBase
+public class ListTests : IntegrationTestBase
 {
     private const string _endpoint = "api/freeagents";
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -19,7 +19,7 @@ internal class ListTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsNoPlayersWhoAreFreeAgents_ThenReturnsNothing()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -32,7 +32,7 @@ internal class ListTests : IntegrationTestBase
         result!.FreeAgents.Should().HaveCount(0);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWhoIsAFreeAgent_ThenReturnsOneFreeAgent()
     {
         var application = CreateUserAuthenticatedApplication();

@@ -17,15 +17,14 @@ using System.Text.Encodings.Web;
 
 namespace DynamoLeagueBlazor.Tests;
 
-[SetUpFixture]
-public class IntegrationTesting
+[CollectionDefinition("Server")]
+public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsyncLifetime
 {
     private static Checkpoint _checkpoint = null!;
     private static IConfiguration _configuration = null!;
     internal static WebApplicationFactory<Program> _setupApplication = null!;
 
-    [OneTimeSetUp]
-    public async Task RunBeforeAnyTestsAsync()
+    public async Task InitializeAsync()
     {
         _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -46,8 +45,7 @@ public class IntegrationTesting
         await dbContext.Database.MigrateAsync();
     }
 
-    [OneTimeTearDown]
-    public async Task RunAfterAllTestsAsync()
+    public async Task DisposeAsync()
     {
         await _setupApplication.DisposeAsync();
     }
@@ -120,7 +118,7 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
 
 internal static class IntegrationTestExtensions
 {
-    internal static async Task<TEntity?> FirstOrDefaultAsync<TEntity>(this WebApplicationFactory<Program> application)
+    public static async Task<TEntity?> FirstOrDefaultAsync<TEntity>(this WebApplicationFactory<Program> application)
         where TEntity : class
     {
         using var scope = application.Services.CreateScope();
@@ -130,7 +128,7 @@ internal static class IntegrationTestExtensions
         return await context.Set<TEntity>().FirstOrDefaultAsync();
     }
 
-    internal static async Task AddAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+    public static async Task AddAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
         where TEntity : class
     {
         using var scope = application.Services.CreateScope();
@@ -142,7 +140,7 @@ internal static class IntegrationTestExtensions
         await context.SaveChangesAsync();
     }
 
-    internal static async Task UpdateAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+    public static async Task UpdateAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
         where TEntity : class
     {
         using var scope = application.Services.CreateScope();
@@ -207,7 +205,7 @@ internal class AdminAuthenticationHandler : AuthenticationHandler<Authentication
 
 internal static class AuthenticationHandlerUtilities
 {
-    internal static AuthenticateResult GetSuccessfulAuthenticateResult(string role, int teamId, string authenticationName)
+    public static AuthenticateResult GetSuccessfulAuthenticateResult(string role, int teamId, string authenticationName)
     {
         var claims = new[] {
             new Claim(ClaimTypes.Name, RandomString),

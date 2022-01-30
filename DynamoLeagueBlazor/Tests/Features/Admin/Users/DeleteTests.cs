@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;
 
-internal class DeleteTests : IntegrationTestBase
+public class DeleteTests : IntegrationTestBase
 {
     private static DeleteUserRequest CreateFakeValidRequest()
     {
@@ -14,7 +14,7 @@ internal class DeleteTests : IntegrationTestBase
 
     }
 
-    [Test]
+    [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
@@ -27,7 +27,7 @@ internal class DeleteTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUserAuthenticatedApplication();
@@ -40,7 +40,7 @@ internal class DeleteTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task GivenAuthenticatedAdmin_WhenThereIsOneUser_ThenDeletesTheUser()
     {
         var application = CreateAdminAuthenticatedApplication();

@@ -1,10 +1,9 @@
 ﻿namespace DynamoLeagueBlazor.Tests;
 
-public class IntegrationTestBase
+[Collection("Server")]
+public class IntegrationTestBase : IAsyncLifetime
 {
-    [SetUp]
-    public async Task SetUpBase()
-    {
-        await ResetStateAsync();
-    }
+    public Task DisposeAsync() => Task.CompletedTask;
+
+    public async Task InitializeAsync() => await ResetStateAsync();
 }
