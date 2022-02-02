@@ -1,0 +1,35 @@
+﻿<MudButton Color="Color" Variant=Variant.Text StartIcon=@Icon ButtonType=ButtonType.Submit Disabled="@IsLoading" FullWidth=true Size=Size.Large OnClick=OnClick>
+    @if (IsLoading)
+    {
+        if(IsLoadingContent is not null)
+        {
+            @IsLoadingContent
+        }
+        else
+        {
+            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+            <MudText Class="ms-2">Please wait...</MudText>
+        }
+    }
+    else
+    {
+        if(ButtonContent is not null)
+        {
+            @ButtonContent
+        }
+        else
+        {
+            <MudText>Save</MudText>
+        }
+    }
+</MudButton>
+
+@code {
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback<bool> IsLoadingChanged { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public Color Color { get; set; } = Color.Success;
+    [Parameter] public RenderFragment? ButtonContent { get; set; }
+    [Parameter] public RenderFragment? IsLoadingContent { get; set; }
+    [Parameter] public string Icon { get; set; } = Icons.Outlined.Check;
+}

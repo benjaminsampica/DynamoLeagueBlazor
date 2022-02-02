@@ -7,35 +7,18 @@
         <DialogActions>
             <MudGrid Spacing=1>
                 <MudItem xs=12>
-                    <MudButton Color="Color.Error" Variant=Variant.Text StartIcon=@Icons.Outlined.Delete 
-                    ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true 
-                    Size=Size.Large OnClick="@(() => IsApproved(false))">
-                        @if (_processingForm)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Saving...</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Remove</MudText>
-                        }
-                    </MudButton>
+                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Outlined.Delete OnClick=@(() => IsApproved(false)) Color=Color.Error>
+                        <ButtonContent>
+                            <MudText>Delete</MudText>
+                        </ButtonContent>
+                    </LoadingButton>
                 </MudItem>
                 <MudItem xs=12>
-                    <MudButton 
-                        Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check 
-                        ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true 
-                        Size=Size.Large OnClick="@(() => IsApproved(true))">
-                        @if (_processingForm)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Saving...</MudText>
-                        }
-                        else
-                        {
+                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Outlined.Check OnClick=@(() => IsApproved(true))>
+                        <ButtonContent>
                             <MudText>Approve</MudText>
-                        }
-                    </MudButton>
+                        </ButtonContent>
+                    </LoadingButton>
                 </MudItem>
             </MudGrid>
         </DialogActions>

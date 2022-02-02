@@ -7,14 +7,11 @@
 <MudAlert Severity=Severity.Warning Class="mb-2">
     Clicking the below button will begin a new season - all players who are eligble to be free agents will be set to a free agent status. Proceed with caution.
 </MudAlert>
-<MudButton Disabled=_isDisabled OnClick=StartSeasonAsync StartIcon=@Icons.Outlined.SportsFootball Variant=Variant.Outlined Color=Color.Primary>
-    @if (_isProcessing)
-    {
-        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-        <MudText Class="ms-2">Processing</MudText>
-    }
-    else
-    {
+<LoadingButton @bind-IsLoading="_isDisabled" Icon=@Icons.Outlined.SportsFootball Color=Color.Primary OnClick=StartSeasonAsync>
+    <IsLoadingContent>
         <MudText>Start New Season</MudText>
-    }
-</MudButton>
+    </IsLoadingContent>
+    <ButtonContent>
+        <MudText>Start New Season</MudText>
+    </ButtonContent>
+</LoadingButton>

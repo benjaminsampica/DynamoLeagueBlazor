@@ -5,19 +5,11 @@
                    Are you sure you want to delete this user?
             </DialogContent>
             <DialogActions>
-                <MudButton Color="Color.Error" Variant=Variant.Text StartIcon=@Icons.Outlined.Delete 
-                    ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true 
-                    Size=Size.Large>
-                    @if (_processingForm)
-                    {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                        <MudText Class="ms-2">Saving...</MudText>
-                    }
-                    else
-                    {
+                <LoadingButton @bind-IsLoading=_processingForm Icon=@Icons.Outlined.Delete Color=Color.Error>
+                    <ButtonContent>
                         <MudText>Delete</MudText>
-                    }
-                </MudButton>
+                    </ButtonContent>
+                </LoadingButton>
             </DialogActions>
         </MudDialog>
     </EditForm> 
