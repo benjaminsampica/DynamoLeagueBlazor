@@ -1,6 +1,7 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MudBlazor;
 using System.Net.Http.Json;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
@@ -9,6 +10,7 @@ namespace DynamoLeagueBlazor.Client.Features.Teams;
 public partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
     [Parameter] public int TeamId { get; set; }
 
     private TeamDetailResult? _result;
@@ -35,20 +37,32 @@ public partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
+        _result.IsUnsignedOption = false;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
+        _result.IsUnsignedOption = false;
     }
 
     private void ShowUnsignedPlayers()
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
+        _result.IsUnsignedOption = true;
     }
+    private void OpenSignPlayerDialog(int playerId)
+    {
+        DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var parameters = new DialogParameters
+        {
+            { nameof(SignPlayer.PlayerId), playerId }
+        };
 
+        DialogService.Show<SignPlayer>("Sign Player", parameters,maxWidth);
+    }
     public void Dispose()
     {
         _cts.Cancel();

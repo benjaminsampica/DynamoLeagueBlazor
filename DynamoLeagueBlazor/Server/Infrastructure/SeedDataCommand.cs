@@ -85,7 +85,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
                 if (i % 2 == 0)
                 {
-                    player.SetToRostered(DateTime.Today.AddYears(1), 1);
+                    player.SetToRostered(DateTime.Today.AddYears(1).Year, 1);
 
                     if (i % 10 == 0)
                     {
@@ -98,7 +98,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
                 }
                 else
                 {
-                    player.SetToRostered(DateTime.Today.AddYears(-1), 1);
+                    player.SetToRostered(DateTime.Today.AddYears(-1).Year, 1);
                     player.SetToFreeAgent(DateTime.Today.AddYears(1));
                 }
 

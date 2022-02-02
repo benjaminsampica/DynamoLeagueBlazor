@@ -1,0 +1,38 @@
+﻿using DynamoLeagueBlazor.Shared.Enums;
+using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DynamoLeagueBlazor.Shared.Features.Teams
+{
+    public class SignPlayerRequest
+    {
+        public int PlayerId { get; set; }
+        public int YearContractExpires { get; set; }
+    }
+
+    public class SignPlayerRequestValidator : AbstractValidator<SignPlayerRequest>
+    {
+        public SignPlayerRequestValidator()
+        {
+            RuleFor(r => r.PlayerId).GreaterThan(0);
+            RuleFor(r => r.YearContractExpires).GreaterThan(0);
+        }
+    }
+
+    public class SignPlayerDetailRequest
+    {
+        public int PlayerId { get; set; }
+    }
+
+    public class SignPlayerDetailResult
+    {
+       public  IEnumerable<ContractOption> ContractOptions { get; set; } = Enumerable.Empty<ContractOption>();
+    }
+
+
+
+}
