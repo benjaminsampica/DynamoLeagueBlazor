@@ -15,7 +15,7 @@ namespace DynamoLeagueBlazor.Shared.Enums
         public abstract int[] PerYearContractPriceTable();
 
 
-        public  IEnumerable<ContractOption> CalculateContractYearOptions(int bidValue)
+        public IEnumerable<ContractOption> CalculateContractYearOptions(int bidValue)
         {
             var yearsToContract = 0;
             foreach (var price in PerYearContractPriceTable())
@@ -25,9 +25,9 @@ namespace DynamoLeagueBlazor.Shared.Enums
         }
         public int GetContractValue(int contractValue, int yearContractExpires)
         {
-            var numberOfYears = yearContractExpires - DateTime.Now.Year ;
-          var chartValue =  PerYearContractPriceTable().ElementAt(numberOfYears);
-            if (chartValue > contractValue)return chartValue;
+            var numberOfYears = yearContractExpires - DateTime.Now.Year;
+            var chartValue = PerYearContractPriceTable().ElementAt(numberOfYears);
+            if (chartValue > contractValue) return chartValue;
             return contractValue;
         }
     }

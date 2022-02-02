@@ -61,7 +61,7 @@ public partial class Detail : IDisposable
             { nameof(SignPlayer.PlayerId), playerId }
         };
 
-        DialogService.Show<SignPlayer>("Sign Player", parameters,maxWidth);
+        DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
     }
     public void Dispose()
     {

@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
@@ -15,7 +14,7 @@ public partial class SignPlayer : IDisposable
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
 
-    
+
 
     private SignPlayerRequest _form = null!;
     private SignPlayerDetailResult? _signPlayerDetailResult;

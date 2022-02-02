@@ -1,10 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Enums;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DynamoLeagueBlazor.Shared.Features.Teams
 {
@@ -30,7 +25,7 @@ namespace DynamoLeagueBlazor.Shared.Features.Teams
 
     public class SignPlayerDetailResult
     {
-       public  IEnumerable<ContractOption> ContractOptions { get; set; } = Enumerable.Empty<ContractOption>();
+        public IEnumerable<ContractOption> ContractOptions { get; set; } = Enumerable.Empty<ContractOption>();
     }
 
 
