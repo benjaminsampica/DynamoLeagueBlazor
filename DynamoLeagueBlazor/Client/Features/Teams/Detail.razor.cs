@@ -21,6 +21,10 @@ public partial class Detail : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadDataAsync();
+    }
+    protected  async Task LoadDataAsync()
+    {
         try
         {
             _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>($"api/teams/{TeamId}", _cts.Token);
@@ -58,7 +62,8 @@ public partial class Detail : IDisposable
         DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
         {
-            { nameof(SignPlayer.PlayerId), playerId }
+            { nameof(SignPlayer.PlayerId), playerId },
+            { nameof(SignPlayer.OnSignPlayerButtonClick), EventCallback.Factory.Create(this, () => LoadDataAsync())}
         };
 
         DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);

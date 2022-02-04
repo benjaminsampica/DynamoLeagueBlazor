@@ -13,6 +13,7 @@ public partial class SignPlayer : IDisposable
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
+    [Parameter, EditorRequired] public EventCallback OnSignPlayerButtonClick { get; set; }
 
 
 
@@ -52,6 +53,7 @@ public partial class SignPlayer : IDisposable
             if (response.IsSuccessStatusCode)
             {
                 SnackBar.Add("Successfully signed player.", Severity.Success);
+                await OnSignPlayerButtonClick.InvokeAsync();
             }
             else
             {
