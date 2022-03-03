@@ -42,7 +42,7 @@ public class ListTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        mockPlayer.SetToRostered(DateTime.MinValue, int.MaxValue);
+        mockPlayer.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
         var biddingEnds = DateTime.MaxValue;
         mockPlayer.SetToFreeAgent(biddingEnds);
         await application.AddAsync(mockPlayer);

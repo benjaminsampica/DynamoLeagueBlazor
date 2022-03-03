@@ -9,7 +9,7 @@ public record Player : BaseEntity
         HeadShotUrl = headShotUrl;
     }
     public string Name { get; private set; }
-    public string Position { get; private set; }
+    public string Position { get; set; }
     public string HeadShotUrl { get; private set; }
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }

@@ -1,11 +1,7 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.Teams;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams
 {
@@ -15,9 +11,7 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams
 
         private static SignPlayerRequest CreateFakeValidRequest()
         {
-            var faker = new AutoFaker<SignPlayerRequest>()
-                .RuleFor(f => f.PlayerId, 1);
-
+            var faker = new AutoFaker<SignPlayerRequest>();
             return faker.Generate();
         }
 
@@ -38,18 +32,24 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams
         public async Task GivenAuthenticatedAdmin_ThenSignsPlayer()
         {
             var application = CreateAdminAuthenticatedApplication();
-
-            var request = new SignPlayerRequest
-            {
-              PlayerId = int.MaxValue,
-              YearContractExpires= DateTime.Now.Year
-            };
-
+            var player = CreateFakePlayer();
+            player.Position = "QB";
+            player.YearContractExpires = DateTime.Now.Year;
+            await application.AddAsync(player);
+            var request = CreateFakeValidRequest();
+            request.YearContractExpires = (int)player.YearContractExpires;
+            request.PlayerId = player.Id;
             var client = application.CreateClient();
-
             var response = await client.PostAsJsonAsync(_endpoint, request);
+            var result = await application.FirstOrDefaultAsync<Player>();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Should().NotBeNull();
+            result.YearContractExpires.Should().Be(request.YearContractExpires);
+            result.Rostered.Should().BeTrue();
+            result.EndOfFreeAgency.Should().BeNull();
+            var position = Position.FromName(player.Position);
+            var expectedContractValue = position.GetContractValue(player.ContractValue, request.YearContractExpires);
+            result.ContractValue.Should().Be(expectedContractValue);
         }
     }
 }

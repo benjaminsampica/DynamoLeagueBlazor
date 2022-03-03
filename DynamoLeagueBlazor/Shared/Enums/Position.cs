@@ -41,7 +41,7 @@ namespace DynamoLeagueBlazor.Shared.Enums
 
         public int YearContractExpires { get; set; }
         public int MinimumAmount { get; set; }
-        public string Display => $"Contract ends after {YearContractExpires} | {MinimumAmount} per year";
+        public string Display => $"Contract ends after {YearContractExpires} | ${MinimumAmount} per year";
     }
 
     public sealed class QuarterBack : Position

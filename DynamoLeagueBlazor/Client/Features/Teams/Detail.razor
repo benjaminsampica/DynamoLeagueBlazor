@@ -54,14 +54,14 @@ else
                             <MudText Typo="Typo.h6">@_playerTableHeader</MudText>
                         </ToolBarContent>
                         <HeaderContent>
-                            @if(_result.IsUnsignedOption){<MudTh>Sign</MudTh>}
+                            @if(IsUnsignedOption && _usersTeam){<MudTh>Sign</MudTh>}
                             <MudTh>@nameof(PlayerItem.Name)</MudTh>
                             <MudTh>@nameof(PlayerItem.Position)</MudTh>
                             <MudTh>Contract Value</MudTh>
                             <MudTh>Contract Length</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            @if(_result.IsUnsignedOption)
+                            @if(IsUnsignedOption && _usersTeam)
                            { <MudTd DataLabel="Actions">
                                 <MudIconButton Icon="@Icons.Filled.AssignmentLate" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" OnClick="(e) => OpenSignPlayerDialog(context.Id)" />
                             </MudTd>

@@ -14,7 +14,7 @@ public class DetailTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubFreeAgent = CreateFakePlayer()
-            .SetToRostered(DateTime.Today.AddYears(-1), int.MaxValue)
+            .SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue)
             .SetToFreeAgent(DateTime.MaxValue);
         await application.AddAsync(stubFreeAgent);
         var endpoint = _endpoint + stubFreeAgent.Id;
@@ -33,7 +33,7 @@ public class DetailTests : IntegrationTestBase
         await application.AddAsync(mockTeam);
 
         var mockFreeAgent = CreateFakePlayer()
-            .SetToRostered(DateTime.Today.AddYears(-1), int.MaxValue)
+            .SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue)
             .SetToFreeAgent(DateTime.MaxValue);
         mockFreeAgent.TeamId = mockTeam.Id;
         await application.AddAsync(mockFreeAgent);
