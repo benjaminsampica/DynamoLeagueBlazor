@@ -17,7 +17,7 @@ public partial class Detail : IDisposable
 
     private TeamDetailResult? _result;
     private bool _usersTeam = false;
-    private bool IsUnsignedOption = false;
+    private bool _isSignedOption = false;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
@@ -49,21 +49,21 @@ public partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
-        IsUnsignedOption = false;
+        _isSignedOption = false;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
-        IsUnsignedOption = false;
+        _isSignedOption = false;
     }
 
     private void ShowUnsignedPlayers()
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
-        IsUnsignedOption = true;
+        _isSignedOption = true;
     }
     private void OpenSignPlayerDialog(int playerId)
     {
