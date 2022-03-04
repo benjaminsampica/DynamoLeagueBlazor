@@ -14,9 +14,6 @@ public partial class SignPlayer : IDisposable
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
     [Parameter, EditorRequired] public EventCallback OnSignPlayerButtonClick { get; set; }
-
-
-
     private SignPlayerRequest _form = null!;
     private SignPlayerDetailResult? _signPlayerDetailResult;
     private bool _processingForm;
