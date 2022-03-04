@@ -52,4 +52,26 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams
             result.ContractValue.Should().Be(expectedContractValue);
         }
     }
+    public class SignPlayereRequestValidatorTests
+    {
+        private readonly SignPlayerRequestValidator _validator = null!;
+
+        public SignPlayereRequestValidatorTests()
+        {
+            _validator = new SignPlayerRequestValidator();
+        }
+
+        [Theory]
+        [InlineData(0, 1,false)]
+        [InlineData(1,0, false)]
+        [InlineData(1, 1, true)]
+        public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int yearContractExpires, bool expectedResult)
+        {
+            var request = new SignPlayerRequest { PlayerId = playerId,YearContractExpires=yearContractExpires };
+
+            var result = _validator.Validate(request);
+
+            result.IsValid.Should().Be(expectedResult);
+        }
+    }
 }
