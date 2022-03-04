@@ -65,7 +65,7 @@ public class SignPlayerCommandHandler : IRequestHandler<SignPlayerCommand, int>
         var player = await _dbContext.Players.AsTracking().SingleAsync(u => u.Id == request.PlayerId, cancellationToken);
         var position = Position.FromName(player.Position);
         player.SetToRostered(request.YearContractExpires, position.GetContractValue(player.ContractValue, request.YearContractExpires));
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         return player.Id;
     }
 }
