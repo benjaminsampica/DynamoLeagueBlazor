@@ -26,10 +26,10 @@ public partial class SignPlayer : IDisposable
     {
         _form = new SignPlayerRequest { PlayerId = PlayerId };
 
-        await SignPlayerDetailsAsyc();
+        await SignPlayerDetailsAsnyc();
     }
 
-    private async Task SignPlayerDetailsAsyc()
+    private async Task SignPlayerDetailsAsnyc()
     {
         try
         {
