@@ -25,8 +25,8 @@ namespace DynamoLeagueBlazor.Shared.Enums
         }
         public int GetContractValue(int contractValue, int yearContractExpires)
         {
-            var numberOfYears = yearContractExpires - DateTime.Now.Year;
-            var chartValue = PerYearContractPriceTable().ElementAt(numberOfYears);
+            var yearsInContract = yearContractExpires - DateTime.Now.Year;
+            var chartValue = PerYearContractPriceTable().ElementAt(yearsInContract);
             if (chartValue > contractValue) contractValue = chartValue;
             return contractValue;
         }
