@@ -1,6 +1,7 @@
 ﻿using AutoBogus;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Enums;
 
 namespace DynamoLeagueBlazor.Tests;
 
@@ -62,5 +63,15 @@ public class FakeFactory
     public static ApplicationUser CreateFakeUser(int teamId)
         => new("fake@gmail.com", teamId);
 
+    public static FakePosition CreateFakePosition() => new();
+
     public static string RandomString => AutoFaker.Generate<string>();
+
+}
+
+public class FakePosition : Position
+{
+    public FakePosition() : base(nameof(FakePosition), 0) { }
+
+    public override int[] PerYearContractPriceTable() => new[] { 1, 2 };
 }

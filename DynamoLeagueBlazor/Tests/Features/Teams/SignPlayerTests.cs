@@ -53,7 +53,7 @@ public class SignPlayerServerTests : IntegrationTestBase
         result.Rostered.Should().BeTrue();
         result.EndOfFreeAgency.Should().BeNull();
         var position = Position.FromName(player.Position);
-        var expectedContractValue = position.GetContractValue(player.ContractValue, request.YearContractExpires);
+        var expectedContractValue = position.GetContractValue(request.YearContractExpires, player.ContractValue);
         result.ContractValue.Should().Be(expectedContractValue);
     }
 }
