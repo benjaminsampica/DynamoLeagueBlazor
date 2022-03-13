@@ -86,14 +86,14 @@ public class BidAmountValidator : IBidAmountValidator
 
     public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
-        var uri = AddBidRouteFactory.CreateRequestUri(request);
+        var uri = AddBidRouteFactory.Create(request);
         return await _httpClient.GetFromJsonAsync<bool>(uri, cancellationToken);
     }
 }
 
 public static class AddBidRouteFactory
 {
-    public static string CreateRequestUri(AddBidRequest request)
+    public static string Create(AddBidRequest request)
     {
         var uri = QueryHelpers.AddQueryString("api/freeagents/addbid", new Dictionary<string, string>
         {

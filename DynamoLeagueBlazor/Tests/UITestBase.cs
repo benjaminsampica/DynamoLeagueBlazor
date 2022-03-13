@@ -3,6 +3,7 @@ using MockHttp;
 using MockHttp.Json;
 using MockHttp.Json.Newtonsoft;
 using MockHttp.Language;
+using MockHttp.Language.Flow;
 using Moq;
 using MudBlazor;
 using MudBlazor.Services;
@@ -12,11 +13,11 @@ namespace DynamoLeagueBlazor.Tests;
 public class UITestBase : TestContextWrapper, IDisposable
 {
     protected Mock<ISnackbar> MockSnackbar = null!;
-    private MockHttpHandler _mockHttpHandler = null!;
+    private readonly MockHttpHandler _mockHttpHandler = null!;
 
     public UITestBase()
     {
-        var testContext = new Bunit.TestContext();
+        var testContext = new TestContext();
         var mockSnackBar = new Mock<ISnackbar>();
 
         testContext.Services.AddMudServices();
@@ -48,13 +49,14 @@ public static class UITestExtensions
         return mockHttpHandler;
     }
 
-    public static IConfiguredRequest When(this MockHttpHandler mockHttpHandler, HttpMethod httpMethod, string uri)
+    public static IConfiguredRequest When(this MockHttpHandler mockHttpHandler, HttpMethod httpMethod, string? uri = null)
         => mockHttpHandler.When(matching =>
-            matching
-                .Method(httpMethod)
-                .RequestUri(uri)
-        );
+        {
+            matching.Method(httpMethod);
 
-    public static void RespondsWithJson<T>(this IConfiguredRequest request, T value)
+            if (uri is not null) matching.RequestUri(uri);
+        });
+
+    public static ISequenceResponseResult RespondsWithJson<T>(this IConfiguredRequest request, T value)
         => request.RespondJson(HttpStatusCode.OK, value);
 }

@@ -132,6 +132,7 @@ public class AddPlayerUITests : UITestBase
         submitButton.Click();
 
         MockSnackbar.Verify(s => s.Add(It.IsAny<string>(), Severity.Success, It.IsAny<Action<SnackbarOptions>>()));
+        GetHttpHandler.Verify();
     }
 }
 

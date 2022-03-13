@@ -45,15 +45,18 @@ public sealed partial class List : IDisposable
         return false;
     }
 
-    private void OpenManageFineDialog(int fineId)
+    private async void OpenManageFineDialog(int fineId)
     {
         var parameters = new DialogParameters
         {
             { nameof(Manage.FineId), fineId },
-            { nameof(Manage.OnManageButtonClick), EventCallback.Factory.Create(this, () => LoadDataAsync())}
         };
 
-        DialogService.Show<Manage>("Manage Fine", parameters);
+        var dialog = DialogService.Show<Manage>("Manage Fine", parameters);
+
+        var result = await dialog.Result;
+
+        if (!result.Cancelled) await LoadDataAsync();
     }
 
     public void Dispose()

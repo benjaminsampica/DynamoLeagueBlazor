@@ -34,7 +34,8 @@ public sealed partial class Detail : IDisposable
 
         await LoadDataAsync();
     }
-    protected async Task LoadDataAsync()
+
+    private async Task LoadDataAsync()
     {
         try
         {
@@ -69,17 +70,24 @@ public sealed partial class Detail : IDisposable
         _isSignedPlayersShowing = true;
     }
 
-    private void OpenSignPlayerDialog(int playerId)
+    private async void OpenSignPlayerDialog(int playerId)
     {
         var maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
         {
-            { nameof(SignPlayer.PlayerId), playerId },
-            { nameof(SignPlayer.OnSignPlayerButtonClick), EventCallback.Factory.Create(this, () => LoadDataAsync())}
+            { nameof(SignPlayer.PlayerId), playerId }
         };
 
-        DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
+        var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
+        var result = await dialog.Result;
+
+
+        if (!result.Cancelled)
+        {
+            await LoadDataAsync();
+        }
     }
+
     public void Dispose()
     {
         _cts.Cancel();

@@ -30,6 +30,7 @@ namespace DynamoLeagueBlazor.Shared.Enums
             return contractValue;
         }
     }
+
     public class ContractOption
     {
         public ContractOption(int yearContractExpires, int minimumAmount)

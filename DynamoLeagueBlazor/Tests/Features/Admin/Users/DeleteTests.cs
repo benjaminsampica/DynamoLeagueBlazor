@@ -21,7 +21,7 @@ public class DeleteTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var endpoint = DeleteUserRouteFactory.CreateRequestUri(CreateFakeValidRequest());
+        var endpoint = DeleteUserRouteFactory.Create(CreateFakeValidRequest());
         var response = await client.DeleteAsync(endpoint);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -34,7 +34,7 @@ public class DeleteTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var endpoint = DeleteUserRouteFactory.CreateRequestUri(CreateFakeValidRequest());
+        var endpoint = DeleteUserRouteFactory.Create(CreateFakeValidRequest());
         var response = await client.DeleteAsync(endpoint);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -54,7 +54,7 @@ public class DeleteTests : IntegrationTestBase
         var request = new DeleteUserRequest { UserId = mockUser.Id };
         var client = application.CreateClient();
 
-        var endpoint = DeleteUserRouteFactory.CreateRequestUri(request);
+        var endpoint = DeleteUserRouteFactory.Create(request);
         var response = await client.DeleteAsync(endpoint);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

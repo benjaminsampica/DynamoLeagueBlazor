@@ -28,7 +28,7 @@ public sealed partial class Delete : IDisposable
 
         try
         {
-            var uri = DeleteUserRouteFactory.CreateRequestUri(_form);
+            var uri = DeleteUserRouteFactory.Create(_form);
             var response = await HttpClient.DeleteAsync(uri, _cts.Token);
 
             if (response.IsSuccessStatusCode)
@@ -58,12 +58,9 @@ public sealed partial class Delete : IDisposable
 
 public static class DeleteUserRouteFactory
 {
-    public static string CreateRequestUri(DeleteUserRequest request)
+    public static string Create(DeleteUserRequest request)
     {
-        var uri = QueryHelpers.AddQueryString("api/admin/users", new Dictionary<string, string>
-        {
-            { nameof(DeleteUserRequest.UserId), request.UserId.ToString() },
-        });
+        var uri = QueryHelpers.AddQueryString("api/admin/users", nameof(DeleteUserRequest.UserId), request.UserId);
 
         return uri;
     }

@@ -11,9 +11,8 @@ public sealed partial class SignPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
+    [CascadingParameter] public MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
-    [Parameter, EditorRequired] public EventCallback OnSignPlayerButtonClick { get; set; }
     private SignPlayerRequest _form = null!;
     private SignPlayerDetailResult? _signPlayerDetailResult;
     private bool _processingForm;
@@ -23,15 +22,14 @@ public sealed partial class SignPlayer : IDisposable
     {
         _form = new SignPlayerRequest { PlayerId = PlayerId };
 
-        await SignPlayerDetailsAsnyc();
+        await SignPlayerDetailsAsync();
     }
 
-    private async Task SignPlayerDetailsAsnyc()
+    private async Task SignPlayerDetailsAsync()
     {
         try
         {
-            var queryString = QueryHelpers.AddQueryString("api/teams/signplayer", nameof(SignPlayerRequest.PlayerId), PlayerId.ToString());
-            _signPlayerDetailResult = await HttpClient.GetFromJsonAsync<SignPlayerDetailResult>(queryString, _cts.Token) ?? new();
+            _signPlayerDetailResult = await HttpClient.GetFromJsonAsync<SignPlayerDetailResult>(SignPlayerRouteFactory.Create(PlayerId), _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -45,12 +43,11 @@ public sealed partial class SignPlayer : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/teams/signplayer", _form);
+            var response = await HttpClient.PostAsJsonAsync(SignPlayerRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {
                 SnackBar.Add("Successfully signed player.", Severity.Success);
-                await OnSignPlayerButtonClick.InvokeAsync();
             }
             else
             {
@@ -71,4 +68,12 @@ public sealed partial class SignPlayer : IDisposable
         _cts.Cancel();
         _cts.Dispose();
     }
+}
+
+public static class SignPlayerRouteFactory
+{
+    public const string Uri = "api/admin/addplayer";
+
+    public static string Create(int playerId)
+        => QueryHelpers.AddQueryString(Uri, nameof(SignPlayerRequest.PlayerId), playerId.ToString());
 }
