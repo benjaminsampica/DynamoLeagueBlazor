@@ -33,18 +33,20 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams
         {
             var application = CreateAdminAuthenticatedApplication();
             var player = CreateFakePlayer();
-            player.Position = "QB";
+            player.Position = Position.QuarterBack.Name;
             player.YearContractExpires = DateTime.Now.Year;
             await application.AddAsync(player);
             var request = CreateFakeValidRequest();
             request.YearContractExpires = (int)player.YearContractExpires;
             request.PlayerId = player.Id;
             var client = application.CreateClient();
-            var response = await client.PostAsJsonAsync(_endpoint, request);
+
+            await client.PostAsJsonAsync(_endpoint, request);
+
             var result = await application.FirstOrDefaultAsync<Player>();
 
             result.Should().NotBeNull();
-            result.YearContractExpires.Should().Be(request.YearContractExpires);
+            result!.YearContractExpires.Should().Be(request.YearContractExpires);
             result.Rostered.Should().BeTrue();
             result.EndOfFreeAgency.Should().BeNull();
             var position = Position.FromName(player.Position);
@@ -62,12 +64,12 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams
         }
 
         [Theory]
-        [InlineData(0, 1,false)]
-        [InlineData(1,0, false)]
+        [InlineData(0, 1, false)]
+        [InlineData(1, 0, false)]
         [InlineData(1, 1, true)]
         public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int yearContractExpires, bool expectedResult)
         {
-            var request = new SignPlayerRequest { PlayerId = playerId,YearContractExpires=yearContractExpires };
+            var request = new SignPlayerRequest { PlayerId = playerId, YearContractExpires = yearContractExpires };
 
             var result = _validator.Validate(request);
 

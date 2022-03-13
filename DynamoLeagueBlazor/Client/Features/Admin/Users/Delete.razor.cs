@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 
-public partial class Delete : IDisposable
+public sealed partial class Delete : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;

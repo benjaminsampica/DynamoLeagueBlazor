@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -8,16 +9,16 @@ using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
-public partial class Detail : IDisposable
+public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
-    [CascadingParameter] private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
     [Parameter] public int TeamId { get; set; }
 
     private TeamDetailResult? _result;
-    private bool _usersTeam = false;
-    private bool _isSignedOption = false;
+    private bool _isUsersTeam = false;
+    private bool _isSignedPlayersShowing = false;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
@@ -25,10 +26,12 @@ public partial class Detail : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-        var claim = user.FindFirst("TeamId");
-        if (int.Parse(claim.Value) == TeamId) { _usersTeam = true; }
+        var authenticationState = await AuthenticationStateTask;
+        var user = authenticationState.User!;
+
+        var claim = user.FindFirst(nameof(IUser.TeamId));
+        if (int.Parse(claim!.Value) == TeamId) _isUsersTeam = true;
+
         await LoadDataAsync();
     }
     protected async Task LoadDataAsync()
@@ -49,25 +52,26 @@ public partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
-        _isSignedOption = false;
+        _isSignedPlayersShowing = false;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
-        _isSignedOption = false;
+        _isSignedPlayersShowing = false;
     }
 
     private void ShowUnsignedPlayers()
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
-        _isSignedOption = true;
+        _isSignedPlayersShowing = true;
     }
+
     private void OpenSignPlayerDialog(int playerId)
     {
-        DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
         {
             { nameof(SignPlayer.PlayerId), playerId },

@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 
-public partial class SignPlayer : IDisposable
+public sealed partial class SignPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;

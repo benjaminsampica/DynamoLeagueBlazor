@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
 
-public partial class Detail : IDisposable
+public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;

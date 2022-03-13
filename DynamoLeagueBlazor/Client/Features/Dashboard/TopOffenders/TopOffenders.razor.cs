@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Dashboard.TopOffenders;
 
-public partial class TopOffenders : IDisposable
+public sealed partial class TopOffenders : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 

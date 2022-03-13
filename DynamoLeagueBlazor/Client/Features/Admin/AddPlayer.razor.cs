@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 namespace DynamoLeagueBlazor.Client.Features.Admin;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
-public partial class AddPlayer : IDisposable
+public sealed partial class AddPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
