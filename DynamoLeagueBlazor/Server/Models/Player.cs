@@ -23,10 +23,10 @@ public record Player : BaseEntity
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
     // TODO: State Machine these
-    public Player SetToRostered(int contractedToYear, int contractValue)
+    public Player SetToRostered(int yearContractExpires, int contractValue)
     {
         Rostered = true;
-        YearContractExpires = contractedToYear;
+        YearContractExpires = yearContractExpires;
         EndOfFreeAgency = null;
         ContractValue = contractValue;
 

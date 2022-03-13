@@ -20,14 +20,20 @@ namespace DynamoLeagueBlazor.Shared.Enums
             var yearsToContract = 0;
             foreach (var price in PerYearContractPriceTable())
             {
-                yield return new ContractOption((DateTime.Now.Year + yearsToContract++), Math.Max(bidValue, price));
+                var yearContractExpires = DateTime.Now.Year + yearsToContract;
+
+                yield return new ContractOption(yearContractExpires, Math.Max(bidValue, price));
+
+                yearsToContract++;
             }
         }
-        public int GetContractValue(int contractValue, int yearContractExpires)
+
+        public int GetContractValue(int yearContractExpires, int contractValue)
         {
-            var chartValue = PerYearContractPriceTable().ElementAt(yearContractExpires - DateTime.Now.Year);
-            if (chartValue > contractValue) contractValue = chartValue;
-            return contractValue;
+            var index = yearContractExpires - DateTime.Now.Year;
+            var chartValue = PerYearContractPriceTable().ElementAt(index);
+
+            return chartValue > contractValue ? chartValue : contractValue;
         }
     }
 
