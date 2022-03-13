@@ -9,7 +9,7 @@ public record Player : BaseEntity
         HeadShotUrl = headShotUrl;
     }
     public string Name { get; private set; }
-    public string Position { get; private set; }
+    public string Position { get; set; }
     public string HeadShotUrl { get; private set; }
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
@@ -23,10 +23,10 @@ public record Player : BaseEntity
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
     // TODO: State Machine these
-    public Player SetToRostered(DateTime contractedToDate, int contractValue)
+    public Player SetToRostered(int contractedToYear, int contractValue)
     {
         Rostered = true;
-        YearContractExpires = contractedToDate.Year;
+        YearContractExpires = contractedToYear;
         EndOfFreeAgency = null;
         ContractValue = contractValue;
 

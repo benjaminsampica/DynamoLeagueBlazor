@@ -1,37 +1,35 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Players;
+namespace DynamoLeagueBlazor.Client.Features.Teams;
 
-public sealed partial class AddFine : IDisposable
+public sealed partial class SignPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
+    [CascadingParameter] public MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
-
-    private AddFineRequest _form = null!;
-    private FineDetailResult? _fineDetail;
+    private SignPlayerRequest _form = null!;
+    private SignPlayerDetailResult? _signPlayerDetailResult;
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _form = new AddFineRequest { PlayerId = PlayerId };
+        _form = new SignPlayerRequest { PlayerId = PlayerId };
 
-        await GetPlayerFineDetailsAsync();
+        await SignPlayerDetailsAsync();
     }
 
-    private async Task GetPlayerFineDetailsAsync()
+    private async Task SignPlayerDetailsAsync()
     {
         try
         {
-            var queryString = QueryHelpers.AddQueryString("api/players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
-            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
+            _signPlayerDetailResult = await HttpClient.GetFromJsonAsync<SignPlayerDetailResult>(SignPlayerRouteFactory.Create(PlayerId), _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -45,11 +43,11 @@ public sealed partial class AddFine : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/players/addfine", _form);
+            var response = await HttpClient.PostAsJsonAsync(SignPlayerRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Successfully added a fine. An administrator will either approve or deny the fine.", Severity.Success);
+                SnackBar.Add("Successfully signed player.", Severity.Success);
             }
             else
             {
@@ -70,4 +68,12 @@ public sealed partial class AddFine : IDisposable
         _cts.Cancel();
         _cts.Dispose();
     }
+}
+
+public static class SignPlayerRouteFactory
+{
+    public const string Uri = "api/admin/addplayer";
+
+    public static string Create(int playerId)
+        => QueryHelpers.AddQueryString(Uri, nameof(SignPlayerRequest.PlayerId), playerId.ToString());
 }

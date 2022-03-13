@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
 
-public partial class Detail : IDisposable
+public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
@@ -86,14 +86,14 @@ public class BidAmountValidator : IBidAmountValidator
 
     public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
-        var uri = AddBidRouteFactory.CreateRequestUri(request);
+        var uri = AddBidRouteFactory.Create(request);
         return await _httpClient.GetFromJsonAsync<bool>(uri, cancellationToken);
     }
 }
 
 public static class AddBidRouteFactory
 {
-    public static string CreateRequestUri(AddBidRequest request)
+    public static string Create(AddBidRequest request)
     {
         var uri = QueryHelpers.AddQueryString("api/freeagents/addbid", new Dictionary<string, string>
         {

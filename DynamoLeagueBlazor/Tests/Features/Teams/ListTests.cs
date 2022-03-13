@@ -25,7 +25,7 @@ public class ListTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
-        var rosteredPlayer = CreateFakePlayer().SetToRostered(DateTime.MaxValue, int.MaxValue);
+        var rosteredPlayer = CreateFakePlayer().SetToRostered(DateTime.MaxValue.Year, int.MaxValue);
         rosteredPlayer.TeamId = mockTeam.Id;
         await application.AddAsync(rosteredPlayer);
 

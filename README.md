@@ -2,8 +2,8 @@
 
 # Introduction
 
-Dynamo League is a fantasy football league based off the Yahoo fantasy football league with heavily customized rulesets. 
-It is comprised of two separate stand-alone applications - a client UI written with Blazor WebAssembly and an API server written with ASP.NET Core.
+Dynamo League is a fantasy football league based off the Yahoo fantasy football league with heavily customized rule sets.
+It is comprised of two separate stand-alone applications - a client UI written using Blazor WebAssembly and an API server written using ASP.NET Core.
 
 # Getting Started
 
@@ -11,9 +11,9 @@ Running & contributing to Dynamo League Blazor requires the following:
 
 - .NET 6 SDK
 - IIS Express
-- SQL Server LocalDb to run tests
+- SQL Server LocalDB
 
-The latter two are installed automatically with either Visual Studio or Rider IDE's. 
+The latter two are installed automatically with either Visual Studio or Rider.
 
 By default, a test account is created with administrator permissions with the following login information:
 

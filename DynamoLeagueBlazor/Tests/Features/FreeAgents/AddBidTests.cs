@@ -24,7 +24,7 @@ public class AddBidTests : IntegrationTestBase
     {
         var application = CreateUnauthenticatedApplication();
         var client = application.CreateClient();
-        var endpoint = AddBidRouteFactory.CreateRequestUri(CreateFakeValidRequest());
+        var endpoint = AddBidRouteFactory.Create(CreateFakeValidRequest());
 
         var response = await client.GetAsync(endpoint);
 
@@ -41,7 +41,7 @@ public class AddBidTests : IntegrationTestBase
         await application.AddAsync(mockPlayer);
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
-        var endpoint = AddBidRouteFactory.CreateRequestUri(request);
+        var endpoint = AddBidRouteFactory.Create(request);
 
         var result = await client.GetFromJsonAsync<bool>(endpoint);
         result.Should().BeTrue();
@@ -60,7 +60,7 @@ public class AddBidTests : IntegrationTestBase
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
         request.Amount = int.MinValue;
-        var endpoint = AddBidRouteFactory.CreateRequestUri(request);
+        var endpoint = AddBidRouteFactory.Create(request);
         mockPlayer.AddBid(int.MaxValue, mockTeam.Id);
         await application.UpdateAsync(mockPlayer);
 

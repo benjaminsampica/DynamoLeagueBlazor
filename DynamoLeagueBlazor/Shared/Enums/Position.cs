@@ -14,7 +14,34 @@ namespace DynamoLeagueBlazor.Shared.Enums
 
         public abstract int[] PerYearContractPriceTable();
 
-        // TODO: Revisit ContractOption
+
+        public IEnumerable<ContractOption> CalculateContractYearOptions(int bidValue)
+        {
+            var yearsToContract = 0;
+            foreach (var price in PerYearContractPriceTable())
+            {
+                yield return new ContractOption((DateTime.Now.Year + yearsToContract++), Math.Max(bidValue, price));
+            }
+        }
+        public int GetContractValue(int contractValue, int yearContractExpires)
+        {
+            var chartValue = PerYearContractPriceTable().ElementAt(yearContractExpires - DateTime.Now.Year);
+            if (chartValue > contractValue) contractValue = chartValue;
+            return contractValue;
+        }
+    }
+
+    public class ContractOption
+    {
+        public ContractOption(int yearContractExpires, int minimumAmount)
+        {
+            YearContractExpires = yearContractExpires;
+            MinimumAmount = minimumAmount;
+        }
+
+        public int YearContractExpires { get; set; }
+        public int MinimumAmount { get; set; }
+        public string Display => $"Contract ends after {YearContractExpires} | ${MinimumAmount} per year";
     }
 
     public sealed class QuarterBack : Position

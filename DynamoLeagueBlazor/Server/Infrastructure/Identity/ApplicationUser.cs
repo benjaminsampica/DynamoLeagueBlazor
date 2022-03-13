@@ -1,9 +1,10 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser, IUser
 {
     public ApplicationUser(string userName, int teamId) : base(userName)
     {
