@@ -114,7 +114,7 @@ try
     app.UseSerilogIngestion();
     app.UseSerilogRequestLogging();
 
-    app.MapRazorPages().RequireAuthorization();
+    app.MapRazorPages();
     app.MapControllers().RequireAuthorization();
     app.MapFallbackToFile("index.html");
 
