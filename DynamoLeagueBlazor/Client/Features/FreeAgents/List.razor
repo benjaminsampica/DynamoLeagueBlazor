@@ -22,11 +22,11 @@
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>Actions</MudTh>
-                <MudTh>Name</MudTh>
-                <MudTh>Position</MudTh>
-                <MudTh>Team</MudTh>
-                <MudTh>Bidding Ends</MudTh>
-                <MudTh>Highest Bid</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Name)">Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Position)">Position</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Team)">Former Team</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.BiddingEnds)">Bidding Ends</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.HighestBid)">Highest Bid</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
