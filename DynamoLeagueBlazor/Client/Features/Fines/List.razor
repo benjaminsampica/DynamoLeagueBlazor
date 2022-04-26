@@ -20,10 +20,10 @@
                 <MudTh>Actions</MudTh>
             </Authorized>
         </AuthorizeView>
-        <MudTh>Name</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.PlayerName)">Name</MudTableSortLabel></MudTh>
         <MudTh>Reason</MudTh>
-        <MudTh>Amount</MudTh>
-        <MudTh>Status</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Amount)">Amount</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Status)">Status</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <AuthorizeView Roles=@RoleName.Admin>

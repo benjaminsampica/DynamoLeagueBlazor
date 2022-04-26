@@ -58,10 +58,10 @@ else
                             {
                                 <MudTh>Sign</MudTh>
                             }
-                            <MudTh>@nameof(PlayerItem.Name)</MudTh>
-                            <MudTh>@nameof(PlayerItem.Position)</MudTh>
-                            <MudTh>Contract Value</MudTh>
-                            <MudTh>Contract Length</MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
                         </HeaderContent>
                         <RowTemplate>
                             @if(_isSignedPlayersShowing && _isUsersTeam)
