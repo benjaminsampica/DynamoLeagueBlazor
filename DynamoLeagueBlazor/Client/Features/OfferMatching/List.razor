@@ -1,0 +1,37 @@
+﻿@page "/offermatching"
+
+<Title>
+	@_title
+</Title>
+
+<PageHeader>
+	@_title
+</PageHeader>
+
+<MudGrid>
+    <MudItem xs=12>
+        <MudTable Items="_result.OfferMatches" Dense=true Loading=_loading>
+            <HeaderContent>
+                <MudTh>Actions</MudTh>
+                <MudTh>Player Name</MudTh>
+                <MudTh>Player Position</MudTh>
+                <MudTh>Offering Team</MudTh>
+                <MudTh>Offer</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Filled.Handshake" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" />
+                </MudTd>
+                <MudTd DataLabel="Player Name">
+                    <PlayerNameWithHeadShot Name="@context.Name" HeadShotUrl="@context.HeadShotUrl" />
+                </MudTd>
+                <MudTd DataLabel="Player Position">@context.Position</MudTd>
+                <MudTd DataLabel="Offering Team">@context.OfferingTeam</MudTd>
+                <MudTd DataLabel="Offer">@context.Offer</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>

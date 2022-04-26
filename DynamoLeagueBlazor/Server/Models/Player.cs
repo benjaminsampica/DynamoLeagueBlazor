@@ -135,4 +135,9 @@ public static class PlayerExtensions
     public static IQueryable<Player> WhereIsFreeAgent(this IQueryable<Player> players)
         => players.Where(p => p.YearContractExpires < DateTime.Today.Year
             && p.EndOfFreeAgency >= DateTime.Now);
+
+    public static IQueryable<Player> WhereIsOfferMatching(this IQueryable<Player> players)
+        => players.Where(p => p.YearContractExpires < DateTime.Today.Year
+            && p.EndOfFreeAgency <= DateTime.Today
+            && p.EndOfFreeAgency.Value.AddDays(3) >= DateTime.Today);
 }
