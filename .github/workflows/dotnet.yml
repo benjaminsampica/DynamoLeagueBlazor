@@ -29,7 +29,6 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    # Begin Automated Deployment
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v')
       run: dotnet publish -c Release -o 'drop' 
@@ -95,19 +94,17 @@ jobs:
           </html>'
     - name: Take App Offline
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        local-dir: 'offline_files/'
-        dangerous-clean-slate: false
+        local-dir: './offline_files/'
+        log-level: verbose
         server-dir: '/'
-        exclude: | 
-          **/drop/**
     - name: Deploy to Prod
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
