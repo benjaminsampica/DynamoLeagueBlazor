@@ -16,3 +16,8 @@ public class FreeAgentListResult
         public bool CurrentUserIsHighestBidder { get; set; }
     }
 }
+
+public class FreeAgentListRouteFactory
+{
+    public const string Uri = "api/freeagents";
+}

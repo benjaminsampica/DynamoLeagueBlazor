@@ -64,8 +64,3 @@ public sealed partial class AddPlayer : IDisposable
         _cts.Dispose();
     }
 }
-
-public static class AddPlayerRouteFactory
-{
-    public const string Uri = "api/admin/addplayer";
-}

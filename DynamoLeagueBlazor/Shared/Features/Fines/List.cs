@@ -14,3 +14,8 @@ public class FineListResult
         public string Status { get; set; }
     }
 }
+
+public class FineListRouteFactory
+{
+    public const string Uri = "api/fines";
+}

@@ -1,6 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Features.Admin.Users;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Features.Admin.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

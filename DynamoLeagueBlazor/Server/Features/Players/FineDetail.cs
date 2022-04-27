@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DynamoLeagueBlazor.Server.Features.Players;
 
 [ApiController]
-[Route("api/players/finedetail")]
+[Route(FineDetailRouteFactory.Uri)]
 public class FineDetailController : ControllerBase
 {
     private readonly IMediator _mediator;

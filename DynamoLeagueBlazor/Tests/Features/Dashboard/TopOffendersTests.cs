@@ -5,8 +5,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Dashboard;
 
 public class TopOffendersTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/dashboard/topoffenders";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -14,7 +12,7 @@ public class TopOffendersTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(_endpoint);
+        var response = await client.GetAsync(TopOffendersRouteFactory.Uri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -31,7 +29,7 @@ public class TopOffendersTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<TopOffendersResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<TopOffendersResult>(TopOffendersRouteFactory.Uri);
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(1);
@@ -67,7 +65,7 @@ public class TopOffendersTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<TopOffendersResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<TopOffendersResult>(TopOffendersRouteFactory.Uri);
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);

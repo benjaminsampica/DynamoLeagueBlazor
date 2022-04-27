@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
@@ -34,7 +33,7 @@ public sealed partial class Detail : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/freeagents/addbid", _form);
+            var response = await HttpClient.PostAsJsonAsync(AddBidRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {
@@ -60,7 +59,7 @@ public sealed partial class Detail : IDisposable
 
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>($"api/freeagents/{PlayerId}", _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>(FreeAgentDetailFactory.Create(PlayerId), _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -88,19 +87,5 @@ public class BidAmountValidator : IBidAmountValidator
     {
         var uri = AddBidRouteFactory.Create(request);
         return await _httpClient.GetFromJsonAsync<bool>(uri, cancellationToken);
-    }
-}
-
-public static class AddBidRouteFactory
-{
-    public static string Create(AddBidRequest request)
-    {
-        var uri = QueryHelpers.AddQueryString("api/freeagents/addbid", new Dictionary<string, string>
-        {
-            { nameof(AddBidRequest.PlayerId), request.PlayerId.ToString() },
-            { nameof(AddBidRequest.Amount), request.Amount.ToString() }
-        });
-
-        return uri;
     }
 }

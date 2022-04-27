@@ -20,3 +20,15 @@ public class TeamDetailResult
         public string YearContractExpires { get; set; }
     }
 }
+
+public class TeamDetailRouteFactory
+{
+    public const string Uri = "api/teams/";
+
+    // TODO: change to request and add validator + tests
+    // see FineDetailRequest
+    public static string Create(int teamId)
+    {
+        return Uri + teamId;
+    }
+}

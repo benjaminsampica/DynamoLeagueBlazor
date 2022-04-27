@@ -1,5 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Helpers;
 using FluentValidation;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace DynamoLeagueBlazor.Shared.Features.FreeAgents;
 
@@ -25,4 +26,20 @@ public class AddBidRequestValidator : AsyncAbstractValidator<AddBidRequest>
 public interface IBidAmountValidator
 {
     public Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken);
+}
+
+public static class AddBidRouteFactory
+{
+    public const string Uri = "api/freeagents/addbid";
+
+    public static string Create(AddBidRequest request)
+    {
+        var uri = QueryHelpers.AddQueryString(Uri, new Dictionary<string, string>
+        {
+            { nameof(AddBidRequest.PlayerId), request.PlayerId.ToString() },
+            { nameof(AddBidRequest.Amount), request.Amount.ToString() }
+        });
+
+        return uri;
+    }
 }

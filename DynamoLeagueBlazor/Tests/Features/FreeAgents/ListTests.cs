@@ -5,8 +5,6 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 public class ListTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/freeagents";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -14,7 +12,7 @@ public class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(_endpoint);
+        var response = await client.GetAsync(FreeAgentListRouteFactory.Uri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -26,7 +24,7 @@ public class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<FreeAgentListResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);
 
         result.Should().NotBeNull();
         result!.FreeAgents.Should().HaveCount(0);
@@ -53,7 +51,7 @@ public class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<FreeAgentListResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);
 
         result.Should().NotBeNull();
         result!.FreeAgents.Should().HaveCount(1);

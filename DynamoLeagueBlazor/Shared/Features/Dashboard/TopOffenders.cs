@@ -11,3 +11,8 @@ public class TopOffendersResult
         public string TotalFineAmount { get; set; }
     }
 }
+
+public class TopOffendersRouteFactory
+{
+    public const string Uri = "api/dashboard/topoffenders";
+}

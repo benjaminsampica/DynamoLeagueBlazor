@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
@@ -68,12 +67,4 @@ public sealed partial class SignPlayer : IDisposable
         _cts.Cancel();
         _cts.Dispose();
     }
-}
-
-public static class SignPlayerRouteFactory
-{
-    public const string Uri = "api/admin/addplayer";
-
-    public static string Create(int playerId)
-        => QueryHelpers.AddQueryString(Uri, nameof(SignPlayerRequest.PlayerId), playerId.ToString());
 }

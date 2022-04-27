@@ -9,8 +9,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 public class AddFineTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/players/addfine";
-
     private static AddFineRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<AddFineRequest>()
@@ -27,7 +25,7 @@ public class AddFineTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -42,7 +40,7 @@ public class AddFineTests : IntegrationTestBase
         var stubRequest = CreateFakeValidRequest();
         stubRequest.PlayerId = mockPlayer.Id;
 
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 

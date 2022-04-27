@@ -7,8 +7,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 public class ManageFineTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/fines/manage";
-
     private static ManageFineRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<ManageFineRequest>()
@@ -25,7 +23,7 @@ public class ManageFineTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+        var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -38,7 +36,7 @@ public class ManageFineTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+        var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -58,7 +56,7 @@ public class ManageFineTests : IntegrationTestBase
         mockRequest.Approved = true;
         mockRequest.FineId = mockFine.Id;
 
-        var response = await client.PostAsJsonAsync(_endpoint, mockRequest);
+        var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, mockRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
@@ -82,7 +80,7 @@ public class ManageFineTests : IntegrationTestBase
         mockRequest.Approved = false;
         mockRequest.FineId = mockFine.Id;
 
-        var response = await client.PostAsJsonAsync(_endpoint, mockRequest);
+        var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, mockRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 

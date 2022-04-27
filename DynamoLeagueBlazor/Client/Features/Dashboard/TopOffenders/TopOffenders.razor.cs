@@ -16,7 +16,7 @@ public sealed partial class TopOffenders : IDisposable
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<TopOffendersResult>("api/dashboard/topoffenders", _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<TopOffendersResult>(TopOffendersRouteFactory.Uri, _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {

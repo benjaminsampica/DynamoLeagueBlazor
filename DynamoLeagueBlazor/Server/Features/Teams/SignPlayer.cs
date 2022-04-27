@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
 [ApiController]
-[Route("api/teams/signplayer")]
+[Route(SignPlayerRouteFactory.Uri)]
 public class SignPlayerController : ControllerBase
 {
     private readonly IMediator _mediator;

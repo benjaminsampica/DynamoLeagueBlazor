@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [ApiController]
-[Route("api/fines")]
+[Route(FineListRouteFactory.Uri)]
 public class ListController : ControllerBase
 {
     private readonly IMediator _mediator;

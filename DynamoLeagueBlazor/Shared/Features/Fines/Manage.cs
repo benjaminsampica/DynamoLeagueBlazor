@@ -15,3 +15,8 @@ public class ManageFineRequestValidator : AbstractValidator<ManageFineRequest>
         RuleFor(p => p.FineId).GreaterThan(0);
     }
 }
+
+public class ManageFineRouteFactory
+{
+    public const string Uri = "api/fines/manage";
+}

@@ -5,8 +5,6 @@ namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
 public class DetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/freeagents/";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -17,7 +15,7 @@ public class DetailTests : IntegrationTestBase
             .SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue)
             .SetToFreeAgent(DateTime.MaxValue);
         await application.AddAsync(stubFreeAgent);
-        var endpoint = _endpoint + stubFreeAgent.Id;
+        var endpoint = FreeAgentDetailFactory.Create(stubFreeAgent.Id);
 
         var response = await client.GetAsync(endpoint);
 
@@ -43,7 +41,7 @@ public class DetailTests : IntegrationTestBase
         await application.UpdateAsync(mockFreeAgent);
 
         var client = application.CreateClient();
-        var endpoint = _endpoint + mockFreeAgent.Id;
+        var endpoint = FreeAgentDetailFactory.Create(mockFreeAgent.Id);
 
         var response = await client.GetFromJsonAsync<FreeAgentDetailResult>(endpoint);
 

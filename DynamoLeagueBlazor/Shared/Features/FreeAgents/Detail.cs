@@ -17,3 +17,13 @@ public class FreeAgentDetailResult
         public string CreatedOn { get; set; }
     }
 }
+
+public class FreeAgentDetailFactory
+{
+    public const string Uri = "api/freeagents/";
+
+    public static string Create(int playerId)
+    {
+        return Uri + playerId;
+    }
+}

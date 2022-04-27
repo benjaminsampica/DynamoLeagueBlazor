@@ -1,4 +1,4 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin.Users;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Users;

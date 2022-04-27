@@ -15,3 +15,8 @@ public class PlayerListResult
         public string YearContractExpires { get; set; }
     }
 }
+
+public class PlayerListRouteFactory
+{
+    public const string Uri = "api/players";
+}

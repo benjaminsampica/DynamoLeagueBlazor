@@ -1,23 +1,11 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
 
 public class FineDetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/players/finedetail";
-
-    private static FineDetailRequest CreateFakeRequest()
-    {
-        var faker = new AutoFaker<FineDetailRequest>()
-            .RuleFor(p => p.PlayerId, 1);
-
-        return faker.Generate();
-    }
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -25,8 +13,7 @@ public class FineDetailTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var stubRequest = CreateFakeRequest();
-        var endpoint = QueryHelpers.AddQueryString(_endpoint, nameof(FineDetailRequest.PlayerId), stubRequest.PlayerId.ToString());
+        var endpoint = FineDetailRouteFactory.Create(int.MaxValue);
 
         var response = await client.GetAsync(endpoint);
 
@@ -42,10 +29,8 @@ public class FineDetailTests : IntegrationTestBase
 
         var player = CreateFakePlayer();
         await application.AddAsync(player);
-        var mockRequest = CreateFakeRequest();
-        mockRequest.PlayerId = player.Id;
 
-        var endpoint = QueryHelpers.AddQueryString(_endpoint, nameof(FineDetailRequest.PlayerId), mockRequest.PlayerId.ToString());
+        var endpoint = FineDetailRouteFactory.Create(player.Id);
 
         var response = await client.GetFromJsonAsync<FineDetailResult>(endpoint);
 

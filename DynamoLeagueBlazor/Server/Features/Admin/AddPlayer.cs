@@ -15,7 +15,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
-[Route("api/admin/addplayer")]
+[Route(AddPlayerRouteFactory.Uri)]
 public class AddPlayerController : ControllerBase
 {
     private readonly IMediator _mediator;

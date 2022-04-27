@@ -21,3 +21,8 @@ public class AddPlayerRequestValidator : AbstractValidator<AddPlayerRequest>
         RuleFor(p => p.ContractValue).GreaterThan(0);
     }
 }
+
+public static class AddPlayerRouteFactory
+{
+    public const string Uri = "api/admin/addplayer";
+}

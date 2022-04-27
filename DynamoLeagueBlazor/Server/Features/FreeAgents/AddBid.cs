@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Route("api/freeagents/addbid")]
+[Route(AddBidRouteFactory.Uri)]
 [ApiController]
 public class AddBidController : ControllerBase
 {

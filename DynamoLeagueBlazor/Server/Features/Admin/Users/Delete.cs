@@ -1,5 +1,5 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Features.Admin.Users;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

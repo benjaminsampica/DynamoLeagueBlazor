@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using System.Net.Http.Json;
 
@@ -30,8 +29,7 @@ public sealed partial class AddFine : IDisposable
     {
         try
         {
-            var queryString = QueryHelpers.AddQueryString("api/players/finedetail", nameof(FineDetailRequest.PlayerId), PlayerId.ToString());
-            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(queryString, _cts.Token) ?? new();
+            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token) ?? new();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -45,7 +43,7 @@ public sealed partial class AddFine : IDisposable
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/players/addfine", _form);
+            var response = await HttpClient.PostAsJsonAsync(AddFineRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {

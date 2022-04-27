@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -23,7 +24,7 @@ public sealed partial class StartSeason : IDisposable
 
     private async Task StartSeasonAsync()
     {
-        await HttpClient.PostAsync("api/admin/startseason", null);
+        await HttpClient.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         SnackBar.Add("A new season has begun!", Severity.Success);
 
@@ -31,7 +32,7 @@ public sealed partial class StartSeason : IDisposable
     }
 
     private async Task<bool> GetSeasonStatusAsync()
-        => await HttpClient.GetFromJsonAsync<bool>("api/admin/seasonstatus", _cts.Token);
+        => await HttpClient.GetFromJsonAsync<bool>(StartSeasonRouteFactory.Uri, _cts.Token);
 
     public void Dispose()
     {

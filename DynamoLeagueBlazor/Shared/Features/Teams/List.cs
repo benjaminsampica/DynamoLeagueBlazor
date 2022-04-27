@@ -25,3 +25,8 @@ public class TeamNameListResult
         public string Name { get; set; }
     }
 }
+
+public class TeamListRouteFactory
+{
+    public const string Uri = "api/teams";
+}

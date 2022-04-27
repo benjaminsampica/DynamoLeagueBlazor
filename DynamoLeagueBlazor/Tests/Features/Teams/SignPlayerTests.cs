@@ -10,8 +10,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
 public class SignPlayerServerTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/teams/signplayer";
-
     private static SignPlayerRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<SignPlayerRequest>();
@@ -26,7 +24,7 @@ public class SignPlayerServerTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(_endpoint, stubRequest);
+        var response = await client.PostAsJsonAsync(SignPlayerRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -44,7 +42,7 @@ public class SignPlayerServerTests : IntegrationTestBase
         request.PlayerId = player.Id;
         var client = application.CreateClient();
 
-        await client.PostAsJsonAsync(_endpoint, request);
+        await client.PostAsJsonAsync(SignPlayerRouteFactory.Uri, request);
 
         var result = await application.FirstOrDefaultAsync<Player>();
 

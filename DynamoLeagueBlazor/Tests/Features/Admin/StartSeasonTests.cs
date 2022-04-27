@@ -1,11 +1,11 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Features.Admin;
+using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 public class StartSeasonTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/admin/startseason";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -13,7 +13,7 @@ public class StartSeasonTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsync(_endpoint, null);
+        var response = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -25,9 +25,37 @@ public class StartSeasonTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsync(_endpoint, null);
+        var response = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+
+    [Fact]
+    public async Task GivenAuthenticatedAdmin_WhenAPlayerIsAFreeAgent_ThenReturnsTrue()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.SetToFreeAgent(DateTime.MaxValue);
+        await application.AddAsync(mockPlayer);
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<bool>(StartSeasonRouteFactory.Uri);
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GivenAuthenticatedAdmin_WhenNoPlayerIsAFreeAgent_ThenReturnsFalse()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<bool>(StartSeasonRouteFactory.Uri);
+
+        result.Should().BeFalse();
     }
 
     [Fact]
@@ -40,7 +68,7 @@ public class StartSeasonTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.PostAsync(_endpoint, null);
+        var result = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
@@ -60,7 +88,7 @@ public class StartSeasonTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.PostAsync(_endpoint, null);
+        var result = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 

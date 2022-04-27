@@ -1,5 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
+using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
-[Route("api/admin/startseason")]
+[Route(StartSeasonRouteFactory.Uri)]
 public class StartSeasonController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,6 +19,12 @@ public class StartSeasonController : ControllerBase
     public StartSeasonController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<bool> GetAsync(CancellationToken cancellationToken)
+    {
+        return await _mediator.Send(new IsSeasonStartedQuery(), cancellationToken);
     }
 
     [HttpPost]
@@ -28,6 +35,24 @@ public class StartSeasonController : ControllerBase
         return NoContent();
     }
 }
+
+public record IsSeasonStartedQuery : IRequest<bool> { }
+
+public class IsSeasonStartedHandler : IRequestHandler<IsSeasonStartedQuery, bool>
+{
+    private readonly ApplicationDbContext _dbContext;
+
+    public IsSeasonStartedHandler(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<bool> Handle(IsSeasonStartedQuery request, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Players.AnyAsync(p => p.EndOfFreeAgency != null, cancellationToken);
+    }
+}
+
 
 public record StartSeasonCommand : IRequest<Unit> { }
 

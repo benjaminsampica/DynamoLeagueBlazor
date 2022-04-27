@@ -20,7 +20,7 @@ public sealed partial class List : IDisposable
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentListResult>("api/freeagents", _cts.Token) ?? new();
+            _result = await HttpClient.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri, _cts.Token) ?? new();
             _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)

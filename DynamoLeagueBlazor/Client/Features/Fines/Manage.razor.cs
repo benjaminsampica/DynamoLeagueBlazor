@@ -27,7 +27,7 @@ public partial class Manage
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("api/fines/manage", _form);
+            var response = await HttpClient.PostAsJsonAsync(ManageFineRouteFactory.Uri, _form);
 
             if (response.IsSuccessStatusCode)
             {

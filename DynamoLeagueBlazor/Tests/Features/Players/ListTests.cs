@@ -5,8 +5,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Players;
 
 public class ListTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/players";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -14,7 +12,7 @@ public class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(_endpoint);
+        var response = await client.GetAsync(PlayerListRouteFactory.Uri);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -31,7 +29,7 @@ public class ListTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var result = await client.GetFromJsonAsync<PlayerListResult>(_endpoint);
+        var result = await client.GetFromJsonAsync<PlayerListResult>(PlayerListRouteFactory.Uri);
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(1);

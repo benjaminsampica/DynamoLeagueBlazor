@@ -6,8 +6,6 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
 public class DetailTests : IntegrationTestBase
 {
-    private const string _endpoint = "api/teams/";
-
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
@@ -15,7 +13,7 @@ public class DetailTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await application.AddAsync(stubTeam);
         var client = application.CreateClient();
-        var endpoint = _endpoint + stubTeam.Id;
+        var endpoint = TeamDetailRouteFactory.Create(stubTeam.Id);
 
         var response = await client.GetAsync(endpoint);
 
@@ -46,7 +44,7 @@ public class DetailTests : IntegrationTestBase
         await application.AddAsync(mockUnsignedPlayer);
 
         var client = application.CreateClient();
-        var endpoint = _endpoint + stubTeam.Id;
+        var endpoint = TeamDetailRouteFactory.Create(stubTeam.Id);
 
         var response = await client.GetFromJsonAsync<TeamDetailResult>(endpoint);
 

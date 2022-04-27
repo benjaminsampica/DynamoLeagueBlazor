@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Features.Admin;
+﻿namespace DynamoLeagueBlazor.Shared.Features.Admin.Users;
 
 public class UserListResult
 {

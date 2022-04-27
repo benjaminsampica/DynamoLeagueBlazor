@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace DynamoLeagueBlazor.Shared.Features.Players;
 
@@ -15,6 +16,11 @@ public class AddFineRequestValidator : AbstractValidator<AddFineRequest>
         RuleFor(r => r.PlayerId).GreaterThan(0);
         RuleFor(r => r.FineReason).NotEmpty();
     }
+}
+
+public class AddFineRouteFactory
+{
+    public const string Uri = "api/players/addfine";
 }
 
 public class FineDetailResult
@@ -34,5 +40,15 @@ public class FineDetailRequestValidator : AbstractValidator<FineDetailRequest>
     public FineDetailRequestValidator()
     {
         RuleFor(r => r.PlayerId).GreaterThan(0);
+    }
+}
+
+public class FineDetailRouteFactory
+{
+    public const string Uri = "api/players/finedetail";
+
+    public static string Create(int playerId)
+    {
+        return QueryHelpers.AddQueryString(Uri, nameof(FineDetailRequest.PlayerId), playerId.ToString());
     }
 }
