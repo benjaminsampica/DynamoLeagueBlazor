@@ -100,8 +100,8 @@ jobs:
         server: win5184.site4now.net
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        local-dir: 'offline_files/'
-        dangerous-clean-slate: false
+        local-dir: './offline_files/'
+        log-level: verbose
         server-dir: '/'
         exclude: | 
           **/drop/**
