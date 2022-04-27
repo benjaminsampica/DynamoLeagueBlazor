@@ -105,7 +105,7 @@ jobs:
         server-dir: '/'
         exclude: | 
           *!(offlinefiles)
-          /*[!offlinefiles]/**
+          **/*[!offlinefiles]/**
     #- name: Deploy to Prod
     #  if: startsWith(github.ref, 'refs/tags/v')
     #  uses: SamKirkland/FTP-Deploy-Action@4.2.0
