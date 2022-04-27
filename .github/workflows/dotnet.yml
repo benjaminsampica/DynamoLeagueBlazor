@@ -42,7 +42,6 @@ jobs:
         ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
         Email.Password: ${{ secrets.email_password }}
     - name: Create app_offline file
-      if: startsWith(github.ref, 'refs/tags/v')
       shell: pwsh
       run: |
           New-Item offline_files -ItemType Directory
@@ -94,7 +93,6 @@ jobs:
           </body>
           </html>'
     - name: Take App Offline
-      if: startsWith(github.ref, 'refs/tags/v')
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
         server: win5184.site4now.net
