@@ -95,14 +95,16 @@ jobs:
           </html>'
     - name: Take App Offline
       #if: startsWith(github.ref, 'refs/tags/v')
-      uses: kevinpainchaud/simple-ftp-deploy-action@v1.2.1
+      uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
-        ftp_host: win5184.site4now.net
-        ftp_username: ${{ secrets.ftp_username }}
-        ftp_password: ${{ secrets.ftp_password }}
-        local_source_dir: './offline_files/'
-        dist_target_dir: '/'
-        delete: "false"
+        server: win5184.site4now.net
+        username: ${{ secrets.ftp_username }}
+        password: ${{ secrets.ftp_password }}
+        local-dir: './offline_files/'
+        log-level: verbose
+        server-dir: '/'
+        exclude: | 
+          **/**
     #- name: Deploy to Prod
     #  if: startsWith(github.ref, 'refs/tags/v')
     #  uses: SamKirkland/FTP-Deploy-Action@4.2.0
