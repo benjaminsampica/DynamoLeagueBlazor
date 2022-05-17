@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Server", "DynamoLeagueBlazor\Server\DynamoLeagueBlazor.Server.csproj", "{9479FD30-357E-42FF-B5DB-0B6DA19D9A5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Server", "src\Server\DynamoLeagueBlazor.Server.csproj", "{9479FD30-357E-42FF-B5DB-0B6DA19D9A5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Client", "DynamoLeagueBlazor\Client\DynamoLeagueBlazor.Client.csproj", "{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Client", "src\Client\DynamoLeagueBlazor.Client.csproj", "{A79A6A5A-17DD-45AD-B995-7C5A1BB12589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Shared", "DynamoLeagueBlazor\Shared\DynamoLeagueBlazor.Shared.csproj", "{D8BEC212-6C75-4909-A780-3678E11C81C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Shared", "src\Shared\DynamoLeagueBlazor.Shared.csproj", "{D8BEC212-6C75-4909-A780-3678E11C81C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Tests", "DynamoLeagueBlazor\Tests\DynamoLeagueBlazor.Tests.csproj", "{888EC223-BE3D-4598-8976-328C3E79B160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamoLeagueBlazor.Tests", "src\Tests\DynamoLeagueBlazor.Tests.csproj", "{888EC223-BE3D-4598-8976-328C3E79B160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
