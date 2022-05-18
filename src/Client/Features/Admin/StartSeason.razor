@@ -5,7 +5,16 @@
 </Title>
 
 <MudAlert Severity=Severity.Warning Class="mb-2">
-    Clicking the below button will begin a new season - all players who are eligble to be free agents will be set to a free agent status. Proceed with caution.
+    Clicking the below button will begin a new season. Beginning a new season includes
+    <br/><br/>
+    <ul>
+        <li>
+            - All players who are eligble to be free agents will be set to a free agent status.
+        </li>
+        <li>
+            - All fines for the previous year will be removed.
+        </li>
+    </ul>
 </MudAlert>
 <LoadingButton @bind-IsLoading="_isDisabled" Icon=@Icons.Outlined.SportsFootball Color=Color.Primary OnClick=StartSeasonAsync>
     <IsLoadingContent>
