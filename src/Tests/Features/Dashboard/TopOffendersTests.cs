@@ -18,6 +18,26 @@ public class TopOffendersTests : IntegrationTestBase
     }
 
     [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithoutAFine_ThenReturnsZeroPlayers()
+    {
+        var application = CreateUserAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
+        await application.AddAsync(mockPlayer);
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<TopOffendersResult>(TopOffendersRouteFactory.Uri);
+
+        result.Should().NotBeNull();
+        result!.Players.Should().HaveCount(0);
+    }
+
+    [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithAFine_ThenReturnsOnePlayerWithAFine()
     {
         var application = CreateUserAuthenticatedApplication();
