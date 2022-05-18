@@ -1,0 +1,38 @@
+﻿@if(_result is null)
+{
+    <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="50px"/>    
+    @for(int i = 0; i < 3; i++)
+    {
+        <MudItem xs=12>
+            <MudCard Class="ma-1">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudSkeleton SkeletonType=SkeletonType.Circle Width="50px" Height="50px"></MudSkeleton>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudSkeleton SkeletonType=SkeletonType.Text Width="200px" Height="40px"></MudSkeleton>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudSkeleton SkeletonType=SkeletonType.Text Width="40px" Height="40px"></MudSkeleton>
+                    </CardHeaderActions>
+                </MudCardHeader>
+            </MudCard>
+        </MudItem>
+    }
+}
+else
+{
+    <MudGrid>
+        <MudItem xs=12>
+            <PageHeader>
+                Top Team Fines
+            </PageHeader>
+        </MudItem>
+
+        <RankedList RankedItems="_result.Teams">
+            <NotEnoughItemsContent>
+                There aren't enough teams with fines quite yet. Check back later!
+            </NotEnoughItemsContent>
+        </RankedList>
+    </MudGrid>
+}

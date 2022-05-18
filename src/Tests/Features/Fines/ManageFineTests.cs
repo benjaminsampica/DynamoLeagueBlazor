@@ -45,16 +45,20 @@ public class ManageFineTests : IntegrationTestBase
     public async Task GivenAuthenticatedAdmin_WhenFineIsApproved_ThenUpdatesIt()
     {
         var application = CreateAdminAuthenticatedApplication();
-        var client = application.CreateClient();
-        var mockPlayer = CreateFakePlayer();
-        await application.AddAsync(mockPlayer);
 
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        await application.UpdateAsync(mockPlayer);
+        await application.AddAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = true;
         mockRequest.FineId = mockFine.Id;
+
+        var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, mockRequest);
 
@@ -69,16 +73,20 @@ public class ManageFineTests : IntegrationTestBase
     public async Task GivenAuthenticatedAdmin_WhenFineIsNotApproved_ThenDeletesIt()
     {
         var application = CreateAdminAuthenticatedApplication();
-        var client = application.CreateClient();
-        var mockPlayer = CreateFakePlayer();
-        await application.AddAsync(mockPlayer);
 
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        await application.UpdateAsync(mockPlayer);
+        await application.AddAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = false;
         mockRequest.FineId = mockFine.Id;
+
+        var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(ManageFineRouteFactory.Uri, mockRequest);
 

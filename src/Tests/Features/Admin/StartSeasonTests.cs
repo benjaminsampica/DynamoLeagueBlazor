@@ -47,7 +47,7 @@ public class StartSeasonTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAuthenticatedAdmin_WhenNoPlayerIsAFreeAgent_ThenReturnsFalse()
+    public async Task GivenAuthenticatedAdmin_WhenNotPlayerIsAFreeAgent_ThenReturnsFalse()
     {
         var application = CreateAdminAuthenticatedApplication();
 
@@ -56,6 +56,54 @@ public class StartSeasonTests : IntegrationTestBase
         var result = await client.GetFromJsonAsync<bool>(StartSeasonRouteFactory.Uri);
 
         result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task GivenAuthenticatedAdmin_WhenAFineExistsBeforeJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var stubPlayer = CreateFakePlayer();
+        stubPlayer.TeamId = stubTeam.Id;
+        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
+        mockFine.CreatedOn = DateTime.MinValue;
+        await application.AddAsync(stubPlayer);
+
+        var client = application.CreateClient();
+
+        var result = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
+
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var fine = await application.FirstOrDefaultAsync<Fine>();
+        fine.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GivenAuthenticatedAdmin_WhenAFineExistsOnOrAfterJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var stubPlayer = CreateFakePlayer();
+        stubPlayer.TeamId = stubTeam.Id;
+        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
+        mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
+        await application.AddAsync(stubPlayer);
+
+        var client = application.CreateClient();
+
+        var result = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
+
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var fine = await application.FirstOrDefaultAsync<Fine>();
+        fine.Should().NotBeNull();
     }
 
     [Fact]

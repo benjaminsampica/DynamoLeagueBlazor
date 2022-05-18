@@ -1,0 +1,20 @@
+﻿<MudCard Style=@BackgroundColor Class="ma-1">
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            <MudAvatar Image=@RankedItem.ImageUrl></MudAvatar>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="NameTypo">@RankedItem.Name</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudText Typo="AmountTypo" Color=Color.Success>@RankedItem.Amount</MudText>
+        </CardHeaderActions>
+    </MudCardHeader>
+</MudCard>
+
+@code {
+    [Parameter, EditorRequired] public IRankedItem RankedItem { get; set; } = null!;
+    [Parameter, EditorRequired] public Typo NameTypo { get; set; }
+    [Parameter, EditorRequired] public Typo AmountTypo { get; set; }
+    [Parameter] public string? BackgroundColor { get; set; }
+}

@@ -41,7 +41,7 @@ else
         @foreach(var team in _result.Teams)
         {
             var detailHref = $"/teams/{team.Id}";
-            <MudItem lg=4 xs=12 Class=grow>
+            <MudItem lg=4 xs=12 Class="grow mx-auto">
                 <a href=@detailHref>
                     <MudCard>
                         <MudCardHeader Class="mud-card-header-override">

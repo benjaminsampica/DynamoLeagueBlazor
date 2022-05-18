@@ -77,20 +77,12 @@ public record Player : BaseEntity
         return bid;
     }
 
-    public Player AddPlayer(string Name, string Position, string Headshot, int TeamId, int ContractValue)
-    {
-        var player = new Player(Name, Position, Headshot)
-        {
-            ContractValue = ContractValue,
-            TeamId = TeamId
-        };
-        player.SetToUnsigned();
-        return player;
-    }
-
     public Fine AddFine(decimal amount, string reason)
     {
-        var fine = new Fine(amount, reason, Id);
+        if (TeamId is null)
+            throw new InvalidOperationException("A player must first be assigned to a team to add a fine.");
+
+        var fine = new Fine(amount, reason, Id, TeamId!.Value);
 
         Fines.Add(fine);
 
