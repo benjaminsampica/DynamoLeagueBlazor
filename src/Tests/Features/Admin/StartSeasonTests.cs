@@ -47,7 +47,7 @@ public class StartSeasonTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAuthenticatedAdmin_WhenNoPlayerIsAFreeAgent_ThenReturnsFalse()
+    public async Task GivenAuthenticatedAdmin_WhenNotPlayerIsAFreeAgent_ThenReturnsFalse()
     {
         var application = CreateAdminAuthenticatedApplication();
 
