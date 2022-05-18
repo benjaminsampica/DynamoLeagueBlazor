@@ -39,9 +39,9 @@ public class TopOffendersTests : IntegrationTestBase
         result!.Players.Should().HaveCount(1);
 
         var firstPlayer = result.Players.First();
-        firstPlayer.TotalFineAmount.Should().Be(mockFine.Amount.ToString("C0"));
+        firstPlayer.Amount.Should().Be(mockFine.Amount.ToString("C0"));
         firstPlayer.Name.Should().Be(mockPlayer.Name);
-        firstPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
+        firstPlayer.ImageUrl.Should().Be(mockPlayer.HeadShotUrl);
     }
 
     [Fact]
@@ -73,6 +73,6 @@ public class TopOffendersTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);
-        result.Players.Should().OnlyContain(p => p.TotalFineAmount != lowestFine.Amount.ToString("C0"));
+        result.Players.Should().OnlyContain(p => p.Amount != lowestFine.Amount.ToString("C0"));
     }
 }

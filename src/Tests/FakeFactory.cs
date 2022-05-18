@@ -21,7 +21,8 @@ public class FakeFactory
     {
         var faker = new AutoFaker<Team>()
             .Ignore(f => f.Id)
-            .Ignore(f => f.Players);
+            .Ignore(f => f.Players)
+            .Ignore(f => f.Fines);
 
         return faker.Generate();
     }

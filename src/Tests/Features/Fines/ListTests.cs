@@ -22,11 +22,11 @@ public class ListTests : IntegrationTestBase
     {
         var application = CreateUserAuthenticatedApplication();
 
-        var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.TeamId = stubTeam.Id;
+        mockPlayer.TeamId = mockTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await application.AddAsync(mockPlayer);
 
@@ -44,5 +44,7 @@ public class ListTests : IntegrationTestBase
         fine.Status.Should().BeOneOf("Pending", "Approved");
         fine.Amount.Should().Be(mockFine.Amount.ToString("C2"));
         fine.Reason.Should().Be(mockFine.Reason);
+        fine.TeamName.Should().Be(mockTeam.Name);
+        fine.TeamLogoUrl.Should().Be(mockTeam.LogoUrl);
     }
 }

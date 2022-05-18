@@ -1,0 +1,9 @@
+﻿<div class="d-flex align-center">
+    <MudAvatar Image=@ImageUrl Class="mr-1"></MudAvatar>
+    @Name
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Name { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string ImageUrl { get; set; } = string.Empty;
+}

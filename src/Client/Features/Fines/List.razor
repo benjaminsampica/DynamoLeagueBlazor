@@ -21,6 +21,7 @@
             </Authorized>
         </AuthorizeView>
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.PlayerName)">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.TeamName)">Team</MudTableSortLabel></MudTh>
         <MudTh>Reason</MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Amount)">Amount</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Status)">Status</MudTableSortLabel></MudTh>
@@ -34,7 +35,10 @@
             </Authorized>
         </AuthorizeView>
         <MudTd DataLabel=Name>
-            <PlayerNameWithHeadShot Name="@fineItem.PlayerName" HeadShotUrl="@fineItem.PlayerHeadShotUrl" />
+            <NameWithImage Name="@fineItem.PlayerName" ImageUrl="@fineItem.PlayerHeadShotUrl" />
+        </MudTd>
+        <MudTd DataLabel=Team>
+            <NameWithImage Name="@fineItem.TeamName" ImageUrl="@fineItem.TeamLogoUrl" />
         </MudTd>
         <MudTd DataLabel=Reason>@fineItem.Reason</MudTd>
         <MudTd DataLabel=Amount>@fineItem.Amount</MudTd>

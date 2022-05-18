@@ -2,11 +2,11 @@
 
 namespace DynamoLeagueBlazor.Shared.Features.Dashboard;
 
-public class TopOffendersResult
+public class TopTeamFinesResult
 {
-    public IEnumerable<PlayerItem> Players { get; set; } = Array.Empty<PlayerItem>();
+    public IEnumerable<TeamItem> Teams { get; set; } = Array.Empty<TeamItem>();
 
-    public class PlayerItem : IRankedItem
+    public class TeamItem : IRankedItem
     {
         public string ImageUrl { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ public class TopOffendersResult
     }
 }
 
-public class TopOffendersRouteFactory
+public class TopTeamFinesRouteFactory
 {
-    public const string Uri = "api/dashboard/topoffenders";
+    public const string Uri = "api/dashboard/topteamfines";
 }
