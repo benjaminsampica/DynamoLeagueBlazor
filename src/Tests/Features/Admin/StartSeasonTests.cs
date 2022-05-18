@@ -65,6 +65,7 @@ public class StartSeasonTests : IntegrationTestBase
         var stubPlayer = CreateFakePlayer();
         await application.AddAsync(stubPlayer);
         var mockFine = CreateFakeFine(stubPlayer.Id);
+        mockFine.CreatedOn = DateTime.MinValue;
         await application.AddAsync(mockFine);
 
         var client = application.CreateClient();
@@ -75,6 +76,26 @@ public class StartSeasonTests : IntegrationTestBase
 
         var fine = await application.FirstOrDefaultAsync<Fine>();
         fine.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GivenAuthenticatedAdmin_WhenAFineExistsOnOrAfterJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
+    {
+        var application = CreateAdminAuthenticatedApplication();
+        var stubPlayer = CreateFakePlayer();
+        await application.AddAsync(stubPlayer);
+        var mockFine = CreateFakeFine(stubPlayer.Id);
+        mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
+        await application.AddAsync(mockFine);
+
+        var client = application.CreateClient();
+
+        var result = await client.PostAsync(StartSeasonRouteFactory.Uri, null);
+
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var fine = await application.FirstOrDefaultAsync<Fine>();
+        fine.Should().NotBeNull();
     }
 
     [Fact]
