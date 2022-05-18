@@ -40,7 +40,7 @@
             <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenAddFineDialog(context.Id)" />
         </MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Name)>
-            <PlayerNameWithHeadShot Name="@context.Name" HeadShotUrl="@context.HeadShotUrl" />
+            <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
         </MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>

@@ -1,0 +1,30 @@
+﻿@if(RankedItems.Count() > 2)
+{
+    <MudItem xs=12>
+        @{
+            var first  =RankedItems.First();
+            var second = RankedItems.Skip(1).First();
+            var third = RankedItems.Skip(2).First();
+        }
+        <RankedCard BackgroundColor="background: rgba(167, 149, 70, 1);" RankedItem="@first" NameTypo=Typo.h4 AmountTypo=Typo.h4/>
+        <RankedCard BackgroundColor="background: rgba(147, 147, 147, 1);" RankedItem="@second" NameTypo=Typo.h5 AmountTypo=Typo.h5/>
+        <RankedCard BackgroundColor="background: rgba(135, 106, 63, 1);" RankedItem="@third" NameTypo=Typo.h5 AmountTypo=Typo.h5/>
+    </MudItem>
+    @foreach(var rankedItem in RankedItems.Skip(3))
+    {
+        <MudItem xs=12 sm=4 Class="mx-auto">
+            <RankedCard RankedItem="@rankedItem" NameTypo=Typo.body1 AmountTypo=Typo.h6 />
+        </MudItem>
+    }
+}
+else
+{
+    <MudAlert Severity=Severity.Normal>
+        @NotEnoughItemsContent
+    </MudAlert>
+}
+
+@code {
+    [Parameter] public IEnumerable<IRankedItem> RankedItems { get; set; } = Array.Empty<IRankedItem>();
+    [Parameter, EditorRequired] public RenderFragment NotEnoughItemsContent { get; set; } = null!;
+}

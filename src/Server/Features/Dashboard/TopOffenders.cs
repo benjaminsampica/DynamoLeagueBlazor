@@ -43,7 +43,6 @@ public class TopOffendersHandler : IRequestHandler<TopOffendersQuery, TopOffende
     public async Task<TopOffendersResult> Handle(TopOffendersQuery request, CancellationToken cancellationToken)
     {
         var players = await _dbContext.Players
-            .Where(p => p.Fines.Any(f => f.Status))
             .OrderByDescending(p => p.Fines.Sum(f => f.Amount))
             .Take(10)
             .ProjectTo<TopOffendersResult.PlayerItem>(_mapper.ConfigurationProvider)
@@ -61,6 +60,7 @@ public class TopOffendersMappingProfile : Profile
     public TopOffendersMappingProfile()
     {
         CreateMap<Player, TopOffendersResult.PlayerItem>()
-            .ForMember(d => d.TotalFineAmount, mo => mo.MapFrom(s => s.Fines.Sum(f => f.Amount).ToString("C0")));
+            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Fines.Sum(f => f.Amount).ToString("C0")))
+            .ForMember(d => d.ImageUrl, mo => mo.MapFrom(s => s.HeadShotUrl));
     }
 }

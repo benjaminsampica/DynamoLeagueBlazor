@@ -34,11 +34,18 @@ public class AddFineTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
     {
         var application = CreateUserAuthenticatedApplication();
-        var client = application.CreateClient();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
         await application.AddAsync(mockPlayer);
+
         var stubRequest = CreateFakeValidRequest();
         stubRequest.PlayerId = mockPlayer.Id;
+
+        var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 

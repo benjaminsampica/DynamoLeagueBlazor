@@ -21,10 +21,14 @@ public class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneFine_ThenReturnsOneFine()
     {
         var application = CreateUserAuthenticatedApplication();
+
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
+
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = mockTeam.Id;
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await application.AddAsync(mockPlayer);
-        var mockFine = mockPlayer.AddFine(1, RandomString);
-        await application.UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -40,5 +44,7 @@ public class ListTests : IntegrationTestBase
         fine.Status.Should().BeOneOf("Pending", "Approved");
         fine.Amount.Should().Be(mockFine.Amount.ToString("C2"));
         fine.Reason.Should().Be(mockFine.Reason);
+        fine.TeamName.Should().Be(mockTeam.Name);
+        fine.TeamLogoUrl.Should().Be(mockTeam.LogoUrl);
     }
 }

@@ -43,7 +43,6 @@ public class ListHandler : IRequestHandler<ListQuery, FineListResult>
     public async Task<FineListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
         var fines = await _dbContext.Fines
-            .Include(p => p.Player)
             .OrderBy(f => f.Status)
             .ProjectTo<FineListResult.FineItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
@@ -63,6 +62,8 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.Status, mo => mo.MapFrom(s => s.Status ? "Approved" : "Pending"))
             .ForMember(d => d.PlayerName, mo => mo.MapFrom(s => s.Player.Name))
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShotUrl))
+            .ForMember(d => d.TeamName, mo => mo.MapFrom(s => s.Team.Name))
+            .ForMember(d => d.TeamLogoUrl, mo => mo.MapFrom(s => s.Team.LogoUrl))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C2")));
     }
 }

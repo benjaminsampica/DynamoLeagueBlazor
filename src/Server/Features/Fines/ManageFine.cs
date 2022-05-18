@@ -51,8 +51,8 @@ public class ManageFineHandler : IRequestHandler<ManageFineCommand>
             .AsTracking()
             .SingleAsync(f => f.Id == request.FineId, cancellationToken);
 
-        if (!request.Approved) _dbContext.Fines.Remove(fine!);
-        else fine!.Status = request.Approved;
+        if (!request.Approved) _dbContext.Fines.Remove(fine);
+        else fine.Status = request.Approved;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

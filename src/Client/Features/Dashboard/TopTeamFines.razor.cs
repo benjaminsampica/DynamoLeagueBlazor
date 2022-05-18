@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
 
-namespace DynamoLeagueBlazor.Client.Features.Dashboard.TopOffenders;
+namespace DynamoLeagueBlazor.Client.Features.Dashboard;
 
-public sealed partial class TopOffenders : IDisposable
+public sealed partial class TopTeamFines : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
 
-    private TopOffendersResult? _result;
+    private TopTeamFinesResult? _result;
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _result = await HttpClient.GetFromJsonAsync<TopOffendersResult>(TopOffendersRouteFactory.Uri, _cts.Token);
+            _result = await HttpClient.GetFromJsonAsync<TopTeamFinesResult>(TopTeamFinesRouteFactory.Uri, _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {

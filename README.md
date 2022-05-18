@@ -20,3 +20,15 @@ By default, a test account is created with administrator permissions with the fo
 Username `test@gmail.com`
 
 Password `hunter2`
+
+# Contributing
+
+Please make sure all tests pass before submitting a new pull request.
+
+## Adding a Migration
+
+New migrations can be added to the database by:
+
+1. Installing the dotnet ef tools via `dotnet tool install --global dotnet-ef`
+2. Running the following command with a command line while inside the `/src/Server` folder
+ `dotnet ef migrations add {YourMigrationName} -o ./Infrastructure/Migrations --context ApplicationDbContext --project DynamoLeagueBlazor.Server.csproj

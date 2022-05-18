@@ -21,11 +21,15 @@ public class TopOffendersTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithAFine_ThenReturnsOnePlayerWithAFine()
     {
         var application = CreateUserAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         var mockPlayer = CreateFakePlayer();
-        await application.AddAsync(mockPlayer);
-        var mockFine = CreateFakeFine(mockPlayer.Id);
+        mockPlayer.TeamId = stubTeam.Id;
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.Status = true;
-        await application.AddAsync(mockFine);
+        await application.AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -35,33 +39,33 @@ public class TopOffendersTests : IntegrationTestBase
         result!.Players.Should().HaveCount(1);
 
         var firstPlayer = result.Players.First();
-        firstPlayer.TotalFineAmount.Should().Be(mockFine.Amount.ToString("C0"));
+        firstPlayer.Amount.Should().Be(mockFine.Amount.ToString("C0"));
         firstPlayer.Name.Should().Be(mockPlayer.Name);
-        firstPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
+        firstPlayer.ImageUrl.Should().Be(mockPlayer.HeadShotUrl);
     }
 
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsElevenPlayersWithApprovedFines_ThenReturnsOnlyTopTenByFineAmount()
     {
         var application = CreateUserAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         foreach (var count in Enumerable.Range(0, 10))
         {
             var mockPlayer = CreateFakePlayer();
+            mockPlayer.TeamId = stubTeam.Id;
+            var fine = mockPlayer.AddFine(int.MaxValue, RandomString);
+            fine.Status = true;
             await application.AddAsync(mockPlayer);
-
-            var mockFine = CreateFakeFine(mockPlayer.Id);
-            mockFine.Status = true;
-            mockFine.Amount = int.MaxValue;
-            await application.AddAsync(mockFine);
         }
 
-        var sixthPlayer = CreateFakePlayer();
-        await application.AddAsync(sixthPlayer);
-
-        var lowestFine = CreateFakeFine(sixthPlayer.Id);
+        var eleventhPlayerWithFine = CreateFakePlayer();
+        eleventhPlayerWithFine.TeamId = stubTeam.Id;
+        var lowestFine = eleventhPlayerWithFine.AddFine(int.MinValue, RandomString);
         lowestFine.Status = true;
-        lowestFine.Amount = 1;
-        await application.AddAsync(lowestFine);
+        await application.AddAsync(eleventhPlayerWithFine);
 
         var client = application.CreateClient();
 
@@ -69,6 +73,6 @@ public class TopOffendersTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.Players.Should().HaveCount(10);
-        result.Players.Should().OnlyContain(p => p.TotalFineAmount != lowestFine.Amount.ToString("C0"));
+        result.Players.Should().OnlyContain(p => p.Amount != lowestFine.Amount.ToString("C0"));
     }
 }
