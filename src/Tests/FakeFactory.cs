@@ -26,24 +26,26 @@ public class FakeFactory
         return faker.Generate();
     }
 
-    public static Player CreateFakePlayer()
+    public static Player CreateFakePlayer(int? teamId = null)
     {
         var faker = new AutoFaker<Player>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Bids)
-            .Ignore(f => f.TeamId)
             .Ignore(f => f.Team)
-            .Ignore(f => f.Fines);
+            .Ignore(f => f.Fines)
+            .RuleFor(f => f.TeamId, teamId ?? null);
 
         return faker.Generate();
     }
 
-    public static Fine CreateFakeFine(int playerId)
+    public static Fine CreateFakeFine(int playerId, int teamId)
     {
         var faker = new AutoFaker<Fine>()
             .Ignore(f => f.Id)
             .Ignore(f => f.Player)
-            .RuleFor(f => f.PlayerId, playerId);
+            .Ignore(f => f.Team)
+            .RuleFor(f => f.PlayerId, playerId)
+            .RuleFor(f => f.TeamId, teamId);
 
         return faker.Generate();
     }
@@ -66,7 +68,6 @@ public class FakeFactory
     public static FakePosition CreateFakePosition() => new();
 
     public static string RandomString => AutoFaker.Generate<string>();
-
 }
 
 public class FakePosition : Position

@@ -21,10 +21,14 @@ public class ListTests : IntegrationTestBase
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneFine_ThenReturnsOneFine()
     {
         var application = CreateUserAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await application.AddAsync(mockPlayer);
-        var mockFine = mockPlayer.AddFine(1, RandomString);
-        await application.UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 

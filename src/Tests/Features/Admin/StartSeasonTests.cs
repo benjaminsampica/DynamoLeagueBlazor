@@ -62,11 +62,15 @@ public class StartSeasonTests : IntegrationTestBase
     public async Task GivenAuthenticatedAdmin_WhenAFineExistsBeforeJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
     {
         var application = CreateAdminAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         var stubPlayer = CreateFakePlayer();
-        await application.AddAsync(stubPlayer);
-        var mockFine = CreateFakeFine(stubPlayer.Id);
+        stubPlayer.TeamId = stubTeam.Id;
+        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = DateTime.MinValue;
-        await application.AddAsync(mockFine);
+        await application.AddAsync(stubPlayer);
 
         var client = application.CreateClient();
 
@@ -82,11 +86,15 @@ public class StartSeasonTests : IntegrationTestBase
     public async Task GivenAuthenticatedAdmin_WhenAFineExistsOnOrAfterJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
     {
         var application = CreateAdminAuthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
         var stubPlayer = CreateFakePlayer();
-        await application.AddAsync(stubPlayer);
-        var mockFine = CreateFakeFine(stubPlayer.Id);
+        stubPlayer.TeamId = stubTeam.Id;
+        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
-        await application.AddAsync(mockFine);
+        await application.AddAsync(stubPlayer);
 
         var client = application.CreateClient();
 
