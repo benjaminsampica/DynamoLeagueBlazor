@@ -82,6 +82,9 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
             player.SetToFreeAgent(date);
         }
 
+        var fines = _dbContext.Fines;
+        _dbContext.Fines.RemoveRange(fines);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
