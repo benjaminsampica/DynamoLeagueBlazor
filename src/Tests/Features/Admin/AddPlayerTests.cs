@@ -64,7 +64,7 @@ public class AddPlayerServerTests : IntegrationTestBase
         player.Should().NotBeNull();
         player!.Name.Should().Be(request.Name);
         player.Position.Should().Be(request.Position);
-        player.HeadShotUrl.Should().Be(request.HeadShot);
+        player.HeadShotUrl.Should().Be($"https://superflex.blob.core.windows.net/superflex-blob/Headshots/{request.Name.Replace(' ', '-')}.png");
         player.TeamId.Should().Be(team.Id);
         player.ContractValue.Should().Be(request.ContractValue);
     }

@@ -53,7 +53,7 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
     }
     public async Task<int> Handle(AddPlayerCommand request, CancellationToken cancellationToken)
     {
-        var player = new Player(request.Name, request.Position, request.Headshot)
+        var player = new Player(request.Name, request.Position)
         {
             ContractValue = request.ContractValue,
             TeamId = request.TeamId

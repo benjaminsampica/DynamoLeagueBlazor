@@ -2,11 +2,11 @@
 
 public record Player : BaseEntity
 {
-    public Player(string name, string position, string headShotUrl)
+    public Player(string name, string position)
     {
         Name = name;
         Position = position;
-        HeadShotUrl = headShotUrl;
+        HeadShotUrl = $"https://superflex.blob.core.windows.net/superflex-blob/Headshots/{@Name.Replace(' ', '-')}.png";
     }
     public string Name { get; private set; }
     public string Position { get; set; }
