@@ -23,6 +23,9 @@ public class IntegrationTestBase : IAsyncLifetime
     public Task DisposeAsync() => Task.CompletedTask;
 
     public async Task InitializeAsync() => await ResetStateAsync();
+
+    public T GetRequiredService<T>() where T : class =>
+        _setupApplication.Services.GetRequiredService<T>();
 }
 
 

@@ -1,0 +1,14 @@
+﻿@page "/admin/refreshplayerheadshots"
+
+<Title>
+    @_title
+</Title>
+
+<LoadingButton @bind-IsLoading="_isDisabled" Icon=@Icons.Outlined.Refresh Color=Color.Primary OnClick=RefreshPlayerHeadshotsAsync>
+    <IsLoadingContent>
+        <MudText>Refreshing...</MudText>
+    </IsLoadingContent>
+    <ButtonContent>
+        <MudText>Refresh Player Headshots</MudText>
+    </ButtonContent>
+</LoadingButton>
