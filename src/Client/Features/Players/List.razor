@@ -23,7 +23,7 @@
     </MudGrid>
 </PageHeader>
 
-<MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)">
+<MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)" SortLabel="Sort By">
     <ToolBarContent>
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0" />
     </ToolBarContent>

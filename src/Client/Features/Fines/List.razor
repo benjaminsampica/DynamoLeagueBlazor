@@ -10,7 +10,7 @@
     @_title
 </PageHeader>
 
-<MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)" Context=fineItem> 
+<MudTable Items="_result.Fines" Dense=true Loading=_loading Filter="new Func<FineItem, bool>(FilterFunc)" Context=fineItem SortLabel="Sort By"> 
     <ToolBarContent>
         <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
     </ToolBarContent>
