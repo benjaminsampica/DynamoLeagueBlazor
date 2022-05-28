@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Fines;
@@ -15,6 +13,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 
 try
 {
