@@ -1,15 +1,51 @@
-﻿using System.Text.Json.Serialization;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
+using System.Text.Json.Serialization;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin.Shared;
 
-internal class PlayerHeadshotService
+public class PlayerHeadshotService : IPlayerHeadshotService
 {
+    private readonly HttpClient _httpClient;
+    private ILogger<PlayerHeadshotService> _logger;
+    private static PlayerDataResult? _playerDataResult;
 
+    public PlayerHeadshotService(HttpClient httpClient, ILogger<PlayerHeadshotService> logger)
+    {
+        _httpClient = httpClient;
+        _logger = logger;
+    }
 
+    public async Task<string?> FindPlayerHeadshotUrlAsync(string fullName, string position, CancellationToken cancellationToken)
+    {
+        if (_playerDataResult == null)
+        {
+            _playerDataResult = await _httpClient.GetFromJsonAsync<PlayerDataResult>(PlayerHeadshotRouteFactory.GetPlayersUri, cancellationToken);
+        }
 
+        var matchingPlayers = _playerDataResult!.Data.Players
+            .Where(p => p.FullName == fullName && p.Position == position)
+            .ToList();
+
+        if (matchingPlayers.Count > 1)
+        {
+            _logger.LogError($"The player name of {fullName} with a position of {position} had more than one matching headshot.");
+
+            return null;
+        }
+        if (!matchingPlayers.Any())
+        {
+            _logger.LogError($"The player name of {fullName} with a position of {position} had no matching headshot.");
+
+            return null;
+        }
+
+        var metricResult = await _httpClient.GetFromJsonAsync<PlayerMetricDataResult>(PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayers.Single().PlayerId), cancellationToken: cancellationToken);
+
+        return metricResult!.Data.Player.Core.Avatar;
+    }
 }
 
-internal class PlayerProfilerRouteFactory
+internal class PlayerHeadshotRouteFactory
 {
     public const string Uri = "https://www.playerprofiler.com/api/v1";
     public const string GetPlayersUri = Uri + "/players";

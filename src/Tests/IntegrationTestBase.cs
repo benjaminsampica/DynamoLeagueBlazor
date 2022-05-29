@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Features.Admin.Shared;
+using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -124,6 +125,14 @@ internal class TestWebApplicationFactory : WebApplicationFactory<Program>
             {
                 options.AddApplicationAuthorizationPolicies();
             });
+
+            // Stub out calls to Player Profiler.
+            var descriptor = services.Single(d => d.ServiceType == typeof(IPlayerHeadshotService));
+            services.Remove(descriptor);
+            var stubPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
+            stubPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(RandomString);
+            services.AddSingleton(stubPlayerHeadshotService.Object);
         });
     }
 }

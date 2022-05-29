@@ -1,8 +1,10 @@
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
+using DynamoLeagueBlazor.Server.Features.Admin.Shared;
 using DynamoLeagueBlazor.Server.Features.Fines;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
@@ -73,6 +75,7 @@ try
     });
 
     builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
+    builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
         .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);

@@ -1,10 +1,5 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Server.Features.Admin;
-using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
-using Microsoft.EntityFrameworkCore;
-using MockHttp;
-using static DynamoLeagueBlazor.Server.Features.Admin.RefreshPlayerHeadshotsHandler;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
@@ -35,98 +30,19 @@ public class RefreshPlayerHeadshotsTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task WhenAPlayerIsMatchedOnNameAndPosition_ThenThePlayerHeadshotIsUpdated()
+    public async Task GivenAuthenticatedAdmin_ThenUpdatesAPlayerHeadshot()
     {
-        var mockHttpHandler = new MockHttpHandler();
-        var httpClient = new HttpClient(mockHttpHandler)
-        {
-            BaseAddress = new Uri(PlayerProfilerUri)
-        };
+        var application = CreateAdminAuthenticatedApplication();
+        var player = CreateFakePlayer();
+        var oldHeadshot = player.HeadShotUrl;
+        await application.AddAsync(player);
 
-        var stubPlayerDataResult = new AutoFaker<PlayerDataResult>().Generate();
-        mockHttpHandler.When(HttpMethod.Get, $"{PlayerProfilerUri}/players")
-            .RespondsWithJson(stubPlayerDataResult);
+        var client = application.CreateClient();
 
-        var matchingPlayer = stubPlayerDataResult.Data.Players.First();
+        var response = await client.PostAsync(RefreshPlayerHeadshotsRouteFactory.Uri, null);
 
-        var stubPlayerMetricDataResult = new AutoFaker<PlayerMetricDataResult>().Generate();
-        stubPlayerMetricDataResult.Data.Player.PlayerId = matchingPlayer.PlayerId;
-        mockHttpHandler.When(HttpMethod.Get, $"{PlayerProfilerUri}/player/{matchingPlayer.PlayerId}")
-            .RespondsWithJson(stubPlayerMetricDataResult);
-
-        var dbContext = GetRequiredService<ApplicationDbContext>();
-
-        var mockPlayer = CreateFakePlayer();
-        mockPlayer.Name = matchingPlayer.FullName;
-        mockPlayer.Position = matchingPlayer.Position;
-        dbContext.Players.Add(mockPlayer);
-        await dbContext.SaveChangesAsync();
-
-        var sut = new RefreshPlayerHeadshotsHandler(dbContext, httpClient);
-
-        await sut.Handle(new RefreshPlayerHeadshotsCommand(), CancellationToken.None);
-
-        var expectedPlayer = await dbContext.Players.FirstAsync();
-        expectedPlayer.HeadShotUrl.Should().Be(stubPlayerMetricDataResult.Data.Player.Core.Avatar);
-    }
-
-    [Fact]
-    public async Task WhenAPlayerIsNotMatchedOnName_ThenTheHeadshotRemainsUnchanged()
-    {
-        var mockHttpHandler = new MockHttpHandler();
-        var httpClient = new HttpClient(mockHttpHandler)
-        {
-            BaseAddress = new Uri(PlayerProfilerUri)
-        };
-
-        var stubPlayerDataResult = new AutoFaker<PlayerDataResult>().Generate();
-        mockHttpHandler.When(HttpMethod.Get, $"{PlayerProfilerUri}/players")
-            .RespondsWithJson(stubPlayerDataResult);
-
-        var matchingPlayer = stubPlayerDataResult.Data.Players.First();
-
-        var dbContext = GetRequiredService<ApplicationDbContext>();
-
-        var mockPlayer = CreateFakePlayer();
-        mockPlayer.Position = matchingPlayer.Position;
-        dbContext.Players.Add(mockPlayer);
-        await dbContext.SaveChangesAsync();
-
-        var sut = new RefreshPlayerHeadshotsHandler(dbContext, httpClient);
-
-        await sut.Handle(new RefreshPlayerHeadshotsCommand(), CancellationToken.None);
-
-        var expectedPlayer = await dbContext.Players.FirstAsync();
-        expectedPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
-    }
-
-    [Fact]
-    public async Task WhenAPlayerIsNotMatchedOnPosition_ThenTheHeadshotRemainsUnchanged()
-    {
-        var mockHttpHandler = new MockHttpHandler();
-        var httpClient = new HttpClient(mockHttpHandler)
-        {
-            BaseAddress = new Uri(PlayerProfilerUri)
-        };
-
-        var stubPlayerDataResult = new AutoFaker<PlayerDataResult>().Generate();
-        mockHttpHandler.When(HttpMethod.Get, $"{PlayerProfilerUri}/players")
-            .RespondsWithJson(stubPlayerDataResult);
-
-        var matchingPlayer = stubPlayerDataResult.Data.Players.First();
-
-        var dbContext = GetRequiredService<ApplicationDbContext>();
-
-        var mockPlayer = CreateFakePlayer();
-        mockPlayer.Name = matchingPlayer.FullName;
-        dbContext.Players.Add(mockPlayer);
-        await dbContext.SaveChangesAsync();
-
-        var sut = new RefreshPlayerHeadshotsHandler(dbContext, httpClient);
-
-        await sut.Handle(new RefreshPlayerHeadshotsCommand(), CancellationToken.None);
-
-        var expectedPlayer = await dbContext.Players.FirstAsync();
-        expectedPlayer.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
+        response.Should().BeSuccessful();
+        var expectedPlayerWithNewHeadshot = await application.FirstOrDefaultAsync<Player>();
+        expectedPlayerWithNewHeadshot!.HeadShotUrl.Should().NotBe(oldHeadshot);
     }
 }

@@ -3,13 +3,13 @@ using AutoMapper.QueryableExtensions;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static DynamoLeagueBlazor.Shared.Features.Teams.TeamNameListResult;
+using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
 
@@ -31,33 +31,48 @@ public class AddPlayerController : ControllerBase
     public async Task<int> PostAsync([FromBody] AddPlayerRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<AddPlayerCommand>(request);
+
         return await _mediator.Send(command, cancellationToken);
     }
 
-    [HttpGet]
-    public async Task<TeamNameListResult> GetAsync(CancellationToken cancellationToken)
+    [HttpGet("teams")]
+    public async Task<TeamNameListResult> GetTeamsAsync(CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new ListQuery(), cancellationToken);
+        return await _mediator.Send(new TeamListQuery(), cancellationToken);
+    }
+
+    [HttpGet("playerpreview")]
+    public async Task<PlayerPreviewResponse> GetPlayerHeadshotUrlAsync([FromQuery] PlayerPreviewRequest request, CancellationToken cancellationToken)
+    {
+        var findPlayerPreviewRequest = _mapper.Map<FindPlayerPreviewRequest>(request);
+
+        return await _mediator.Send(findPlayerPreviewRequest, cancellationToken);
     }
 }
 
-
-public record AddPlayerCommand(string Name, string Position, string Headshot, int TeamId, int ContractValue) : IRequest<int> { }
+public record AddPlayerCommand(string Name, string Position, int TeamId, int ContractValue) : IRequest<int> { }
 
 public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
 {
     private readonly ApplicationDbContext _dbContext;
-    public AddPlayerHandler(ApplicationDbContext dbContext)
+    private readonly IPlayerHeadshotService _playerHeadshotService;
+
+    public AddPlayerHandler(ApplicationDbContext dbContext, IPlayerHeadshotService playerHeadshotService)
     {
         _dbContext = dbContext;
+        _playerHeadshotService = playerHeadshotService;
     }
+
     public async Task<int> Handle(AddPlayerCommand request, CancellationToken cancellationToken)
     {
-        var player = new Player(request.Name, request.Position, request.Headshot)
+        var headshotUrl = await _playerHeadshotService.FindPlayerHeadshotUrlAsync(request.Name, request.Position, cancellationToken);
+
+        var player = new Player(request.Name, request.Position, headshotUrl!)
         {
             ContractValue = request.ContractValue,
             TeamId = request.TeamId
         };
+
         player.SetToUnsigned();
 
         _dbContext.Add(player);
@@ -67,19 +82,28 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
     }
 }
 
-public record ListQuery : IRequest<TeamNameListResult> { }
-public class ListHandler : IRequestHandler<ListQuery, TeamNameListResult>
+public class AddPlayerMappingProfile : Profile
+{
+    public AddPlayerMappingProfile()
+    {
+        CreateMap<AddPlayerRequest, AddPlayerCommand>();
+    }
+}
+
+public record TeamListQuery : IRequest<TeamNameListResult> { }
+
+public class TeamListHandler : IRequestHandler<TeamListQuery, TeamNameListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public ListHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public TeamListHandler(ApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
-    public async Task<TeamNameListResult> Handle(ListQuery request, CancellationToken cancellationToken)
+    public async Task<TeamNameListResult> Handle(TeamListQuery request, CancellationToken cancellationToken)
     {
         var teams = await _dbContext.Teams
                 .ProjectTo<TeamNameItem>(_mapper.ConfigurationProvider)
@@ -91,17 +115,41 @@ public class ListHandler : IRequestHandler<ListQuery, TeamNameListResult>
         };
     }
 }
-public class ListMappingProfile : Profile
+
+public class TeamListMappingProfile : Profile
 {
-    public ListMappingProfile()
+    public TeamListMappingProfile()
     {
         CreateMap<Team, TeamNameItem>();
     }
 }
-public class AddPlayerMappingProfile : Profile
+
+public record FindPlayerPreviewRequest(string Name, string Position) : IRequest<PlayerPreviewResponse> { }
+
+public class FindPlayerPreviewRequestHandler : IRequestHandler<FindPlayerPreviewRequest, PlayerPreviewResponse>
 {
-    public AddPlayerMappingProfile()
+    private readonly IPlayerHeadshotService _playerHeadshotService;
+
+    public FindPlayerPreviewRequestHandler(IPlayerHeadshotService playerHeadshotService)
     {
-        CreateMap<AddPlayerRequest, AddPlayerCommand>();
+        _playerHeadshotService = playerHeadshotService;
+    }
+
+    public async Task<PlayerPreviewResponse> Handle(FindPlayerPreviewRequest request, CancellationToken cancellationToken)
+    {
+        var headshotUrl = await _playerHeadshotService.FindPlayerHeadshotUrlAsync(request.Name, request.Position, cancellationToken);
+
+        return new PlayerPreviewResponse
+        {
+            HeadshotUrl = headshotUrl
+        };
+    }
+}
+
+public class FindPlayerPreviewMappingProfile : Profile
+{
+    public FindPlayerPreviewMappingProfile()
+    {
+        CreateMap<PlayerPreviewRequest, FindPlayerPreviewRequest>();
     }
 }

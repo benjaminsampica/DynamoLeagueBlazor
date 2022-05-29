@@ -1,6 +1,6 @@
-﻿using DynamoLeagueBlazor.Server.Features.Admin.Shared;
-using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Shared.Features.Admin;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,35 +35,21 @@ public record RefreshPlayerHeadshotsCommand : IRequest<Unit> { }
 public class RefreshPlayerHeadshotsHandler : IRequestHandler<RefreshPlayerHeadshotsCommand>
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly HttpClient _httpClient;
+    private readonly IPlayerHeadshotService _playerHeadshotService;
 
-    public RefreshPlayerHeadshotsHandler(ApplicationDbContext dbContext, HttpClient httpClient)
+    public RefreshPlayerHeadshotsHandler(ApplicationDbContext dbContext, IPlayerHeadshotService playerHeadshotService)
     {
         _dbContext = dbContext;
-        _httpClient = httpClient;
+        _playerHeadshotService = playerHeadshotService;
     }
 
     public async Task<Unit> Handle(RefreshPlayerHeadshotsCommand request, CancellationToken cancellationToken)
     {
-        var playerResult = await _httpClient.GetFromJsonAsync<PlayerDataResult>(PlayerProfilerRouteFactory.GetPlayersUri, cancellationToken: cancellationToken);
-
-        if (playerResult != null)
+        var players = await _dbContext.Players.AsTracking().ToListAsync(cancellationToken);
+        foreach (var player in players)
         {
-            foreach (var player in playerResult.Data.Players)
-            {
-                var matchingDynamoLeaguePlayer = await _dbContext.Players
-                    .AsTracking()
-                    .SingleOrDefaultAsync(p =>
-                        p.Name == player.FullName
-                        && p.Position == player.Position,
-                        cancellationToken);
-
-                if (matchingDynamoLeaguePlayer is null) continue;
-
-                var metricResult = await _httpClient.GetFromJsonAsync<PlayerMetricDataResult>(PlayerProfilerRouteFactory.GetPlayerUri(player.PlayerId), cancellationToken: cancellationToken);
-
-                matchingDynamoLeaguePlayer.HeadShotUrl = metricResult!.Data.Player.Core.Avatar;
-            }
+            string? headshot = await _playerHeadshotService.FindPlayerHeadshotUrlAsync(player.Name, player.Position, cancellationToken);
+            player.HeadShotUrl = headshot!;
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,8 @@
 using DynamoLeagueBlazor.Client;
 using DynamoLeagueBlazor.Client.Areas.Identity;
+using DynamoLeagueBlazor.Client.Features.Admin;
 using DynamoLeagueBlazor.Client.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components.Web;
@@ -38,6 +40,7 @@ try
     });
 
     builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
+    builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
     var host = builder.Build();
 
