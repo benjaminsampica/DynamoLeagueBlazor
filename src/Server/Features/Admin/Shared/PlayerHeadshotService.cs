@@ -26,16 +26,8 @@ public class PlayerHeadshotService : IPlayerHeadshotService
             .Where(p => p.FullName == fullName && p.Position == position)
             .ToList();
 
-        if (matchingPlayers.Count > 1)
+        if (matchingPlayers.Count != 1)
         {
-            _logger.LogError($"The player name of {fullName} with a position of {position} had more than one matching headshot.");
-
-            return null;
-        }
-        if (!matchingPlayers.Any())
-        {
-            _logger.LogError($"The player name of {fullName} with a position of {position} had no matching headshot.");
-
             return null;
         }
 
