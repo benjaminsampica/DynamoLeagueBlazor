@@ -121,6 +121,7 @@ jobs:
           **/offline_files/**
   publish-test-results:
     runs-on: linux
+    needs: build-and-deploy
     if: github.event_name == 'pull_request'
     steps:
     - name: Download test results
