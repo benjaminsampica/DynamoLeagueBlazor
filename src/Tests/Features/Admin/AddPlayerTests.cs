@@ -3,6 +3,7 @@ using DynamoLeagueBlazor.Client.Features.Admin;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using System.Net.Http.Json;
 using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
@@ -87,6 +88,8 @@ public class AddPlayerUITests : UITestBase
     [Fact]
     public void WhenPageLoads_ThenPopulatesListOfTeams()
     {
+        TestContext!.Services.AddSingleton(Mock.Of<IPlayerHeadshotService>());
+
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
@@ -101,6 +104,11 @@ public class AddPlayerUITests : UITestBase
     [Fact]
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
+        var mockPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
+        mockPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(RandomString);
+        TestContext!.Services.AddSingleton(mockPlayerHeadshotService.Object);
+
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
