@@ -1,6 +1,6 @@
-﻿using DynamoLeagueBlazor.Server.Features.Admin.Shared;
-using DynamoLeagueBlazor.Server.Infrastructure;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
