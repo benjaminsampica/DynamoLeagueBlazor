@@ -35,7 +35,7 @@ jobs:
       if: github.event_name == 'pull_request'
       uses: romeovs/lcov-reporter-action@v0.3.1
       with:
-        lcov-file: ./coverage.lcov
+        lcov-file: .src/tests/coverage.lcov
         delete-old-comments: true
         filter-changed-files: true
     - name: Publish
