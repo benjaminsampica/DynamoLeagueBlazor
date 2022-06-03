@@ -31,12 +31,13 @@ jobs:
       run: dotnet restore
     - name: Test
       run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=Coverage/results.lcov
-    - name: Upload tests
-      uses: actions/upload-artifact@v3
+    - name: Code Coverage Report
       if: github.event_name == 'pull_request'
+      uses: romeovs/lcov-reporter-action@v0.2.11
       with:
-        name: test-results
-        path: '**/coverage/'
+        lcov-file: Coverage/coverage.lcov
+        delete-old-comments: true
+        filter-changed-files: true
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v')
       run: dotnet publish -c Release -o 'drop' 
@@ -122,17 +123,3 @@ jobs:
         dangerous-clean-slate: true
         exclude: |
           **/offline_files/**
-  publish-test-results:
-    runs-on: windows-latest
-    needs: build-and-deploy
-    if: github.event_name == 'pull_request'
-    steps:
-    - name: Download test results
-      uses: actions/download-artifact@v3
-      with:
-        name: test-results
-    - name: Code Coverage Report
-      uses: romeovs/lcov-reporter-action@v0.2.11
-      with:
-        delete-old-comments: true
-        filter-changed-files: trues
