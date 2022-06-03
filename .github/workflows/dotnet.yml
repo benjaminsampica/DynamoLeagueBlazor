@@ -26,8 +26,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=lcov --results-directory ./coverage
-    - uses: actions/upload-artifact@v3
+      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=Coverage/ /p:CoverletOutputFormat=lcov
+    - name: Upload tests
+      uses: actions/upload-artifact@v3
       if: github.event_name == 'pull_request'
       with:
         name: test-results
@@ -118,7 +119,7 @@ jobs:
         exclude: |
           **/offline_files/**
   publish-test-results:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build-and-deploy
     if: github.event_name == 'pull_request'
     steps:
