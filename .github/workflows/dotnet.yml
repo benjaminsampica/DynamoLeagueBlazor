@@ -25,10 +25,8 @@ jobs:
       run: dotnet workload install wasm-tools 
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore -c Release
     - name: Test
-      run: dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
     - uses: actions/upload-artifact@v3
       if: github.event_name == 'pull_request'
       with:
