@@ -1,5 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Admin;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -14,17 +14,25 @@ public sealed partial class AddPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject] private IPlayerHeadshotService PlayerHeadshotService { get; set; } = null!;
 
     private TeamNameListResult _teamList = new();
-    private AddPlayerRequest _form = new();
-    private bool _processingForm;
+    private AddPlayerRequest _addPlayerForm = new();
+    private AddPlayerRequestValidator _validator = null!;
+    private PlayerPreviewRequest _playerPreviewForm = new();
+    private string _previewHeadshotUrl = string.Empty;
+    private bool _isPreviewButtonDisabled;
+    private bool _isProcessingForm;
+    private const string _title = "Add Player";
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
+        _validator = new(PlayerHeadshotService);
+
         try
         {
-            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.Uri, _cts.Token) ?? new TeamNameListResult();
+            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.GetTeamListUri, _cts.Token) ?? new TeamNameListResult();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -34,16 +42,16 @@ public sealed partial class AddPlayer : IDisposable
 
     private async Task OnValidSubmitAsync()
     {
-        _processingForm = true;
+        _isProcessingForm = true;
 
         try
         {
-            var response = await HttpClient.PostAsJsonAsync(AddPlayerRouteFactory.Uri, _form);
+            var response = await HttpClient.PostAsJsonAsync(AddPlayerRouteFactory.Uri, _addPlayerForm);
 
             if (response.IsSuccessStatusCode)
             {
                 SnackBar.Add("Player successfully added.", Severity.Success);
-                _form = new();
+                _addPlayerForm = new();
             }
             else
             {
@@ -55,12 +63,58 @@ public sealed partial class AddPlayer : IDisposable
             exception.Redirect();
         }
 
-        _processingForm = false;
+        _isProcessingForm = false;
+    }
+
+    private async Task PreviewHeadshotAsync()
+    {
+        _isPreviewButtonDisabled = true;
+
+        try
+        {
+            var response = await HttpClient.GetFromJsonAsync<PlayerPreviewResponse>(AddPlayerRouteFactory.CreatePlayerPreviewUri(_playerPreviewForm.Name, _playerPreviewForm.Position), _cts.Token);
+
+            if (response!.HeadshotUrl is null)
+            {
+                SnackBar.Add("Player headshot not found - check the name or position.", Severity.Warning);
+            }
+
+            _previewHeadshotUrl = response.HeadshotUrl ?? string.Empty;
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+
+        _isPreviewButtonDisabled = false;
+    }
+
+    private void MapToHeadshotForm()
+    {
+        _playerPreviewForm.Name = _addPlayerForm.Name;
+        _playerPreviewForm.Position = _addPlayerForm.Position;
     }
 
     public void Dispose()
     {
         _cts.Cancel();
         _cts.Dispose();
+    }
+}
+
+public class PlayerHeadshotService : IPlayerHeadshotService
+{
+    private readonly HttpClient _httpClient;
+
+    public PlayerHeadshotService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public async Task<string?> FindPlayerHeadshotUrlAsync(string fullName, string position, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.GetFromJsonAsync<PlayerPreviewResponse>(AddPlayerRouteFactory.CreatePlayerPreviewUri(fullName, position), cancellationToken);
+
+        return response!.HeadshotUrl;
     }
 }

@@ -2,11 +2,11 @@
 using DynamoLeagueBlazor.Client.Features.Admin;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
-using DynamoLeagueBlazor.Shared.Features.Teams;
-using Moq;
+using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using System.Net.Http.Json;
-using static DynamoLeagueBlazor.Shared.Features.Teams.TeamNameListResult;
+using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
 using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin;
@@ -20,7 +20,7 @@ public class AddPlayerServerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(AddPlayerRouteFactory.Uri);
+        var response = await client.PostAsync(AddPlayerRouteFactory.Uri, null);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -32,7 +32,7 @@ public class AddPlayerServerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync(AddPlayerRouteFactory.Uri);
+        var response = await client.PostAsync(AddPlayerRouteFactory.Uri, null);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -49,7 +49,6 @@ public class AddPlayerServerTests : IntegrationTestBase
         {
             Name = RandomString,
             Position = Position.Defense.Name,
-            HeadShot = RandomString,
             TeamId = team.Id,
             ContractValue = int.MaxValue
         };
@@ -58,13 +57,13 @@ public class AddPlayerServerTests : IntegrationTestBase
 
         var response = await client.PostAsJsonAsync(AddPlayerRouteFactory.Uri, request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().BeSuccessful();
 
         var player = await application.FirstOrDefaultAsync<Player>();
         player.Should().NotBeNull();
         player!.Name.Should().Be(request.Name);
         player.Position.Should().Be(request.Position);
-        player.HeadShotUrl.Should().Be(request.HeadShot);
+        player.HeadShotUrl.Should().NotBeEmpty();
         player.TeamId.Should().Be(team.Id);
         player.ContractValue.Should().Be(request.ContractValue);
     }
@@ -89,7 +88,9 @@ public class AddPlayerUITests : UITestBase
     [Fact]
     public void WhenPageLoads_ThenPopulatesListOfTeams()
     {
-        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
+        TestContext!.Services.AddSingleton(Mock.Of<IPlayerHeadshotService>());
+
+        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
         var cut = RenderComponent<AddPlayer>();
@@ -103,7 +104,12 @@ public class AddPlayerUITests : UITestBase
     [Fact]
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
-        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.Uri)
+        var mockPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
+        mockPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(RandomString);
+        TestContext!.Services.AddSingleton(mockPlayerHeadshotService.Object);
+
+        GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
         GetHttpHandler.When(HttpMethod.Post, AddPlayerRouteFactory.Uri)
@@ -125,9 +131,6 @@ public class AddPlayerUITests : UITestBase
         var team = cut.FindComponent<MudSelect<int>>();
         await team.InvokeAsync(async () => await team.Instance.ValueChanged.InvokeAsync(_teamNameItem.Id));
 
-        var headShot = cut.Find($"#{nameof(AddPlayerRequest.HeadShot)}");
-        headShot.Change(RandomString);
-
         var submitButton = cut.Find("button");
         submitButton.Click();
 
@@ -142,7 +145,7 @@ public class AddPlayerRequestValidatorTests
 
     public AddPlayerRequestValidatorTests()
     {
-        _validator = new AddPlayerRequestValidator();
+        _validator = new AddPlayerRequestValidator(Mock.Of<IPlayerHeadshotService>());
     }
 
     [Theory]
@@ -155,20 +158,6 @@ public class AddPlayerRequestValidatorTests
 
         var result = _validator.Validate(request);
         var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.Name));
-
-        hasNoErrors.Should().Be(expectedResult);
-    }
-
-    [Theory]
-    [InlineData(" ", false)]
-    [InlineData(null, false)]
-    [InlineData("Test", true)]
-    public void GivenDifferentPlayerHeadShots_ThenReturnsExpectedResult(string headShot, bool expectedResult)
-    {
-        var request = new AddPlayerRequest() { HeadShot = headShot };
-
-        var result = _validator.Validate(request);
-        var hasNoErrors = result.Errors.All(e => e.PropertyName != nameof(AddPlayerRequest.HeadShot));
 
         hasNoErrors.Should().Be(expectedResult);
     }
