@@ -30,12 +30,12 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=coverage.lcov
+      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=./coverage.lcov
     - name: Code Coverage Report
       if: github.event_name == 'pull_request'
       uses: romeovs/lcov-reporter-action@v0.3.1
       with:
-        lcov-file: '**/coverage.lcov'
+        lcov-file: ./coverage.lcov
         delete-old-comments: true
         filter-changed-files: true
     - name: Publish
