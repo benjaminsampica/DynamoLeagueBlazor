@@ -30,7 +30,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=Coverage/ /p:CoverletOutputFormat=lcov
+      run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=Coverage/results.lcov
     - name: Upload tests
       uses: actions/upload-artifact@v3
       if: github.event_name == 'pull_request'
