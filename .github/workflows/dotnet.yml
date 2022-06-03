@@ -31,13 +31,11 @@ jobs:
       run: dotnet restore
     - name: Test
       run: dotnet test -c Release --collect:"XPlat Code Coverage" --results-directory ./coverage
-    - name: Code Coverage Report
+    - uses: actions/upload-artifact@v3
       if: github.event_name == 'pull_request'
-      uses: romeovs/lcov-reporter-action@v0.3.1
       with:
-        lcov-file: .src/tests/coverage.lcov
-        delete-old-comments: true
-        filter-changed-files: true
+        name: test-results
+        path: '**/coverage/'
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v')
       run: dotnet publish -c Release -o 'drop' 
