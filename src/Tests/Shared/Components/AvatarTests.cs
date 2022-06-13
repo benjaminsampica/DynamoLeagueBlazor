@@ -20,6 +20,6 @@ public class AvatarTests : UITestBase
             parameters.Add(p => p.Image, RandomString);
         });
 
-        component.Markup.Should().Contain("svg");
+        component.Markup.Should().Contain("img");
     }
 }
