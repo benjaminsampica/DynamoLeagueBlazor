@@ -1,0 +1,17 @@
+﻿@if(string.IsNullOrEmpty(Image))
+{
+    <div class="mud-theme-dark pa-2 rounded-circle">
+        <MudIcon Icon=@Icons.Filled.Person Size=Size @attributes=AllOtherAttributes></MudIcon>
+    </div>
+}
+else
+{
+    <MudAvatar Image=@Image Size=Size @attributes=AllOtherAttributes></MudAvatar>
+}
+
+
+@code {
+    [Parameter] public string? Image { get; set; }
+    [Parameter] public Size Size { get; set; } = Size.Medium;
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AllOtherAttributes { get; set; }
+}
