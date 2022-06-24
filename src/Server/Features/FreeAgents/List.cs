@@ -77,15 +77,9 @@ public class ListMappingProfile : Profile
                 s.Bids.Any() &&
                 s.Bids.GetHighestBidder().TeamId == currentUserTeamId)
             )
-            .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
-            .ForMember(d => d.BiddingEndDate, mo => mo.MapFrom(s => s.EndOfFreeAgency))
-            .ForMember(d => d.HighestBidValue, mo => mo.MapFrom(s => s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount : 0))
-            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s =>
-                s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount.ToString("C0")
-                : string.Empty)
-            
+            .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
+            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s => s.Bids.Any()
+                ? s.Bids.GetHighestBidder().Amount : 0)
             );
     }
 }

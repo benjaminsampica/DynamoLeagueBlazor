@@ -25,8 +25,8 @@
                 <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Name)">Name</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Position)">Position</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.Team)">Former Team</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.BiddingEndDate)">Bidding Ends</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.HighestBidValue)">Highest Bid</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.BiddingEnds)">Bidding Ends</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<FreeAgentItem,object>(x=> x.HighestBid)">Highest Bid</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
@@ -40,7 +40,7 @@
                 </MudTd>
                 <MudTd DataLabel="Player Position">@context.Position</MudTd>
                 <MudTd DataLabel="Player Team">@context.Team</MudTd>
-                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds</MudTd>
+                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds.ToShortDateString()</MudTd>
                 <MudTd DataLabel="Highest Bid">
                     <div>
                         @context.HighestBid
