@@ -12,6 +12,7 @@ public class PlayerListResult
         public string Position { get; set; }
         public string Team { get; set; }
         public string ContractValue { get; set; }
+        public int ContractValueAmount { get; set; }
         public string YearContractExpires { get; set; }
     }
 }

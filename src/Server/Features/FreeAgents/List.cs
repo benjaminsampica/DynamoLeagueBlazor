@@ -54,6 +54,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
             .Include(p => p.Team)
             .Include(p => p.Bids)
             .WhereIsFreeAgent()
+            .OrderBy(p => p.EndOfFreeAgency)
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
 
@@ -77,10 +78,14 @@ public class ListMappingProfile : Profile
                 s.Bids.GetHighestBidder().TeamId == currentUserTeamId)
             )
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
+            .ForMember(d => d.BiddingEndDate, mo => mo.MapFrom(s => s.EndOfFreeAgency))
+            .ForMember(d => d.HighestBidValue, mo => mo.MapFrom(s => s.Bids.Any()
+                ? s.Bids.GetHighestBidder().Amount : 0))
             .ForMember(d => d.HighestBid, mo => mo.MapFrom(s =>
                 s.Bids.Any()
                 ? s.Bids.GetHighestBidder().Amount.ToString("C0")
                 : string.Empty)
+            
             );
     }
 }

@@ -13,6 +13,7 @@ public class FineListResult
         public string TeamLogoUrl { get; set; }
         public string Reason { get; set; }
         public string Amount { get; set; }
+        public int AmountValue { get; set; }
         public string Status { get; set; }
     }
 }

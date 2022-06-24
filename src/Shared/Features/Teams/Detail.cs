@@ -17,7 +17,9 @@ public class TeamDetailResult
         public string Name { get; set; }
         public string Position { get; set; }
         public string ContractValue { get; set; }
+        public int ContractValueAmount { get; set; }
         public string YearContractExpires { get; set; }
+        public DateTime YearContractExpiresDate { get; set; }
     }
 }
 
