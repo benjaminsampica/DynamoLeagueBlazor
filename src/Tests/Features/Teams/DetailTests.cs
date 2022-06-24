@@ -77,7 +77,7 @@ public class DetailTests : IntegrationTestBase
         unsignedPlayer.HeadShotUrl.Should().Be(mockUnsignedPlayer.HeadShotUrl);
         unsignedPlayer.Name.Should().Be(mockUnsignedPlayer.Name);
         unsignedPlayer.Position.Should().Be(mockUnsignedPlayer.Position);
-        unsignedPlayer.YearContractExpires.Should().Be(mockUnsignedPlayer.YearContractExpires?? 0);
+        unsignedPlayer.YearContractExpires.Should().Be(mockUnsignedPlayer.YearContractExpires);
         unsignedPlayer.ContractValue.Should().Be(mockUnsignedPlayer.ContractValue);
     }
 }
