@@ -32,7 +32,7 @@
         <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Team)">@nameof(PlayerItem.Team)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValueAmount)">Contract Value</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -44,8 +44,8 @@
         </MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
-        <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
-        <MudTd DataLabel="Contract Length">@context.YearContractExpires</MudTd>
+        <MudTd DataLabel="Contract Value">@context.ContractValue.ToString("C0")</MudTd>
+        <MudTd DataLabel="Contract Length">@context.YearContractExpires.ToString()</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager />

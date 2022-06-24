@@ -42,7 +42,7 @@ public class ListTests : IntegrationTestBase
         fine.PlayerHeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         fine.PlayerName.Should().Be(mockPlayer.Name);
         fine.Status.Should().BeOneOf("Pending", "Approved");
-        fine.Amount.Should().Be(mockFine.Amount.ToString("C2"));
+        fine.Amount.Should().Be(mockFine.Amount);
         fine.Reason.Should().Be(mockFine.Reason);
         fine.TeamName.Should().Be(mockTeam.Name);
         fine.TeamLogoUrl.Should().Be(mockTeam.LogoUrl);

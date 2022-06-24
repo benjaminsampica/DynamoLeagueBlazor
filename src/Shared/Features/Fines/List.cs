@@ -12,8 +12,7 @@ public class FineListResult
         public string TeamName { get; set; }
         public string TeamLogoUrl { get; set; }
         public string Reason { get; set; }
-        public string Amount { get; set; }
-        public int AmountValue { get; set; }
+        public decimal Amount { get; set; }
         public string Status { get; set; }
     }
 }

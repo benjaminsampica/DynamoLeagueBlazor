@@ -23,7 +23,7 @@
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.PlayerName)">Name</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.TeamName)">Team</MudTableSortLabel></MudTh>
         <MudTh>Reason</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.AmountValue)">Amount</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Amount)">Amount</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<FineItem,object>(x=> x.Status)">Status</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -41,7 +41,7 @@
             <NameWithImage Name="@fineItem.TeamName" ImageUrl="@fineItem.TeamLogoUrl" />
         </MudTd>
         <MudTd DataLabel=Reason>@fineItem.Reason</MudTd>
-        <MudTd DataLabel=Amount>@fineItem.Amount</MudTd>
+        <MudTd DataLabel=Amount>@fineItem.Amount.ToString("C0")</MudTd>
         <MudTd DataLabel=Status>
             @{
                 RenderFragment status = fineItem.Status switch

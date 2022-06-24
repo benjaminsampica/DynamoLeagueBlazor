@@ -60,8 +60,8 @@ else
                             }
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValueAmount)">Contract Value</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpiresDate)">Contract Length</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
                         </HeaderContent>
                         <RowTemplate>
                             @if(_isSignedPlayersShowing && _isUsersTeam)
@@ -72,8 +72,8 @@ else
                             }
                             <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>
                             <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
-                            <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
-                            <MudTd DataLabel="Contract Length">@context.YearContractExpires</MudTd>
+                            <MudTd DataLabel="Contract Value">@context.ContractValue.ToString("C0")</MudTd>
+                            <MudTd DataLabel="Contract Length">@context.YearContractExpires.ToString()</MudTd>
                         </RowTemplate>
                     </MudTable>
                 </MudItem>
