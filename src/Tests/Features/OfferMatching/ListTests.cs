@@ -1,7 +1,6 @@
-﻿using System.Net.Http.Json;
-using AutoBogus;
-using DynamoLeagueBlazor.Client.Features.OfferMatching;
+﻿using DynamoLeagueBlazor.Client.Features.OfferMatching;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
+using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.OfferMatching;
 

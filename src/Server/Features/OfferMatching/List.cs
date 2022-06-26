@@ -14,10 +14,12 @@ namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 [Route(OfferMatchingListRouteFactory.Uri)]
 public class ListController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public ListController(IMediator mediator)
+    public ListController(IMapper mapper, IMediator mediator)
     {
+        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -25,6 +27,12 @@ public class ListController : ControllerBase
     public async Task<OfferMatchingListResult> GetAsync(CancellationToken cancellationToken)
     {
         return await _mediator.Send(new ListQuery(), cancellationToken);
+    }
+    [HttpPost]
+    public async Task<int> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
+    {
+        var query = _mapper.Map<MatchPlayerCommand>(request);
+        return await _mediator.Send(query, cancellationToken);
     }
 }
 
@@ -62,7 +70,28 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
         };
     }
 }
+public record MatchPlayerCommand(int PlayerId, int Amount) : IRequest<int> { }
 
+public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
+{
+    private readonly ApplicationDbContext _dbContext;
+
+    public MatchPlayerHandler(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<int> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
+    {
+        var player = (await _dbContext.Players
+            .AsTracking()
+            .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
+        player.ContractValue = request.Amount;
+        player.SetToUnsigned();
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return player.Id;
+    }
+}
 public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
@@ -71,8 +100,15 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount.ToString("C0")
-                : string.Empty)
+                ? s.Bids.GetHighestBidder().Amount : 0)
             );
+    }
+}
+
+public class MatchPlayerMappingProfile : Profile
+{
+    public MatchPlayerMappingProfile()
+    {
+        CreateMap<MatchPlayerRequest, MatchPlayerCommand>();
     }
 }

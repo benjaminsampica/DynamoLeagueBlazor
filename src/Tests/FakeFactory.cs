@@ -1,5 +1,4 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 

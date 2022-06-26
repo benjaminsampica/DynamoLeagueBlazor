@@ -20,7 +20,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
-                    <MudIconButton Icon="@Icons.Filled.Handshake" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" />
+                    <MudIconButton Icon="@Icons.Filled.Handshake" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => MatchPlayerAsync(context.Id,context.Offer)"/>
                 </MudTd>
                 <MudTd DataLabel="Player Name">
                     <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
