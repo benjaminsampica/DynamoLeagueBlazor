@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Client.Features.OfferMatching;
+using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using System.Net.Http.Json;
 
@@ -63,9 +64,34 @@ public class ListServerTests : IntegrationTestBase
         freeAgent.Position.Should().Be(mockPlayer.Position);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         freeAgent.OfferingTeam.Should().Be(mockTeam.Name);
-        freeAgent.Offer.Should().Be(bidAmount.ToString("C0"));
+        freeAgent.Offer.Should().Be(bidAmount);
     }
-}
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_AllowPlayerToBeMatched()
+    {
+        var application = CreateUserAuthenticatedApplication();
+
+        var player = CreateFakePlayer();
+        player.Position = Position.QuarterBack.Name;
+        player.YearContractExpires = DateTime.Now.Year;
+        await application.AddAsync(player);
+        var request = CreateFakeValidRequest();
+        request.PlayerId = player.Id;
+        var client = application.CreateClient();
+        var result = await client.PostAsJsonAsync<MatchPlayerRequest>(OfferMatchingListRouteFactory.Uri, request);
+
+        result.Should().NotBeNull();
+        player.Rostered.Should().Be(false);
+        player.YearContractExpires.Should().Be(null);
+        player.EndOfFreeAgency.Should().Be(null);
+        player.YearAcquired.Should().Be(DateTime.Today.Year);
+    }
+    private static MatchPlayerRequest CreateFakeValidRequest()
+    {
+        var faker = new AutoFaker<MatchPlayerRequest>();
+        return faker.Generate();
+    }
+} 
 
 public class ListClientTests : UITestBase
 {
