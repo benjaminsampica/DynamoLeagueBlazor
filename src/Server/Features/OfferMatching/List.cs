@@ -29,7 +29,7 @@ public class ListController : ControllerBase
         return await _mediator.Send(new ListQuery(), cancellationToken);
     }
     [HttpPost]
-    public async Task<int> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<MatchPlayerCommand>(request);
         return await _mediator.Send(query, cancellationToken);
@@ -70,9 +70,9 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
         };
     }
 }
-public record MatchPlayerCommand(int PlayerId, int Amount) : IRequest<int> { }
+public record MatchPlayerCommand(int PlayerId, int Amount) : IRequest { }
 
-public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
+public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -81,7 +81,7 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
     {
         var player = (await _dbContext.Players
             .AsTracking()
@@ -89,9 +89,9 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
         player.ContractValue = request.Amount;
         player.SetToUnsigned();
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return player.Id;
+        return Unit.Value;
     }
-
+    
 }
 public class ListMappingProfile : Profile
 {
