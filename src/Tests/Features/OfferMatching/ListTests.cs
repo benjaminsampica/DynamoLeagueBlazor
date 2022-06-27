@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Client.Features.OfferMatching;
+using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using System.Net.Http.Json;
@@ -78,13 +79,13 @@ public class ListServerTests : IntegrationTestBase
         var request = CreateFakeValidRequest();
         request.PlayerId = player.Id;
         var client = application.CreateClient();
-        var result = await client.PostAsJsonAsync<MatchPlayerRequest>(OfferMatchingListRouteFactory.Uri, request);
+        await client.PostAsJsonAsync<MatchPlayerRequest>(OfferMatchingListRouteFactory.Uri, request);
+        var result = await application.FirstOrDefaultAsync<Player>();
 
-        result.Should().NotBeNull();
-        player.Rostered.Should().Be(false);
-        player.YearContractExpires.Should().Be(null);
-        player.EndOfFreeAgency.Should().Be(null);
-        player.YearAcquired.Should().Be(DateTime.Today.Year);
+        result!.Rostered.Should().Be(false);
+        result.YearContractExpires.Should().Be(null);
+        result.EndOfFreeAgency.Should().Be(null);
+        result.YearAcquired.Should().Be(DateTime.Today.Year);
     }
     private static MatchPlayerRequest CreateFakeValidRequest()
     {
