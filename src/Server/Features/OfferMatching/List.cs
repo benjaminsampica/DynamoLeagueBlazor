@@ -94,13 +94,14 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
 }
 public class ListMappingProfile : Profile
 {
+    private const int _minimumBid = 1;
     public ListMappingProfile()
     {
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount : 1)
+                ? s.Bids.GetHighestBidder().Amount : _minimumBid)
             );
     }
 }
