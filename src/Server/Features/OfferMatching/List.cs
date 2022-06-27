@@ -100,7 +100,7 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount : 0)
+                ? s.Bids.GetHighestBidder().Amount : 1)
             );
     }
 }
