@@ -21,7 +21,7 @@ public sealed partial class List : IDisposable
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
+            await LoadDataAsync();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -32,6 +32,11 @@ public sealed partial class List : IDisposable
             _loading = false;
         }
     }
+    private async Task LoadDataAsync()
+    {
+        _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
+    }
+
     private async void MatchPlayerAsync(int playerId, int amount)
     {
         _player = new MatchPlayerRequest() { PlayerId = playerId, Amount = amount };
@@ -45,7 +50,7 @@ public sealed partial class List : IDisposable
         {
             SnackBar.Add("Something went wrong...", Severity.Error);
         }
-        await OnInitializedAsync();
+        await LoadDataAsync();
     }
     public void Dispose()
     {
