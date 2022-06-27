@@ -91,7 +91,7 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand, int>
         await _dbContext.SaveChangesAsync(cancellationToken);
         return player.Id;
     }
-    
+
 }
 public class ListMappingProfile : Profile
 {

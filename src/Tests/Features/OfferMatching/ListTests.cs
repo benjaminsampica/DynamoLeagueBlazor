@@ -92,7 +92,7 @@ public class ListServerTests : IntegrationTestBase
         var faker = new AutoFaker<MatchPlayerRequest>();
         return faker.Generate();
     }
-} 
+}
 
 public class ListClientTests : UITestBase
 {
