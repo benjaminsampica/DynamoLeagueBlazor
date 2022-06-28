@@ -1,6 +1,5 @@
 ﻿using DynamoLeagueBlazor.Client.Features.OfferMatching;
 using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using System.Net.Http.Json;
 
@@ -68,31 +67,31 @@ public class ListServerTests : IntegrationTestBase
         freeAgent.Offer.Should().Be(bidAmount);
     }
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_AllowPlayerToBeMatched()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatched_ThenPlayerIsMovedToUnsignedStatus()
     {
         var application = CreateUserAuthenticatedApplication();
+        var team = CreateFakeTeam();
+        await application.AddAsync(team);
 
         var player = CreateFakePlayer();
-        player.Position = Position.QuarterBack.Name;
-        player.YearContractExpires = DateTime.Now.Year;
+        player.YearContractExpires = DateTime.MaxValue.Year;
+        player.AddBid(int.MaxValue, team.Id);
         await application.AddAsync(player);
-        var request = CreateFakeValidRequest();
+
+        var request = AutoFaker.Generate<MatchPlayerRequest>();
         request.PlayerId = player.Id;
         var client = application.CreateClient();
-        await client.PostAsJsonAsync<MatchPlayerRequest>(OfferMatchingListRouteFactory.Uri, request);
-        var result = await application.FirstOrDefaultAsync<Player>();
 
+        await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
+
+        var result = await application.FirstOrDefaultAsync<Player>();
         result!.Rostered.Should().Be(false);
         result.YearContractExpires.Should().Be(null);
         result.EndOfFreeAgency.Should().Be(null);
         result.YearAcquired.Should().Be(DateTime.Today.Year);
+        result.ContractValue.Should().Be(int.MaxValue);
     }
-    private static MatchPlayerRequest CreateFakeValidRequest()
-    {
-        var faker = new AutoFaker<MatchPlayerRequest>();
-        return faker.Generate();
-    }
-} 
+}
 
 public class ListClientTests : UITestBase
 {

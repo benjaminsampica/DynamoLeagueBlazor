@@ -14,12 +14,10 @@ namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 [Route(OfferMatchingListRouteFactory.Uri)]
 public class ListController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public ListController(IMapper mapper, IMediator mediator)
+    public ListController(IMediator mediator)
     {
-        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -31,8 +29,7 @@ public class ListController : ControllerBase
     [HttpPost]
     public async Task<Unit> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<MatchPlayerCommand>(request);
-        return await _mediator.Send(query, cancellationToken);
+        return await _mediator.Send(new MatchPlayerCommand(request.PlayerId), cancellationToken);
     }
 }
 
@@ -70,7 +67,20 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
         };
     }
 }
-public record MatchPlayerCommand(int PlayerId, int Amount) : IRequest { }
+public class ListMappingProfile : Profile
+{
+    private const int _minimumBid = 1;
+    public ListMappingProfile()
+    {
+        CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
+            .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
+            .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
+                s.Bids.Any()
+                ? s.Bids.GetHighestBid().Amount : _minimumBid)
+            );
+    }
+}
+public record MatchPlayerCommand(int PlayerId) : IRequest { }
 
 public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
 {
@@ -85,32 +95,14 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
     {
         var player = (await _dbContext.Players
             .AsTracking()
+            .Include(p => p.Bids)
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
-        player.ContractValue = request.Amount;
+        player.ContractValue = player.Bids.GetHighestBid().Amount;
         player.SetToUnsigned();
+
         await _dbContext.SaveChangesAsync(cancellationToken);
+
         return Unit.Value;
     }
-    
-}
-public class ListMappingProfile : Profile
-{
-    private const int _minimumBid = 1;
-    public ListMappingProfile()
-    {
-        CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
-            .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
-            .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
-                s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount : _minimumBid)
-            );
-    }
-}
 
-public class MatchPlayerMappingProfile : Profile
-{
-    public MatchPlayerMappingProfile()
-    {
-        CreateMap<MatchPlayerRequest, MatchPlayerCommand>();
-    }
 }

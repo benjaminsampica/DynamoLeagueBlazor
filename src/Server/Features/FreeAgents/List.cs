@@ -74,12 +74,12 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.CurrentUserIsHighestBidder, mo => mo.MapFrom(s =>
                 s.Bids.Any() &&
-                s.Bids.GetHighestBidder().TeamId == currentUserTeamId)
+                s.Bids.GetHighestBid().TeamId == currentUserTeamId)
             )
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
             .ForMember(d => d.HighestBid, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount.ToString("C0")
+                ? s.Bids.GetHighestBid().Amount.ToString("C0")
                 : string.Empty)
             );
     }

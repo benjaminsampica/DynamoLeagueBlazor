@@ -38,17 +38,17 @@ public sealed partial class List : IDisposable
 
     private async Task MatchPlayerAsync(int playerId, int amount)
     {
-        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId, Amount = amount });
+        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId });
 
         if (response.IsSuccessStatusCode)
         {
             SnackBar.Add("Successfully retained player.", Severity.Success);
+            await LoadDataAsync();
         }
         else
         {
             SnackBar.Add("Something went wrong...", Severity.Error);
         }
-        await LoadDataAsync();
     }
     public void Dispose()
     {
