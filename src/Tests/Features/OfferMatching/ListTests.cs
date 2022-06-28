@@ -93,7 +93,7 @@ public class ListServerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBids_ThenPlayerIsMovedToUnsignedStatus()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBids_ThenContractValueIsOne()
     {
         int minimumBid = 1;
         var application = CreateUserAuthenticatedApplication();
