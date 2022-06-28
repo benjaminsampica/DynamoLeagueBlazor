@@ -50,11 +50,10 @@ public class EmailSettings
 {
     public const string Email = "Email";
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public string MailServer { get; set; }
+    public string MailServer { get; set; } = null!;
     public int MailPort { get; set; }
-    public string SenderName { get; set; }
-    public string Sender { get; set; }
-    public string Password { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public string SenderName { get; set; } = null!;
+    public string Sender { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string AdminEmail { get; set; }
 }
