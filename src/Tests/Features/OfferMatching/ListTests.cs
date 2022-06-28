@@ -111,7 +111,7 @@ public class ListServerTests : IntegrationTestBase
         await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
 
         var result = await application.FirstOrDefaultAsync<Player>();
-        result.ContractValue.Should().Be(minimumBid);
+        result!.ContractValue.Should().Be(minimumBid);
 
     }
 }
