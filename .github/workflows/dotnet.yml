@@ -38,7 +38,7 @@ jobs:
         path: '**/coverage/'
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v')
-      run: dotnet publish -c Release -o 'drop' s
+      run: dotnet publish -c Release -o 'drop'
     - name: Variable Substitution
       if: startsWith(github.ref, 'refs/tags/v')
       uses: microsoft/variable-substitution@v1
