@@ -40,7 +40,7 @@
                 </MudTd>
                 <MudTd DataLabel="Player Position">@context.Position</MudTd>
                 <MudTd DataLabel="Player Team">@context.Team</MudTd>
-                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds</MudTd>
+                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds.ToShortDateString()</MudTd>
                 <MudTd DataLabel="Highest Bid">
                     <div>
                         @context.HighestBid
