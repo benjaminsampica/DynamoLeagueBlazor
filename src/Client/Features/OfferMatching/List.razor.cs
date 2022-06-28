@@ -12,7 +12,6 @@ public sealed partial class List : IDisposable
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     private const string _title = "Offer Matching";
     private bool _loading;
-    private MatchPlayerRequest _player;
     private readonly CancellationTokenSource _cts = new();
     private OfferMatchingListResult _result = new();
 
@@ -37,10 +36,9 @@ public sealed partial class List : IDisposable
         _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
     }
 
-    private async void MatchPlayerAsync(int playerId, int amount)
+    private async Task MatchPlayerAsync(int playerId, int amount)
     {
-        _player = new MatchPlayerRequest() { PlayerId = playerId, Amount = amount };
-        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, _player);
+        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId, Amount = amount });
 
         if (response.IsSuccessStatusCode)
         {
