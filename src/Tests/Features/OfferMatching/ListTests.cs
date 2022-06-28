@@ -91,6 +91,33 @@ public class ListServerTests : IntegrationTestBase
         result.YearAcquired.Should().Be(DateTime.Today.Year);
         result.ContractValue.Should().Be(int.MaxValue);
     }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBids_ThenPlayerIsMovedToUnsignedStatus()
+    {
+        int minimumBid = 1;
+        var application = CreateUserAuthenticatedApplication();
+        var team = CreateFakeTeam();
+        await application.AddAsync(team);
+
+        var player = CreateFakePlayer();
+        player.YearContractExpires = DateTime.MaxValue.Year;
+        await application.AddAsync(player);
+
+        var request = AutoFaker.Generate<MatchPlayerRequest>();
+        request.PlayerId = player.Id;
+        var client = application.CreateClient();
+
+        await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
+
+        var result = await application.FirstOrDefaultAsync<Player>();
+        result!.Rostered.Should().Be(false);
+        result.YearContractExpires.Should().Be(null);
+        result.EndOfFreeAgency.Should().Be(null);
+        result.YearAcquired.Should().Be(DateTime.Today.Year);
+        result.ContractValue.Should().Be(minimumBid);
+
+    }
 }
 
 public class ListClientTests : UITestBase
