@@ -1,14 +1,15 @@
-﻿using System.Net.Http.Json;
-using DynamoLeagueBlazor.Shared.Features.OfferMatching;
+﻿using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MudBlazor;
+using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.OfferMatching;
 
 public sealed partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
-
+    [Inject] private ISnackbar SnackBar { get; set; } = null!;
     private const string _title = "Offer Matching";
     private bool _loading;
     private readonly CancellationTokenSource _cts = new();
@@ -19,7 +20,7 @@ public sealed partial class List : IDisposable
         try
         {
             _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
+            await LoadDataAsync();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -30,7 +31,25 @@ public sealed partial class List : IDisposable
             _loading = false;
         }
     }
+    private async Task LoadDataAsync()
+    {
+        _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
+    }
 
+    private async Task MatchPlayerAsync(int playerId, int amount)
+    {
+        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId });
+
+        if (response.IsSuccessStatusCode)
+        {
+            SnackBar.Add("Successfully retained player.", Severity.Success);
+            await LoadDataAsync();
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
+        }
+    }
     public void Dispose()
     {
         _cts.Cancel();

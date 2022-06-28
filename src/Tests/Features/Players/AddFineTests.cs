@@ -1,5 +1,4 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Server.Models;
+﻿using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
 using Microsoft.Extensions.DependencyInjection;

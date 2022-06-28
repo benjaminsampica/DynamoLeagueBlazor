@@ -26,6 +26,11 @@ public class ListController : ControllerBase
     {
         return await _mediator.Send(new ListQuery(), cancellationToken);
     }
+    [HttpPost]
+    public async Task<Unit> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
+    {
+        return await _mediator.Send(new MatchPlayerCommand(request.PlayerId), cancellationToken);
+    }
 }
 
 public record ListQuery : IRequest<OfferMatchingListResult> { }
@@ -62,17 +67,42 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
         };
     }
 }
-
 public class ListMappingProfile : Profile
 {
+    private const int _minimumBid = 1;
     public ListMappingProfile()
     {
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
                 s.Bids.Any()
-                ? s.Bids.GetHighestBidder().Amount.ToString("C0")
-                : string.Empty)
+                ? s.Bids.GetHighestBid().Amount : _minimumBid)
             );
     }
+}
+public record MatchPlayerCommand(int PlayerId) : IRequest { }
+
+public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
+{
+    private readonly ApplicationDbContext _dbContext;
+
+    public MatchPlayerHandler(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<Unit> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
+    {
+        var player = (await _dbContext.Players
+            .AsTracking()
+            .Include(p => p.Bids)
+            .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
+        player.ContractValue = player.Bids.GetHighestBid().Amount;
+        player.SetToUnsigned();
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
+    }
+
 }

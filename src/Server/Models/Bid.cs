@@ -20,6 +20,6 @@ public record Bid : BaseEntity
 
 public static class BidExtensions
 {
-    public static Bid GetHighestBidder(this ICollection<Bid> bids)
+    public static Bid GetHighestBid(this ICollection<Bid> bids)
         => bids.OrderByDescending(b => b.Amount).First();
 }

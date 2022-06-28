@@ -1,5 +1,4 @@
-﻿using AutoBogus;
-using DynamoLeagueBlazor.Client.Features.Teams;
+﻿using DynamoLeagueBlazor.Client.Features.Teams;
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.Teams;

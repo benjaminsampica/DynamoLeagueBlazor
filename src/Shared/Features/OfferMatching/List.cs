@@ -11,7 +11,7 @@ public class OfferMatchingListResult
         public string Position { get; set; }
         public string HeadShotUrl { get; set; }
         public string OfferingTeam { get; set; }
-        public string Offer { get; set; }
+        public int Offer { get; set; }
     }
 }
 
