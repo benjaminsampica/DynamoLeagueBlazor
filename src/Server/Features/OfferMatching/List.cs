@@ -85,7 +85,7 @@ public record MatchPlayerCommand(int PlayerId) : IRequest { }
 public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
 {
     private readonly ApplicationDbContext _dbContext;
-    private const int _minimumValue = 1;
+
     public MatchPlayerHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -97,7 +97,7 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
             .AsTracking()
             .Include(p => p.Bids)
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
-        player.ContractValue = player.Bids.GetHighestBid()?.Amount ?? _minimumValue;
+        player.ContractValue = player.Bids.GetHighestBid()?.Amount ?? Bid._minimumBid;
         player.SetToUnsigned();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
