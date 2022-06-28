@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
@@ -22,10 +23,31 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    Log.Logger = new LoggerConfiguration()
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-        .CreateLogger();
+    var loggerConfiguration = new LoggerConfiguration()
+        .MinimumLevel.Is(LogEventLevel.Information)
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .MinimumLevel.Override("System", LogEventLevel.Warning)
+        .MinimumLevel.Override("Duende", LogEventLevel.Error)
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName);
+
+    builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
+        .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
+
+    if (builder.Environment.IsProduction())
+    {
+        builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+        var emailSettings = builder.Services.BuildServiceProvider().GetRequiredService<EmailSettings>();
+        loggerConfiguration.WriteTo.Email(emailSettings.Sender, emailSettings.AdminEmail, mailServer: emailSettings.MailServer, restrictedToMinimumLevel: LogEventLevel.Error, mailSubject: "An error occured on Dynamo League.");
+    }
+    else
+    {
+        builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
+        loggerConfiguration.WriteTo.Trace();
+    }
+
+    Log.Logger = loggerConfiguration.CreateLogger();
 
     builder.Host.UseSerilog();
 
@@ -76,18 +98,6 @@ try
 
     builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
-
-    builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
-        .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
-
-    if (builder.Environment.IsProduction())
-    {
-        builder.Services.AddSingleton<IEmailSender, EmailSender>();
-    }
-    else
-    {
-        builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
-    }
 
     var app = builder.Build();
 

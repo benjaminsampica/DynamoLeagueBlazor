@@ -29,7 +29,8 @@
 	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
 	<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 	<PackageReference Include="Serilog.AspNetCore.Ingestion" Version="1.0.0-dev-00021" />
-	<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	<PackageReference Include="Serilog.Sinks.Email" Version="2.4.0" />
+	<PackageReference Include="Serilog.Sinks.Trace" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
