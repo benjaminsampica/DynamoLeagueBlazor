@@ -62,8 +62,8 @@ public class ListTests : IntegrationTestBase
         freeAgent.Position.Should().Be(mockPlayer.Position);
         freeAgent.Team.Should().Be(mockTeam.Name);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
-        freeAgent.HighestBid.Should().Be(bidAmount.ToString("C0"));
-        freeAgent.BiddingEnds.Should().Be(biddingEnds.ToShortDateString());
+        freeAgent.HighestBid.Should().Be(bidAmount);
+        freeAgent.BiddingEnds.Should().Be(biddingEnds);
         freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }
 }

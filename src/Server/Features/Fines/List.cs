@@ -64,6 +64,6 @@ public class ListMappingProfile : Profile
             .ForMember(d => d.PlayerHeadShotUrl, mo => mo.MapFrom(s => s.Player.HeadShotUrl))
             .ForMember(d => d.TeamName, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.TeamLogoUrl, mo => mo.MapFrom(s => s.Team.LogoUrl))
-            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C2")));
+            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount));
     }
 }

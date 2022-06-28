@@ -11,8 +11,8 @@ public class FreeAgentListResult
         public string Position { get; set; }
         public string Team { get; set; }
         public string HeadShotUrl { get; set; }
-        public string BiddingEnds { get; set; }
-        public string HighestBid { get; set; }
+        public DateTime BiddingEnds { get; set; }
+        public int HighestBid { get; set; }
         public bool CurrentUserIsHighestBidder { get; set; }
     }
 }
