@@ -13,7 +13,7 @@ public record Bid : BaseEntity
     public int PlayerId { get; private set; }
     public int TeamId { get; private set; }
     public DateTime CreatedOn { get; private set; } = DateTime.Now;
-    public const int _minimumBid = 1;
+    public const int MinimumAmount = 1;
     public Team Team { get; private set; } = null!;
     public Player Player { get; private set; } = null!;
 }
