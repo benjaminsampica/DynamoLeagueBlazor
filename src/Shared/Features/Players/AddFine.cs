@@ -6,7 +6,7 @@ namespace DynamoLeagueBlazor.Shared.Features.Players;
 public class AddFineRequest
 {
     public int PlayerId { get; set; }
-    public string FineReason { get; set; }
+    public string FineReason { get; set; } = null!;
 }
 
 public class AddFineRequestValidator : AbstractValidator<AddFineRequest>

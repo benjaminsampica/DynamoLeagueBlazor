@@ -2,9 +2,9 @@
 
 public class TeamDetailResult
 {
-    public string LogoUrl { get; set; }
-    public string Name { get; set; }
-    public string CapSpace { get; set; }
+    public string LogoUrl { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public string CapSpace { get; set; } = null!;
     public List<PlayerItem> RosteredPlayers { get; set; } = new List<PlayerItem>();
     public List<PlayerItem> UnrosteredPlayers { get; set; } = new List<PlayerItem>();
     public List<PlayerItem> UnsignedPlayers { get; set; } = new List<PlayerItem>();
@@ -13,9 +13,9 @@ public class TeamDetailResult
     public class PlayerItem
     {
         public int Id { get; set; }
-        public string HeadShotUrl { get; set; }
-        public string Name { get; set; }
-        public string Position { get; set; }
+        public string HeadShotUrl { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Position { get; set; } = null!;
         public int ContractValue { get; set; }
         public int? YearContractExpires { get; set; }
     }

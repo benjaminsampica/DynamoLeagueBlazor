@@ -55,5 +55,5 @@ public class EmailSettings
     public string SenderName { get; set; } = null!;
     public string Sender { get; set; } = null!;
     public string Password { get; set; } = null!;
-    public string AdminEmail { get; set; }
+    public string AdminEmail { get; set; } = null!;
 }

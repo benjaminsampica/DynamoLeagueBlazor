@@ -8,8 +8,8 @@ namespace DynamoLeagueBlazor.Shared.Features.Admin;
 
 public class AddPlayerRequest
 {
-    public string Name { get; set; }
-    public string Position { get; set; }
+    public string Name { get; set; } = null!;
+    public string Position { get; set; } = null!;
     public int TeamId { get; set; }
     public int ContractValue { get; set; }
 }
@@ -21,7 +21,7 @@ public class TeamNameListResult
     public class TeamNameItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }
 
@@ -54,8 +54,8 @@ public class AddPlayerRequestValidator : AsyncAbstractValidator<AddPlayerRequest
 
 public class PlayerPreviewRequest
 {
-    public string Name { get; set; }
-    public string Position { get; set; }
+    public string Name { get; set; } = null!;
+    public string Position { get; set; } = null!;
 }
 
 public class PlayerPreviewRequestValidator : AbstractValidator<PlayerPreviewRequest>

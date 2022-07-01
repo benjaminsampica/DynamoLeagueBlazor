@@ -7,10 +7,10 @@ public class PlayerListResult
     public class PlayerItem
     {
         public int Id { get; set; }
-        public string HeadShotUrl { get; set; }
-        public string Name { get; set; }
-        public string Position { get; set; }
-        public string Team { get; set; }
+        public string HeadShotUrl { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Position { get; set; } = null!;
+        public string Team { get; set; } = null!;
         public int ContractValue { get; set; }
         public int YearContractExpires { get; set; }
     }

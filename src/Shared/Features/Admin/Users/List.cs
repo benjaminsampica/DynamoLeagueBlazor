@@ -6,9 +6,9 @@ public class UserListResult
 
     public class UserItem
     {
-        public string Id { get; set; }
-        public string Team { get; set; }
-        public string Email { get; set; }
+        public string Id { get; set; } = null!;
+        public string Team { get; set; } = null!;
+        public string Email { get; set; } = null!;
         public bool EmailConfirmed { get; set; }
     }
 }

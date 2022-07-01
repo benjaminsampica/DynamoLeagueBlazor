@@ -29,23 +29,8 @@ try
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName);
-
-    builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
-        .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
-
-    if (builder.Environment.IsProduction())
-    {
-        builder.Services.AddSingleton<IEmailSender, EmailSender>();
-
-        var emailSettings = builder.Services.BuildServiceProvider().GetRequiredService<EmailSettings>();
-        loggerConfiguration.WriteTo.Email(emailSettings.Sender, emailSettings.AdminEmail, mailServer: emailSettings.MailServer, restrictedToMinimumLevel: LogEventLevel.Error, mailSubject: "An error occured on Dynamo League.");
-    }
-    else
-    {
-        builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
-        loggerConfiguration.WriteTo.Trace();
-    }
+        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+        .WriteTo.File(".logs/log.log", rollingInterval: RollingInterval.Day);
 
     Log.Logger = loggerConfiguration.CreateLogger();
 
@@ -98,6 +83,18 @@ try
 
     builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
+
+    builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
+        .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);
+
+    if (builder.Environment.IsProduction())
+    {
+        builder.Services.AddSingleton<IEmailSender, EmailSender>();
+    }
+    else
+    {
+        builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
+    }
 
     var app = builder.Build();
 
