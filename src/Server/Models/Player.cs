@@ -89,6 +89,8 @@ public record Player : BaseEntity
         return fine;
     }
 
+    public int GetHighestBidAmount() => Bids.Any() ? Bids.FindHighestBid()!.Amount : Bid.MinimumAmount;
+
     private bool IsEligibleForFreeAgencyExtension(int teamId)
     {
         var isBidByTheSameTeam = teamId == TeamId;

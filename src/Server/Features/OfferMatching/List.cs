@@ -56,6 +56,7 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
         var offerMatches = await _dbContext.Players
+            .Include(p => p.Bids)
             .Where(p => p.TeamId == currentUserTeamId)
             .WhereIsOfferMatching()
             .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider)
@@ -69,15 +70,11 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
 }
 public class ListMappingProfile : Profile
 {
-    private const int _minimumBid = 1;
     public ListMappingProfile()
     {
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
-            .ForMember(d => d.Offer, mo => mo.MapFrom(s =>
-                s.Bids.Any()
-                ? s.Bids.GetHighestBid().Amount : _minimumBid)
-            );
+            .ForMember(d => d.Offer, mo => mo.MapFrom(s => s.GetHighestBidAmount()));
     }
 }
 public record MatchPlayerCommand(int PlayerId) : IRequest { }
@@ -97,7 +94,7 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
             .AsTracking()
             .Include(p => p.Bids)
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
-        player.ContractValue = player.Bids.GetHighestBid()?.Amount ?? Bid._minimumBid;
+        player.ContractValue = player.Bids.FindHighestBid()?.Amount ?? Bid.MinimumAmount;
         player.SetToUnsigned();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
