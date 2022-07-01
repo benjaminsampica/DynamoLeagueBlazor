@@ -50,7 +50,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
     {
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
-        var freeAgents = _dbContext.Players
+        var freeAgents = await _dbContext.Players
             .Include(p => p.Team)
             .Include(p => p.Bids)
                 .ThenInclude(b => b.Team)
