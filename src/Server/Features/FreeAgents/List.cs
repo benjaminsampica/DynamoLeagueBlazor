@@ -50,22 +50,14 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
     {
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
-        var freeAgentsQuery = _dbContext.Players
+        var freeAgents = _dbContext.Players
             .Include(p => p.Team)
             .Include(p => p.Bids)
-                .ThenInclude(b => b.Team);
-
-        var currentFreeAgents = await freeAgentsQuery
-            .Where(p => EF.Functions.DateDiffDay(DateTime.Today, p.EndOfFreeAgency) > 0) // Those who are not yet out of free agency, closest to ending first.
+                .ThenInclude(b => b.Team)
+            .WhereIsFreeAgent()
+            .OrderBy(p => p.EndOfFreeAgency)
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
-
-        var expiredFreeAgents = await freeAgentsQuery
-            .Where(p => EF.Functions.DateDiffDay(p.EndOfFreeAgency, DateTime.Today) > 0) // Those who are out of free agency, closest to having just ended first.
-            .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
-            .ToListAsync(cancellationToken);
-
-        var freeAgents = currentFreeAgents.Concat(expiredFreeAgents).ToList();
 
         return new FreeAgentListResult
         {
