@@ -50,7 +50,7 @@
                         {
                             <MudChip Color=Color.Success Size=Size.Small>You!</MudChip>
                         }
-                        else
+                        else if(context.WinningTeam != null)
                         {
                             <MudChip Color=Color.Error Size=Size.Small>@context.WinningTeam</MudChip>
                         }
