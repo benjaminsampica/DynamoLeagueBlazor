@@ -96,33 +96,4 @@ public class ListTests : IntegrationTestBase
         var freeAgent = result!.FreeAgents.First();
         freeAgent.WinningTeam.Should().Be(winningTeam.Name);
     }
-
-    [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenThereIsAFreeAgentAndAnOfferMatchingPlayer_ThenShowsTheFreeAgentFirstAndOfferMatchingPlayerSecond()
-    {
-        var application = CreateUserAuthenticatedApplication();
-
-        var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
-
-        var mockFreeAgent = CreateFakePlayer();
-        mockFreeAgent.TeamId = mockTeam.Id;
-        mockFreeAgent.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
-        var oneSecondFromNow = DateTime.Today.AddSeconds(1);
-        mockFreeAgent.SetToFreeAgent(oneSecondFromNow);
-        await application.AddAsync(mockFreeAgent);
-
-        var mockOfferMatcher = CreateFakePlayer();
-        mockOfferMatcher.TeamId = mockTeam.Id;
-        mockOfferMatcher.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
-        var oneSecondBeforeNow = DateTime.Today.AddSeconds(-1);
-        mockOfferMatcher.SetToFreeAgent(oneSecondBeforeNow);
-        await application.AddAsync(mockOfferMatcher);
-
-        var client = application.CreateClient();
-
-        var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);
-
-        result!.FreeAgents.Should().BeInDescendingOrder(p => p.BiddingEnds);
-    }
 }
