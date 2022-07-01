@@ -50,13 +50,21 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
     {
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
-        var freeAgents = await _dbContext.Players
+        var freeAgentsQuery = _dbContext.Players
             .Include(p => p.Team)
-            .Include(p => p.Bids)
-            .WhereIsFreeAgent()
-            .OrderBy(p => p.EndOfFreeAgency)
+            .Include(p => p.Bids);
+
+        var currentFreeAgents = await freeAgentsQuery
+            .Where(p => EF.Functions.DateDiffSecond(DateTime.Today, p.EndOfFreeAgency) > 0) // Those who are not yet out of free agency, closest to ending first.
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
+
+        var expiredFreeAgents = await freeAgentsQuery
+            .Where(p => EF.Functions.DateDiffSecond(p.EndOfFreeAgency, DateTime.Today) > 0) // Those who are out of free agency, closest to having just ended first.
+            .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
+            .ToListAsync(cancellationToken);
+
+        var freeAgents = currentFreeAgents.Concat(expiredFreeAgents).ToList();
 
         return new FreeAgentListResult
         {
@@ -78,6 +86,7 @@ public class ListMappingProfile : Profile
                 s.Bids.FindHighestBid()!.TeamId == currentUserTeamId)
             )
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
-            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s => s.GetHighestBidAmount()));
+            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s => s.GetHighestBidAmount()))
+            .ForMember(d => d.WinningTeam, mo => mo.MapFrom(s => s.Team.Name));
     }
 }
