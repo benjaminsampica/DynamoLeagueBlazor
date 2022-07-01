@@ -28,4 +28,20 @@ public class PlayerTests
 
         sut.WhereIsOfferMatching().Should().NotContain(player);
     }
+
+    [Fact]
+    public void GivenAPlayerWithNoBids_WhenFindingTheHighestBid_ThenTheHighestBidIsTheMinimumAmount()
+        => CreateFakePlayer()
+            .GetHighestBidAmount()
+            .Should().Be(Bid.MinimumAmount);
+
+    [Fact]
+    public void GivenAPlayerWithABid_ThenReturnsThatBidAmount()
+    {
+        var player = CreateFakePlayer();
+
+        player.AddBid(int.MaxValue, int.MaxValue);
+
+        player.GetHighestBidAmount().Should().Be(int.MaxValue);
+    }
 }
