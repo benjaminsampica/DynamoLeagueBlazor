@@ -7,13 +7,13 @@ public class FineListResult
     public class FineItem
     {
         public int Id { get; set; }
-        public string PlayerHeadShotUrl { get; set; }
-        public string PlayerName { get; set; }
-        public string TeamName { get; set; }
-        public string TeamLogoUrl { get; set; }
-        public string Reason { get; set; }
+        public string PlayerHeadShotUrl { get; set; } = null!;
+        public string PlayerName { get; set; } = null!;
+        public string TeamName { get; set; } = null!;
+        public string TeamLogoUrl { get; set; } = null!;
+        public string Reason { get; set; } = null!;
         public decimal Amount { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = null!;
     }
 }
 

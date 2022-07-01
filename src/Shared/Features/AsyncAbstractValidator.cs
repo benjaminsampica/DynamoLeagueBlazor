@@ -12,7 +12,7 @@ namespace DynamoLeagueBlazor.Shared.Helpers;
 /// </summary>
 public abstract class AsyncAbstractValidator<T> : AbstractValidator<T>
 {
-    private Task<ValidationResult> _validateTask;
+    private Task<ValidationResult> _validateTask = null!;
 
     public override Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default)
         => _validateTask = base.ValidateAsync(context, cancellation);
@@ -25,6 +25,6 @@ public abstract class AsyncAbstractValidator<T> : AbstractValidator<T>
     }
 
     public Task<ValidationResult> WaitForValidateAsync()
-         => _validateTask ?? Task.FromResult<ValidationResult>(null);
+         => _validateTask ?? Task.FromResult<ValidationResult>(null!);
 
 }

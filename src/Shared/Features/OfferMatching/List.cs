@@ -7,10 +7,10 @@ public class OfferMatchingListResult
     public class OfferMatchingItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Position { get; set; }
-        public string HeadShotUrl { get; set; }
-        public string OfferingTeam { get; set; }
+        public string Name { get; set; } = null!;
+        public string Position { get; set; } = null!;
+        public string HeadShotUrl { get; set; } = null!;
+        public string OfferingTeam { get; set; } = null!;
         public int Offer { get; set; }
     }
 }

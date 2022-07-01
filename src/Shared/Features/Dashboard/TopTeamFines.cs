@@ -8,9 +8,9 @@ public class TopTeamFinesResult
 
     public class TeamItem : IRankedItem
     {
-        public string ImageUrl { get; set; }
-        public string Name { get; set; }
-        public string Amount { get; set; }
+        public string ImageUrl { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Amount { get; set; } = null!;
     }
 }
 

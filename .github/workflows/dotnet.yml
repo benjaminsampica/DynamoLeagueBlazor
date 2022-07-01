@@ -47,7 +47,6 @@ jobs:
       env:
         ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
         Email.Password: ${{ secrets.email_password }}
-        Email.AdminEmail: ${{ secrets.admin_email }}
     - name: Create app_offline file
       if: startsWith(github.ref, 'refs/tags/v')
       shell: pwsh
