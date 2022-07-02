@@ -40,15 +40,21 @@
                 </MudTd>
                 <MudTd DataLabel="Player Position">@context.Position</MudTd>
                 <MudTd DataLabel="Player Team">@context.Team</MudTd>
-                <MudTd DataLabel="Bidding Ends">@context.BiddingEnds.ToShortDateString()</MudTd>
+                <MudTd DataLabel="Bidding Ends">
+                    @context.BiddingEnds.ToShortDateString()
+                </MudTd>
                 <MudTd DataLabel="Highest Bid">
-                    <div>
-                        @context.HighestBid
+                    <span>
+                        @context.HighestBid.ToString("C")
                         @if (context.CurrentUserIsHighestBidder)
                         {
-                            <MudChip Color=Color.Success Icon=@Icons.Outlined.Check Size=Size.Small>You!</MudChip>
+                            <MudChip Color=Color.Success Size=Size.Small>You!</MudChip>
                         }
-                    </div>
+                        else if(context.WinningTeam != null)
+                        {
+                            <MudChip Color=Color.Error Size=Size.Small>@context.WinningTeam</MudChip>
+                        }
+                    </span>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

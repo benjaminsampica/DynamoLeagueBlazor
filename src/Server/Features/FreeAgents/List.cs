@@ -53,6 +53,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
         var freeAgents = await _dbContext.Players
             .Include(p => p.Team)
             .Include(p => p.Bids)
+                .ThenInclude(b => b.Team)
             .WhereIsFreeAgent()
             .OrderBy(p => p.EndOfFreeAgency)
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
@@ -78,6 +79,7 @@ public class ListMappingProfile : Profile
                 s.Bids.FindHighestBid()!.TeamId == currentUserTeamId)
             )
             .ForMember(d => d.BiddingEnds, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
-            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s => s.GetHighestBidAmount()));
+            .ForMember(d => d.HighestBid, mo => mo.MapFrom(s => s.GetHighestBidAmount()))
+            .ForMember(d => d.WinningTeam, mo => mo.MapFrom(s => s.Bids.Any() ? s.Bids.FindHighestBid()!.Team.Name : null));
     }
 }

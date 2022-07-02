@@ -14,6 +14,7 @@ public class FreeAgentListResult
         public DateTime BiddingEnds { get; set; }
         public int HighestBid { get; set; }
         public bool CurrentUserIsHighestBidder { get; set; }
+        public string? WinningTeam { get; set; }
     }
 }
 

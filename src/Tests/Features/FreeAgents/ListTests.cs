@@ -66,4 +66,34 @@ public class ListTests : IntegrationTestBase
         freeAgent.BiddingEnds.Should().Be(biddingEnds);
         freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenAFreeAgentHasABidByAnotherTeam_ThenThatTeamShowsAsTheWinningTeam()
+    {
+        var application = CreateUserAuthenticatedApplication();
+
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = mockTeam.Id;
+        mockPlayer.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
+        var biddingEnds = DateTime.MaxValue;
+        mockPlayer.SetToFreeAgent(biddingEnds);
+        await application.AddAsync(mockPlayer);
+
+        var winningTeam = CreateFakeTeam();
+        await application.AddAsync(winningTeam);
+
+        var bidAmount = int.MaxValue;
+        mockPlayer.AddBid(bidAmount, winningTeam.Id);
+        await application.UpdateAsync(mockPlayer);
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);
+
+        var freeAgent = result!.FreeAgents.First();
+        freeAgent.WinningTeam.Should().Be(winningTeam.Name);
+    }
 }
