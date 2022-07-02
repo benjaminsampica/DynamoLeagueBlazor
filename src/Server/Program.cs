@@ -135,7 +135,9 @@ try
 
     app.Services.UseScheduler(scheduler =>
     {
-        scheduler.Schedule<EndBiddingService>().DailyAtHour(22);
+        scheduler.Schedule<EndBiddingService>()
+            .DailyAtHour(22)
+            .Zoned(TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
     });
 
     await using (var scope = app.Services.CreateAsyncScope())
