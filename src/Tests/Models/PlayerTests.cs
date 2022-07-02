@@ -1,34 +1,10 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
+using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Tests.Models;
 
 public class PlayerTests
 {
-    [Theory]
-    [InlineData(-1), InlineData(-2), InlineData(-3)]
-    public void WhereIsOfferMatching_GivenAPlayer_WhenTheirFreeAgencyIsThreeOrLessDaysFromToday_ThenShouldContainThePlayer(int daysAgo)
-    {
-        var player = CreateFakePlayer();
-        player.SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue);
-        player.SetToFreeAgent(DateTime.Today.AddDays(daysAgo));
-
-        var sut = new List<Player> { player }.AsQueryable();
-
-        sut.WhereIsOfferMatching().Should().Contain(player);
-    }
-
-    [Fact]
-    public void WhereIsOfferMatching_GivenAPlayer_WhenTheirFreeAgencyIsFourOrMoreDaysFromToday_ThenShouldNotContainThePlayer()
-    {
-        var player = CreateFakePlayer();
-        player.SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue);
-        player.SetToFreeAgent(DateTime.Today.AddDays(-4));
-
-        var sut = new List<Player> { player }.AsQueryable();
-
-        sut.WhereIsOfferMatching().Should().NotContain(player);
-    }
-
     [Fact]
     public void GivenAPlayerWithNoBids_WhenFindingTheHighestBid_ThenTheHighestBidIsTheMinimumAmount()
         => CreateFakePlayer()
@@ -43,5 +19,26 @@ public class PlayerTests
         player.AddBid(int.MaxValue, int.MaxValue);
 
         player.GetHighestBidAmount().Should().Be(int.MaxValue);
+    }
+}
+
+public class PlayerStateTests
+{
+    [Fact]
+    public void GivenAFreeAgent_ThenCanMoveToOfferMatching()
+    {
+        var player = CreateFakePlayer();
+        player.State = PlayerState.FreeAgent;
+
+        player.SetToOfferMatching();
+    }
+
+    [Fact]
+    public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
+    {
+        var player = CreateFakePlayer();
+        player.State = PlayerState.FreeAgent;
+
+        FluentActions.Invoking(() => player.SetToOfferMatching()).Should().NotThrow();
     }
 }

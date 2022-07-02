@@ -1,7 +1,9 @@
+using Coravel;
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Admin.Shared;
 using DynamoLeagueBlazor.Server.Features.Fines;
+using DynamoLeagueBlazor.Server.Features.FreeAgents;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
@@ -96,6 +98,9 @@ try
         builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
     }
 
+    builder.Services.AddScheduler();
+    builder.Services.AddScoped<EndBiddingService>();
+
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -127,6 +132,11 @@ try
     app.MapRazorPages();
     app.MapControllers().RequireAuthorization();
     app.MapFallbackToFile("index.html");
+
+    app.Services.UseScheduler(scheduler =>
+    {
+        scheduler.Schedule<EndBiddingService>().DailyAtHour(22);
+    });
 
     await using (var scope = app.Services.CreateAsyncScope())
     {
