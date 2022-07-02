@@ -21,7 +21,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
             sql.AppendLine("UPDATE Players")
                 .AppendLine("SET State = 0")
                 .AppendLine($"WHERE {nameof(Player.EndOfFreeAgency)} >= getdate()")
-                .AppendLine($"AND {nameof(Player.YearContractExpires)} < YEAR(getdate()))");
+                .AppendLine($"AND {nameof(Player.YearContractExpires)} < YEAR(getdate())");
 
             migrationBuilder.Sql(sql.ToString());
         }
