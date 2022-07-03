@@ -45,7 +45,7 @@ public record Player : BaseEntity
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
-    private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, UnwantedByLeague, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
+    private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
     public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered }
 
     public Player SetToRostered(int yearContractExpires, int contractValue)
