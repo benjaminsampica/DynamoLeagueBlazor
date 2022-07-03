@@ -18,11 +18,12 @@ public sealed partial class Detail : IDisposable
 
     private TeamDetailResult? _result;
     private bool _isUsersTeam = false;
-    private bool _isSignedPlayersShowing = false;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
     private readonly CancellationTokenSource _cts = new();
+    private Func<int, Task>? _onPlayerTableActionClick;
+    private string? _tableActionIcon;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,24 +54,30 @@ public sealed partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
-        _isSignedPlayersShowing = false;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
-        _isSignedPlayersShowing = false;
+        _onPlayerTableActionClick = DropPlayerAsync;
+        _tableActionIcon = Icons.Outlined.PersonRemove;
     }
 
     private void ShowUnsignedPlayers()
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
-        _isSignedPlayersShowing = true;
+        _onPlayerTableActionClick = OpenSignPlayerDialogAsync;
+        _tableActionIcon = Icons.Filled.AssignmentLate;
     }
 
-    private async void OpenSignPlayerDialog(int playerId)
+    private async Task DropPlayerAsync(int playerId)
+    {
+
+    }
+
+    private async Task OpenSignPlayerDialogAsync(int playerId)
     {
         var maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
