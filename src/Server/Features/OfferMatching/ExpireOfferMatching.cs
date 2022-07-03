@@ -18,12 +18,20 @@ public class ExpireOfferMatchingService : IInvocable
     {
         var players = _dbContext.Players
             .AsTracking()
+            .Include(p => p.Bids)
             .Where(p => p.State == PlayerState.OfferMatching
                 && p.EndOfFreeAgency!.Value.AddDays(3) <= DateTime.Today);
 
         foreach (var player in players)
         {
-            player.ExpireMatch();
+            if (!player.Bids.Any())
+            {
+                _dbContext.Remove(player);
+            }
+            else
+            {
+                player.ExpireMatch();
+            }
         }
 
         await _dbContext.SaveChangesAsync();

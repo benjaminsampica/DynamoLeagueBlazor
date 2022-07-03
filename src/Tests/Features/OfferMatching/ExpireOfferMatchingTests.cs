@@ -39,7 +39,29 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnOfferMatchingPlayer_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenSetsToUnsigned()
+    public async Task GivenAnOfferMatchingPlayerWithBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenSetsToUnsigned()
+    {
+        var application = CreateUnauthenticatedApplication();
+
+        var stubTeam = CreateFakeTeam();
+        await application.AddAsync(stubTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.AddBid(int.MaxValue, stubTeam.Id);
+        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
+        mockPlayer.State = PlayerState.OfferMatching;
+        await application.AddAsync(mockPlayer);
+
+        var sut = GetRequiredService<ExpireOfferMatchingService>();
+
+        await sut.Invoke();
+
+        var unsignedPlayer = await application.FirstOrDefaultAsync<Player>();
+        unsignedPlayer!.State.Should().Be(PlayerState.Unsigned);
+    }
+
+    [Fact]
+    public async Task GivenAnOfferMatchingPlayerWithoutBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenIsRemovedFromTheLeague()
     {
         var application = CreateUnauthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
@@ -52,6 +74,6 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
         await sut.Invoke();
 
         var offerMatchingPlayer = await application.FirstOrDefaultAsync<Player>();
-        offerMatchingPlayer!.State.Should().Be(PlayerState.Unsigned);
+        offerMatchingPlayer.Should().BeNull();
     }
 }
