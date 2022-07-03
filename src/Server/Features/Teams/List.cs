@@ -7,6 +7,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Server.Models.Player;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
@@ -73,8 +74,8 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
             var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
 
             var unsignedPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsUnsigned();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Unsigned);
             var unsignedPlayerCount = await unsignedPlayersQuery.CountAsync(cancellationToken);
             team.UnsignedPlayerCount = unsignedPlayerCount.ToString();
 

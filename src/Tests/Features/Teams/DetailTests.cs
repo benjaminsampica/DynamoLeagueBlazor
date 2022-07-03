@@ -31,16 +31,18 @@ public class DetailTests : IntegrationTestBase
         var mockRosteredPlayer = CreateFakePlayer();
         mockRosteredPlayer.TeamId = stubTeam.Id;
         mockRosteredPlayer.SetToRostered(DateTime.MaxValue.Year, 1);
+        mockRosteredPlayer.State = PlayerState.Rostered;
         await application.AddAsync(mockRosteredPlayer);
 
         var mockUnrosteredPlayer = CreateFakePlayer();
         mockUnrosteredPlayer.TeamId = stubTeam.Id;
         mockUnrosteredPlayer.SetToUnrostered();
+        mockUnrosteredPlayer.State = PlayerState.Unrostered;
         await application.AddAsync(mockUnrosteredPlayer);
 
         var mockUnsignedPlayer = CreateFakePlayer();
         mockUnsignedPlayer.TeamId = stubTeam.Id;
-        mockUnsignedPlayer.SetToUnsigned();
+        mockUnsignedPlayer.State = PlayerState.Unsigned;
         await application.AddAsync(mockUnsignedPlayer);
 
         var client = application.CreateClient();
