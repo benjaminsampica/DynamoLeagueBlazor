@@ -39,7 +39,7 @@ public class DropPlayerCommandHandler : IRequestHandler<DropPlayerCommand, int>
             .AsTracking()
             .SingleAsync(u => u.Id == command.PlayerId, cancellationToken);
 
-        player.DropForTeam();
+        player.DropFromCurrentTeam();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

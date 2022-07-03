@@ -13,6 +13,7 @@ public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
     [Parameter] public int TeamId { get; set; }
 
@@ -34,6 +35,7 @@ public sealed partial class Detail : IDisposable
         if (int.Parse(claim!.Value) == TeamId) _isUsersTeam = true;
 
         await LoadDataAsync();
+        ShowRosteredPlayers();
     }
 
     private async Task LoadDataAsync()
@@ -42,7 +44,6 @@ public sealed partial class Detail : IDisposable
         {
             _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>(TeamDetailRouteFactory.Create(TeamId), _cts.Token);
             _title = $"Team Detail - {_result!.Name}";
-            ShowRosteredPlayers();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -54,14 +55,15 @@ public sealed partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
+        _onPlayerTableActionClick = DropPlayerAsync;
+        _tableActionIcon = Icons.Outlined.PersonRemove;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
-        _onPlayerTableActionClick = DropPlayerAsync;
-        _tableActionIcon = Icons.Outlined.PersonRemove;
+        _onPlayerTableActionClick = null;
     }
 
     private void ShowUnsignedPlayers()
@@ -74,7 +76,26 @@ public sealed partial class Detail : IDisposable
 
     private async Task DropPlayerAsync(int playerId)
     {
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync(DropPlayerRouteFactory.Uri, new DropPlayerRequest { PlayerId = playerId }, _cts.Token);
 
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully dropped player.", Severity.Success);
+
+                await LoadDataAsync();
+                ShowRosteredPlayers();
+            }
+            else
+            {
+                Snackbar.Add("Something went wrong...", Severity.Error);
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 
     private async Task OpenSignPlayerDialogAsync(int playerId)
@@ -88,10 +109,10 @@ public sealed partial class Detail : IDisposable
         var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
         var result = await dialog.Result;
 
-
         if (!result.Cancelled)
         {
             await LoadDataAsync();
+            ShowUnsignedPlayers();
         }
     }
 
@@ -99,5 +120,7 @@ public sealed partial class Detail : IDisposable
     {
         _cts.Cancel();
         _cts.Dispose();
+
+        _onPlayerTableActionClick = null;
     }
 }

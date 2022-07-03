@@ -29,9 +29,9 @@ public class SignPlayerServerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAuthenticatedAdmin_ThenSignsPlayer()
+    public async Task GivenAuthenticatedUser_ThenSignsPlayer()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         var player = CreateFakePlayer();
         player.Position = Position.QuarterBack.Name;
         player.YearContractExpires = DateTime.Now.Year;

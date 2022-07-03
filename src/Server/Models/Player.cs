@@ -104,7 +104,7 @@ public record Player : BaseEntity
         return bid;
     }
 
-    public void DropForTeam() => _machine.Fire(PlayerStateTrigger.DroppedByTeam);
+    public void DropFromCurrentTeam() => _machine.Fire(PlayerStateTrigger.DroppedByTeam);
 
     private void GrantExtensionToFreeAgency()
     {
