@@ -5,13 +5,13 @@ namespace DynamoLeagueBlazor.Server.Models;
 public record Player : BaseEntity
 {
     private readonly StateMachine<PlayerState?, PlayerStateTrigger> _machine;
-    //private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
+    private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
     //private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
 
     public Player()
     {
         _machine = new(() => State, state => State = state);
-        //_rosteredTrigger = _machine.SetTriggerParameters<int, int>(PlayerStateTrigger.SignedByTeam);
+        _rosteredTrigger = _machine.SetTriggerParameters<int, int>(PlayerStateTrigger.SignedByTeam);
         //_freeAgentTrigger = _machine.SetTriggerParameters<DateTime>(PlayerStateTrigger.NewSeasonStarted);
 
         _machine.Configure(PlayerState.FreeAgent)
@@ -21,6 +21,14 @@ public record Player : BaseEntity
             .Permit(PlayerStateTrigger.OfferMatchedByTeam, PlayerState.Unsigned)
             .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned)
             .OnExit(() => SetToUnsigned());
+
+        _machine.Configure(PlayerState.Unsigned)
+            .Permit(PlayerStateTrigger.SignedByTeam, PlayerState.Rostered);
+
+        _machine.Configure(PlayerState.Rostered)
+            .OnEntryFrom(_rosteredTrigger, (yearContractExpires, contractValue) => SetToRostered(yearContractExpires, contractValue))
+            .Permit(PlayerStateTrigger.DroppedByTeam, PlayerState.Unrostered)
+            .Permit(PlayerStateTrigger.NewSeasonStarted, PlayerState.FreeAgent);
     }
 
     public Player(string name, string position, string headShotUrl) : this()
@@ -36,7 +44,7 @@ public record Player : BaseEntity
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
-    public bool Rostered { get; set; } // TODO: Remove this when rostered is a state.
+    public bool Rostered { get; set; } // TODO: Remove this when all needs for rostered are done.
     public int? TeamId { get; set; }
     public DateTime? EndOfFreeAgency { get; set; }
     public PlayerState? State { get; set; } = PlayerState.Unsigned;
@@ -48,39 +56,36 @@ public record Player : BaseEntity
     private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
     public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered }
 
-    public Player SetToRostered(int yearContractExpires, int contractValue)
-    {
-        Rostered = true;
-        YearContractExpires = yearContractExpires;
-        EndOfFreeAgency = null;
-        ContractValue = contractValue;
-
-        return this;
-    }
-
     public Player SetToUnrostered()
     {
-        Rostered = false;
         EndOfFreeAgency = null;
 
         return this;
     }
+
+    public void EndBidding() => _machine.Fire(PlayerStateTrigger.BiddingEnded);
 
     public void MatchOffer() => _machine.Fire(PlayerStateTrigger.OfferMatchedByTeam);
 
     public void ExpireMatch() => _machine.Fire(PlayerStateTrigger.MatchExpired);
 
-    public void EndBidding() => _machine.Fire(PlayerStateTrigger.BiddingEnded);
-
     private Player SetToUnsigned()
     {
-        Rostered = false;
         YearContractExpires = null;
         EndOfFreeAgency = null;
         ContractValue = Bids.FindHighestBid()?.Amount ?? Bid.MinimumAmount;
         YearAcquired = DateTime.Today.Year;
 
         return this;
+    }
+
+    public void SignForCurrentTeam(int yearContractExpires, int contractValue) => _machine.Fire(_rosteredTrigger, yearContractExpires, contractValue);
+
+    private void SetToRostered(int yearContractExpires, int contractValue)
+    {
+        YearContractExpires = yearContractExpires;
+        ContractValue = contractValue;
+        EndOfFreeAgency = null;
     }
 
     public Player SetToFreeAgent(DateTime endOfFreeAgency)
@@ -140,14 +145,11 @@ public record Player : BaseEntity
 
 public static class PlayerExtensions
 {
-    public static IQueryable<Player> WhereIsRostered(this IQueryable<Player> players)
-        => players.Where(p => p.Rostered
-            && p.YearContractExpires >= DateTime.Today.Year
-            && p.EndOfFreeAgency == null);
-    public static IQueryable<Player> WhereIsUnrostered(this IQueryable<Player> players)
-        => players.Where(p => p.Rostered == false
-            && p.YearContractExpires != null
-            && p.EndOfFreeAgency == null);
+    // TODO: For reference when doing unrostering/dropping players. Remove when that state is added.
+    //public static IQueryable<Player> WhereIsUnrostered(this IQueryable<Player> players)
+    //    => players.Where(p => p.Rostered == false
+    //        && p.YearContractExpires != null
+    //        && p.EndOfFreeAgency == null);
 
     public static IQueryable<Player> WhereIsEligibleForFreeAgency(this IQueryable<Player> players)
         => players.Where(p => p.YearContractExpires < DateTime.Today.Year);

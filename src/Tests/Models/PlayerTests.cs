@@ -56,6 +56,17 @@ public class PlayerStateTests
         offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
     }
 
+    [Fact]
+    public void GivenAnUnsignedPlayer_WhenATeamSignsThePlayer_ThenMovesToRostered()
+    {
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.Unsigned;
+
+        offerMatchingPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Rostered);
+    }
+
     //[Fact]
     //public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
     //{

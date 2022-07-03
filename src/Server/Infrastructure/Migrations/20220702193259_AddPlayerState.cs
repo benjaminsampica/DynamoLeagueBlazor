@@ -1,6 +1,5 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System.Text;
 
 #nullable disable
 
@@ -17,13 +16,12 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                 nullable: true);
 
             // Convert Free Agents to use state.
-            var sql = new StringBuilder();
-            sql.AppendLine("UPDATE Players")
-                .AppendLine("SET State = 0")
-                .AppendLine($"WHERE {nameof(Player.EndOfFreeAgency)} >= getdate()")
-                .AppendLine($"AND {nameof(Player.YearContractExpires)} < YEAR(getdate())");
+            var sql = $@"UPDATE Players
+                    SET State = 1
+                    WHERE {nameof(Player.EndOfFreeAgency)} >= getdate()
+                    AND {nameof(Player.YearContractExpires)} < YEAR(getdate())";
 
-            migrationBuilder.Sql(sql.ToString());
+            migrationBuilder.Sql(sql);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
