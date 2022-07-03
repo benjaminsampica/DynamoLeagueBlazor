@@ -78,11 +78,19 @@ public class PlayerStateTests
         rosteredPlayer.State.Should().Be(PlayerState.FreeAgent);
     }
 
-    //[Fact]
-    //public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
-    //{
-    //    var player = CreateFakePlayer();
+    [Fact]
+    public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifecycle()
+    {
+        var player = CreateFakePlayer();
 
-    //    FluentActions.Invoking(() => player.SOMETHING()).Should().NotThrow();
-    //}
+        FluentActions.Invoking(() =>
+        {
+            player.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+            player.BeginNewSeason(DateTime.MaxValue);
+            player.EndBidding();
+            player.MatchOffer();
+        }).Should().NotThrow();
+
+        player.State.Should().Be(PlayerState.Unsigned);
+    }
 }
