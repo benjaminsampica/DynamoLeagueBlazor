@@ -59,12 +59,23 @@ public class PlayerStateTests
     [Fact]
     public void GivenAnUnsignedPlayer_WhenATeamSignsThePlayer_ThenMovesToRostered()
     {
-        var offerMatchingPlayer = CreateFakePlayer();
-        offerMatchingPlayer.State = PlayerState.Unsigned;
+        var unsignedPlayer = CreateFakePlayer();
+        unsignedPlayer.State = PlayerState.Unsigned;
 
-        offerMatchingPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+        unsignedPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
 
-        offerMatchingPlayer.State.Should().Be(PlayerState.Rostered);
+        unsignedPlayer.State.Should().Be(PlayerState.Rostered);
+    }
+
+    [Fact]
+    public void GivenAnRosteredPlayer_WhenANewSeasonStarts_ThenMovesToFreeAgent()
+    {
+        var rosteredPlayer = CreateFakePlayer();
+        rosteredPlayer.State = PlayerState.Rostered;
+
+        rosteredPlayer.BeginNewSeason(DateTime.MaxValue);
+
+        rosteredPlayer.State.Should().Be(PlayerState.FreeAgent);
     }
 
     //[Fact]

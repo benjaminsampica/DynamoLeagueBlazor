@@ -36,7 +36,8 @@ public class StartSeasonTests : IntegrationTestBase
     {
         var application = CreateAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.SetToFreeAgent(DateTime.MaxValue);
+        mockPlayer.State = PlayerState.Rostered;
+        mockPlayer.BeginNewSeason(DateTime.MaxValue);
         await application.AddAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -67,6 +68,7 @@ public class StartSeasonTests : IntegrationTestBase
         await application.AddAsync(stubTeam);
 
         var stubPlayer = CreateFakePlayer();
+        stubPlayer.State = PlayerState.Rostered;
         stubPlayer.TeamId = stubTeam.Id;
         var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = DateTime.MinValue;
@@ -91,6 +93,7 @@ public class StartSeasonTests : IntegrationTestBase
         await application.AddAsync(stubTeam);
 
         var stubPlayer = CreateFakePlayer();
+        stubPlayer.State = PlayerState.Rostered;
         stubPlayer.TeamId = stubTeam.Id;
         var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
