@@ -117,14 +117,17 @@ public class AddBidTests : IntegrationTestBase
 
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
+
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
         await application.AddAsync(mockPlayer);
+
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
 
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Should().BeSuccessful();
 
         var bid = await application.FirstOrDefaultAsync<Bid>();
         bid.Should().NotBeNull();
@@ -145,16 +148,9 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
     }
 
     [Theory]
-    [InlineData(0, int.MaxValue, false)]
-    [InlineData(1, 0, false)]
-    public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int amount, bool expectedResult)
-    {
-        var request = new AddBidRequest { PlayerId = playerId, Amount = amount };
-
-        var result = _validator.Validate(request);
-
-        result.IsValid.Should().Be(expectedResult);
-    }
+    [InlineData(-1), InlineData(0)]
+    public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId }).ShouldHaveValidationErrorFor(p => p.PlayerId);
 
     [Theory]
     [InlineData(1, false)]
@@ -164,14 +160,45 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await _setupApplication.AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
-        await _setupApplication.AddAsync(mockPlayer);
         mockPlayer.AddBid(1, stubTeam.Id);
         await _setupApplication.UpdateAsync(mockPlayer);
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = amount };
 
-        var result = _validator.Validate(request);
+        var result = _validator.TestValidate(request);
 
         result.IsValid.Should().Be(expectedResult);
+    }
+
+    [Fact]
+    public async Task GivenAPlayerEndOfFreeAgencyOfNow_WhenItIsNow_ThenIsNotValid()
+    {
+        var stubTeam = CreateFakeTeam();
+        await _setupApplication.AddAsync(stubTeam);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now;
+        await _setupApplication.AddAsync(mockPlayer);
+
+        var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
+
+        var result = _validator.TestValidate(request);
+
+        result.ShouldHaveValidationErrorFor(p => p);
+    }
+
+    [Fact]
+    public async Task GivenAPlayerEndOfFreeAgencyOfNowPlusOneSecond_WhenItIsNow_ThenIsValid()
+    {
+        var stubTeam = CreateFakeTeam();
+        await _setupApplication.AddAsync(stubTeam);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(1);
+        await _setupApplication.AddAsync(mockPlayer);
+
+        var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
+
+        var result = _validator.TestValidate(request);
+
+        result.ShouldNotHaveValidationErrorFor(p => p);
     }
 }
