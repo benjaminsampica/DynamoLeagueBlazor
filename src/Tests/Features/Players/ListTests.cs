@@ -1,9 +1,11 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Client.Features.Players;
+using DynamoLeagueBlazor.Shared.Features.Players;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
 
-public class ListTests : IntegrationTestBase
+public class ListServerTests : IntegrationTestBase
 {
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -42,5 +44,21 @@ public class ListTests : IntegrationTestBase
         player.Team.Should().Be(mockTeam.Name);
         player.YearContractExpires.Should().Be(mockPlayer.YearContractExpires);
         player.ContractValue.Should().Be(mockPlayer.ContractValue);
+    }
+}
+
+public class ListClientTests : UITestBase
+{
+    [Fact]
+    public void WhenAddFineIsClicked_ThenShowsDialog()
+    {
+        GetHttpHandler.When(HttpMethod.Get, PlayerListRouteFactory.Uri)
+            .RespondsWithJson(AutoFaker.Generate<PlayerListResult>());
+
+        var cut = RenderComponent<List>();
+
+        cut.Find("button").Click();
+
+        cut.HasComponent<MudDialog>().Should().BeTrue();
     }
 }

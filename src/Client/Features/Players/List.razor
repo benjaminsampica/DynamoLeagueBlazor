@@ -5,49 +5,53 @@
     @_title
 </Title>
 
-<PageHeader>
-    <MudGrid>
-        <MudItem md=2 xs=0/>
-        <MudItem md=8 xs=12>
+<MudGrid>
+    <MudItem xs=12>
+        <PageHeader>
             @_title
-        </MudItem>
-        <MudItem md=2 xs=12>
-            <AuthorizeView Roles="Admin">
-                <Authorized>
-                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PersonAdd" Link="/admin/addplayer" FullWidth=true>
-                        Add Player
-                    </MudButton>
-                </Authorized>
-            </AuthorizeView>
-        </MudItem>
-    </MudGrid>
-</PageHeader>
-
-<MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)" SortLabel="Sort By">
-    <ToolBarContent>
-        <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0" />
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Actions</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Team)">@nameof(PlayerItem.Team)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Actions">
-            <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenAddFineDialog(context.Id)" />
-        </MudTd>
-        <MudTd DataLabel=@nameof(PlayerItem.Name)>
-            <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
-        </MudTd>
-        <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
-        <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
-        <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
-        <MudTd DataLabel="Contract Length">@context.YearContractExpires</MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+        </PageHeader>
+    </MudItem>
+    <MudItem xs=12>
+        <MudGrid Justify="Justify.FlexEnd" Spacing=0>
+            <MudItem md=3 xs=12>
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        <MudButton Color="Color.Primary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PersonAdd" Link="/admin/addplayer" FullWidth=true>
+                            Add Player
+                        </MudButton>
+                    </Authorized>
+                </AuthorizeView>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+    <MudItem xs=12>
+        <MudTable Items="_result.Players" Dense=true Loading=_loading Filter="new Func<PlayerItem, bool>(FilterFunc)" SortLabel="Sort By">
+            <ToolBarContent>
+                <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0" />
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Actions</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Team)">@nameof(PlayerItem.Team)</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Error" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2" OnClick="(e) => OpenAddFineDialog(context.Id)" />
+                </MudTd>
+                <MudTd DataLabel=@nameof(PlayerItem.Name)>
+                    <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
+                </MudTd>
+                <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
+                <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
+                <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
+                <MudTd DataLabel="Contract Length">@context.YearContractExpires</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>
