@@ -1,5 +1,7 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Client.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Utilities;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
@@ -81,5 +83,61 @@ public class DetailTests : IntegrationTestBase
         unsignedPlayer.Position.Should().Be(mockUnsignedPlayer.Position);
         unsignedPlayer.YearContractExpires.Should().Be(mockUnsignedPlayer.YearContractExpires);
         unsignedPlayer.ContractValue.Should().Be(mockUnsignedPlayer.ContractValue);
+    }
+}
+
+public class DetailClientTests : UITestBase
+{
+    [Fact]
+    public void WhenPageIsLoading_ThenShowsLoading()
+    {
+        AuthorizeAsUser(int.MaxValue);
+
+        GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(int.MaxValue))
+            .TimesOutAfter(500);
+
+        var cut = RenderComponent<Detail>(parameters =>
+        {
+            parameters.Add(p => p.TeamId, int.MaxValue);
+        });
+
+        cut.HasComponent<MudSkeleton>().Should().BeTrue();
+    }
+
+    [Fact]
+    public void WhenThePageInitializes_ThenShowsAListOfRosteredPlayers()
+    {
+        var teamId = int.MaxValue;
+
+        AuthorizeAsUser(teamId);
+
+        GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(teamId))
+            .RespondsWithJson(AutoFaker.Generate<TeamDetailResult>());
+
+        var cut = RenderComponent<Detail>(parameters =>
+        {
+            parameters.Add(p => p.TeamId, teamId);
+        });
+
+        cut.Markup.Should().Contain("Rostered Players");
+        cut.HasComponent<MudTable<TeamDetailResult.PlayerItem>>().Should().BeTrue();
+        cut.Markup.Should().Contain("tr");
+    }
+
+    [Fact]
+    public void GivenAUserHasATeamOfOne_WhenViewingThePageOfTeamTwo_ThenDoesNotShowAnyActionButtons()
+    {
+        AuthorizeAsUser(1);
+
+        var teamTwo = 2;
+        GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(teamTwo))
+            .RespondsWithJson(AutoFaker.Generate<TeamDetailResult>());
+
+        var cut = RenderComponent<Detail>(parameters =>
+        {
+            parameters.Add(p => p.TeamId, teamTwo);
+        });
+
+        cut.Markup.Should().NotContain("Actions");
     }
 }

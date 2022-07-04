@@ -56,7 +56,7 @@ else
                         <HeaderContent>
                             @if(_isUsersTeam && _onPlayerTableActionClick != null)
                             {
-                                <MudTh></MudTh>
+                                <MudTh>Actions</MudTh>
                             }
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
@@ -66,7 +66,7 @@ else
                         <RowTemplate>
                             @if(_isUsersTeam && _onPlayerTableActionClick != null)
                             { 
-                                <MudTd>
+                                <MudTd DataLabel="Actions">
                                     <MudIconButton Icon="@_tableActionIcon" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" OnClick="() => _onPlayerTableActionClick.Invoke(context.Id)" />
                                 </MudTd>
                             }

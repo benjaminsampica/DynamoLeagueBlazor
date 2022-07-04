@@ -14,8 +14,8 @@ public sealed partial class Detail : IDisposable
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-    [Parameter] public int TeamId { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+    [Parameter, EditorRequired] public int TeamId { get; set; }
 
     private TeamDetailResult? _result;
     private bool _isUsersTeam = false;
@@ -32,7 +32,7 @@ public sealed partial class Detail : IDisposable
         var user = authenticationState.User!;
 
         var claim = user.FindFirst(nameof(IUser.TeamId));
-        if (int.Parse(claim!.Value) == TeamId) _isUsersTeam = true;
+        _isUsersTeam = int.Parse(claim!.Value) == TeamId;
 
         await LoadDataAsync();
         ShowRosteredPlayers();
