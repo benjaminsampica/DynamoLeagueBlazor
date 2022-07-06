@@ -83,7 +83,7 @@ public class BidAmountValidator : IBidAmountValidator
 
     public BidAmountValidator(ApplicationDbContext dbContext)
     {
-        this._dbContext = dbContext;
+        _dbContext = dbContext;
     }
 
     public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)

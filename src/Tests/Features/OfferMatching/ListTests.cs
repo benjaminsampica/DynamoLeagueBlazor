@@ -2,6 +2,7 @@
 using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using System.Net.Http.Json;
+using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Tests.Features.OfferMatching;
 
@@ -42,9 +43,7 @@ public class ListServerTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        mockPlayer.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
-        var biddingEnds = DateTime.Today.AddDays(-1);
-        mockPlayer.SetToFreeAgent(biddingEnds);
+        mockPlayer.State = PlayerState.OfferMatching;
         await application.AddAsync(mockPlayer);
 
         var bidAmount = int.MaxValue;

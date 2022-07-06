@@ -55,6 +55,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
         using var scope = _setupApplication.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+        await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.MigrateAsync();
     }
 

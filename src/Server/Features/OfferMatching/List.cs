@@ -7,6 +7,7 @@ using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 
@@ -57,8 +58,8 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
 
         var offerMatches = await _dbContext.Players
             .Include(p => p.Bids)
-            .Where(p => p.TeamId == currentUserTeamId)
-            .WhereIsOfferMatching()
+            .Where(p => p.TeamId == currentUserTeamId
+                && p.State == PlayerState.OfferMatching)
             .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
