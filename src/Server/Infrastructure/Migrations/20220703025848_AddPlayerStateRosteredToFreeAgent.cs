@@ -11,7 +11,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
             // Convert Signed to use state.
             var sql = $@"UPDATE Players
                 SET State = 3
-                WHERE Rostered = true";
+                WHERE Rostered = 1";
 
             migrationBuilder.Sql(sql.ToString());
 
