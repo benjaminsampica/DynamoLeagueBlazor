@@ -58,16 +58,16 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
             using var dbContext = await _dbContext.CreateDbContextAsync(cancellationToken);
 
             var rosteredPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsRostered();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Rostered);
             var rosteredPlayerCount = await rosteredPlayersQuery.CountAsync(cancellationToken);
             team.RosteredPlayerCount = rosteredPlayerCount.ToString();
 
             var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
             var unrosteredPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsUnrostered();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Unrostered);
             var unrosteredPlayerCount = await unrosteredPlayersQuery.CountAsync(cancellationToken);
             team.UnrosteredPlayerCount = unrosteredPlayerCount.ToString();
 

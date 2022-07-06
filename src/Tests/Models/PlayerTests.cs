@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
-using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Tests.Models;
 
@@ -55,6 +54,17 @@ public class PlayerStateTests
         offerMatchingPlayer.ExpireMatch();
 
         offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
+    }
+
+    [Fact]
+    public void GivenAnUnsignedPlayer_WhenATeamSignsThePlayer_ThenMovesToRostered()
+    {
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.Unsigned;
+
+        offerMatchingPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Rostered);
     }
 
     //[Fact]

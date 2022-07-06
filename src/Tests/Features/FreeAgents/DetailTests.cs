@@ -11,11 +11,9 @@ public class DetailTests : IntegrationTestBase
         var application = CreateUnauthenticatedApplication();
         var client = application.CreateClient();
 
-        var stubFreeAgent = CreateFakePlayer()
-            .SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue)
-            .SetToFreeAgent(DateTime.MaxValue);
-        await application.AddAsync(stubFreeAgent);
-        var endpoint = FreeAgentDetailFactory.Create(stubFreeAgent.Id);
+        var stubPlayer = CreateFakePlayer();
+        await application.AddAsync(stubPlayer);
+        var endpoint = FreeAgentDetailFactory.Create(stubPlayer.Id);
 
         var response = await client.GetAsync(endpoint);
 
@@ -30,9 +28,7 @@ public class DetailTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
 
-        var mockFreeAgent = CreateFakePlayer()
-            .SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue)
-            .SetToFreeAgent(DateTime.MaxValue);
+        var mockFreeAgent = CreateFakePlayer();
         mockFreeAgent.TeamId = mockTeam.Id;
         await application.AddAsync(mockFreeAgent);
 

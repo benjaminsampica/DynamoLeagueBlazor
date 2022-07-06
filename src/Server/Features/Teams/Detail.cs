@@ -51,8 +51,8 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
             .SingleAsync(cancellationToken);
 
         var rosteredPlayersQuery = _dbContext.Players
-            .Where(p => p.TeamId == request.TeamId)
-            .WhereIsRostered();
+            .Where(p => p.TeamId == request.TeamId
+                && p.State == PlayerState.Rostered);
         var rosteredPlayers = await rosteredPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
@@ -61,8 +61,8 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
         var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
         var unrosteredPlayersQuery = _dbContext.Players
-            .Where(p => p.TeamId == request.TeamId)
-            .WhereIsUnrostered();
+            .Where(p => p.TeamId == request.TeamId
+                && p.State == PlayerState.Unrostered);
         var unrosteredPlayers = await unrosteredPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

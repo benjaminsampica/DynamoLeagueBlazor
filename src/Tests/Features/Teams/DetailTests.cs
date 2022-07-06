@@ -30,7 +30,7 @@ public class DetailTests : IntegrationTestBase
 
         var mockRosteredPlayer = CreateFakePlayer();
         mockRosteredPlayer.TeamId = stubTeam.Id;
-        mockRosteredPlayer.SetToRostered(DateTime.MaxValue.Year, 1);
+        mockRosteredPlayer.SignForCurrentTeam(DateTime.MaxValue.Year, 1);
         mockRosteredPlayer.State = PlayerState.Rostered;
         await application.AddAsync(mockRosteredPlayer);
 

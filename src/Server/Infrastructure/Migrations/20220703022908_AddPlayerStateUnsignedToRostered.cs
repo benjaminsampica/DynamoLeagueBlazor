@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
 {
-    public partial class AddPlayerStateOfferMatchingToUnsigned : Migration
+    public partial class AddPlayerStateUnsignedToRostered : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Convert Offer Matches to use state.
+            // Convert Unsigned to use state.
             var sql = $@"UPDATE Players
-                SET State = 1
-                WHERE DATEADD(day, 3, {nameof(Player.EndOfFreeAgency)}) <= getdate()";
+                SET State = 2
+                WHERE DATEADD(day, 3, {nameof(Player.EndOfFreeAgency)}) >= getdate()";
 
             migrationBuilder.Sql(sql);
         }
@@ -21,7 +21,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
         {
             var sql = @"UPDATE Players
                 SET State = NULL
-                WHERE STATE = 1";
+                WHERE STATE = 2";
 
             migrationBuilder.Sql(sql);
         }

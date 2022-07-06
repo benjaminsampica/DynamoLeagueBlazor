@@ -87,8 +87,7 @@ public class ListServerTests : IntegrationTestBase
         await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
 
         var result = await application.FirstOrDefaultAsync<Player>();
-        result!.Rostered.Should().Be(false);
-        result.YearContractExpires.Should().Be(null);
+        result!.YearContractExpires.Should().Be(null);
         result.EndOfFreeAgency.Should().Be(null);
         result.YearAcquired.Should().Be(DateTime.Today.Year);
         result.ContractValue.Should().Be(int.MaxValue);
