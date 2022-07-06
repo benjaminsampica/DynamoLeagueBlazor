@@ -357,6 +357,9 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                     b.Property<int?>("State")
                         .HasColumnType("int");
 
+                    b.Property<int?>("State")
+                        .HasColumnType("int");
+
                     b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
