@@ -1,6 +1,7 @@
 ﻿global using AutoBogus;
 global using Bunit;
 global using FluentAssertions;
+global using FluentValidation.TestHelper;
 global using MockHttp;
 global using Moq;
 global using System.Net;

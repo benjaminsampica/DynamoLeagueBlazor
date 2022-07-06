@@ -16,11 +16,11 @@ public class AddBidTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GET_GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
+    public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = CreateUnauthenticatedApplication();
         var client = application.CreateClient();
-        var endpoint = AddBidRouteFactory.Create(CreateFakeValidRequest());
+        var endpoint = AddBidRouteFactory.Create(AddBidRouteFactory.GetIsHighestUri, CreateFakeValidRequest());
 
         var response = await client.GetAsync(endpoint);
 
@@ -28,7 +28,7 @@ public class AddBidTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GET_GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenReturnsTrue()
+    public async Task GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenReturnsTrue()
     {
         var application = CreateUserAuthenticatedApplication();
         var client = application.CreateClient();
@@ -37,14 +37,14 @@ public class AddBidTests : IntegrationTestBase
         await application.AddAsync(mockPlayer);
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
-        var endpoint = AddBidRouteFactory.Create(request);
+        var endpoint = AddBidRouteFactory.Create(AddBidRouteFactory.GetIsHighestUri, request);
 
         var result = await client.GetFromJsonAsync<bool>(endpoint);
         result.Should().BeTrue();
     }
 
     [Fact]
-    public async Task GET_GivenAnyAuthenticatedUser_WhenIsNotHighestBid_ThenReturnsFalse()
+    public async Task GivenAnyAuthenticatedUser_WhenIsNotHighestBid_ThenReturnsFalse()
     {
         var application = CreateUserAuthenticatedApplication();
         var client = application.CreateClient();
@@ -56,9 +56,43 @@ public class AddBidTests : IntegrationTestBase
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
         request.Amount = int.MinValue;
-        var endpoint = AddBidRouteFactory.Create(request);
+        var endpoint = AddBidRouteFactory.Create(AddBidRouteFactory.GetIsHighestUri, request);
         mockPlayer.AddBid(int.MaxValue, mockTeam.Id);
         await application.UpdateAsync(mockPlayer);
+
+        var result = await client.GetFromJsonAsync<bool>(endpoint);
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenHasNotEnded_ThenReturnsTrue()
+    {
+        var application = CreateUserAuthenticatedApplication();
+        var client = application.CreateClient();
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(1);
+        await application.AddAsync(mockPlayer);
+        var request = CreateFakeValidRequest();
+        request.PlayerId = mockPlayer.Id;
+        var endpoint = AddBidRouteFactory.Create(AddBidRouteFactory.GetHasNotEndedUri, request);
+
+        var result = await client.GetFromJsonAsync<bool>(endpoint);
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenHasEnded_ThenReturnsFalse()
+    {
+        var application = CreateUserAuthenticatedApplication();
+        var client = application.CreateClient();
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(-1);
+        await application.AddAsync(mockPlayer);
+        var request = CreateFakeValidRequest();
+        request.PlayerId = mockPlayer.Id;
+        var endpoint = AddBidRouteFactory.Create(AddBidRouteFactory.GetHasNotEndedUri, request);
 
         var result = await client.GetFromJsonAsync<bool>(endpoint);
         result.Should().BeFalse();
@@ -83,14 +117,17 @@ public class AddBidTests : IntegrationTestBase
 
         var mockTeam = CreateFakeTeam();
         await application.AddAsync(mockTeam);
+
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
         await application.AddAsync(mockPlayer);
+
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
 
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Should().BeSuccessful();
 
         var bid = await application.FirstOrDefaultAsync<Bid>();
         bid.Should().NotBeNull();
@@ -111,16 +148,9 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
     }
 
     [Theory]
-    [InlineData(0, int.MaxValue, false)]
-    [InlineData(1, 0, false)]
-    public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, int amount, bool expectedResult)
-    {
-        var request = new AddBidRequest { PlayerId = playerId, Amount = amount };
-
-        var result = _validator.Validate(request);
-
-        result.IsValid.Should().Be(expectedResult);
-    }
+    [InlineData(-1), InlineData(0)]
+    public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId }).ShouldHaveValidationErrorFor(p => p.PlayerId);
 
     [Theory]
     [InlineData(1, false)]
@@ -130,14 +160,45 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await _setupApplication.AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
-        await _setupApplication.AddAsync(mockPlayer);
         mockPlayer.AddBid(1, stubTeam.Id);
         await _setupApplication.UpdateAsync(mockPlayer);
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = amount };
 
-        var result = _validator.Validate(request);
+        var result = _validator.TestValidate(request);
 
         result.IsValid.Should().Be(expectedResult);
+    }
+
+    [Fact]
+    public async Task GivenAPlayerEndOfFreeAgencyOfNow_WhenItIsNow_ThenIsNotValid()
+    {
+        var stubTeam = CreateFakeTeam();
+        await _setupApplication.AddAsync(stubTeam);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now;
+        await _setupApplication.AddAsync(mockPlayer);
+
+        var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
+
+        var result = _validator.TestValidate(request);
+
+        result.ShouldHaveValidationErrorFor(p => p);
+    }
+
+    [Fact]
+    public async Task GivenAPlayerEndOfFreeAgencyOfNowPlusOneSecond_WhenItIsNow_ThenIsValid()
+    {
+        var stubTeam = CreateFakeTeam();
+        await _setupApplication.AddAsync(stubTeam);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(1);
+        await _setupApplication.AddAsync(mockPlayer);
+
+        var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
+
+        var result = _validator.TestValidate(request);
+
+        result.ShouldNotHaveValidationErrorFor(p => p);
     }
 }

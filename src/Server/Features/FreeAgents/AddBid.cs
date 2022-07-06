@@ -15,21 +15,29 @@ public class AddBidController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IBidAmountValidator _bidAmountValidator;
+    private readonly IBidValidator _bidValidator;
 
-    public AddBidController(IMediator mediator, IMapper mapper, IBidAmountValidator bidAmountValidator)
+    public AddBidController(IMediator mediator, IMapper mapper, IBidValidator bidValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
-        _bidAmountValidator = bidAmountValidator;
+        _bidValidator = bidValidator;
     }
 
-    [HttpGet]
-    public async Task<bool> GetAsync([FromQuery] int playerId, int amount, CancellationToken cancellationToken)
+    [HttpGet("ishighest")]
+    public async Task<bool> GetIsHighestAsync([FromQuery] int playerId, int amount, CancellationToken cancellationToken)
     {
-        var isValidBid = await _bidAmountValidator.IsHighestBidAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
+        var isHighestBid = await _bidValidator.IsHighestAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
 
-        return isValidBid;
+        return isHighestBid;
+    }
+
+    [HttpGet("hasnotended")]
+    public async Task<bool> GetHasNotEndedAsync([FromQuery] int playerId, int amount, CancellationToken cancellationToken)
+    {
+        var hasBiddingEnded = await _bidValidator.HasNotEndedAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
+
+        return hasBiddingEnded;
     }
 
     [HttpPost]
@@ -77,16 +85,25 @@ public class AddBidMappingProfile : Profile
     }
 }
 
-public class BidAmountValidator : IBidAmountValidator
+public class BidValidator : IBidValidator
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public BidAmountValidator(ApplicationDbContext dbContext)
+    public BidValidator(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken)
+    public async Task<bool> HasNotEndedAsync(AddBidRequest request, CancellationToken cancellationToken)
+    {
+        var player = await _dbContext.Players.FindAsync(new object[] { request.PlayerId }, cancellationToken);
+
+        var hasNotEnded = player!.EndOfFreeAgency > DateTime.Now;
+
+        return hasNotEnded;
+    }
+
+    public async Task<bool> IsHighestAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
         var isHighestBid = await _dbContext.Players
             .Where(p => p.Id == request.PlayerId

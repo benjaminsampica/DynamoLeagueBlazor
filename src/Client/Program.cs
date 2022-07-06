@@ -39,7 +39,7 @@ try
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
     });
 
-    builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
+    builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
     var host = builder.Build();

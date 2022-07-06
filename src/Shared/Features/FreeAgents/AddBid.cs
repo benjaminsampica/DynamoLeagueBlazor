@@ -12,29 +12,35 @@ public class AddBidRequest
 
 public class AddBidRequestValidator : AsyncAbstractValidator<AddBidRequest>
 {
-    public AddBidRequestValidator(IBidAmountValidator bidAmountValidator)
+    public AddBidRequestValidator(IBidValidator bidValidator)
     {
         RuleFor(x => x.PlayerId).GreaterThan(0);
         RuleFor(x => x.Amount)
             .Cascade(CascadeMode.Stop)
             .GreaterThan(0)
-            .MustAsync((request, value, context, token) => bidAmountValidator.IsHighestBidAsync(request, token))
+            .MustAsync((request, value, token) => bidValidator.IsHighestAsync(request, token))
             .WithMessage("Please enter a bid higher than the current amount.");
+        RuleFor(x => x)
+            .MustAsync((request, token) => bidValidator.HasNotEndedAsync(request, token))
+            .WithMessage("The bidding has ended.");
     }
 }
 
-public interface IBidAmountValidator
+public interface IBidValidator
 {
-    public Task<bool> IsHighestBidAsync(AddBidRequest request, CancellationToken cancellationToken);
+    public Task<bool> IsHighestAsync(AddBidRequest request, CancellationToken cancellationToken);
+    public Task<bool> HasNotEndedAsync(AddBidRequest request, CancellationToken cancellationToken);
 }
 
 public static class AddBidRouteFactory
 {
     public const string Uri = "api/freeagents/addbid";
+    public const string GetIsHighestUri = $"{Uri}/ishighest";
+    public const string GetHasNotEndedUri = $"{Uri}/hasnotended";
 
-    public static string Create(AddBidRequest request)
+    public static string Create(string endpoint, AddBidRequest request)
     {
-        var uri = QueryHelpers.AddQueryString(Uri, new Dictionary<string, string>
+        var uri = QueryHelpers.AddQueryString(endpoint, new Dictionary<string, string>
         {
             { nameof(AddBidRequest.PlayerId), request.PlayerId.ToString() },
             { nameof(AddBidRequest.Amount), request.Amount.ToString() }
