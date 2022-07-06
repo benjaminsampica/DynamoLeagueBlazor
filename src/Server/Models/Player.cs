@@ -4,9 +4,9 @@ namespace DynamoLeagueBlazor.Server.Models;
 
 public record Player : BaseEntity
 {
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger> _machine;
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger> _machine;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
 
     public Player()
     {

@@ -8,6 +8,13 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Convert Signed to use state.
+            var sql = $@"UPDATE Players
+                SET State = 2
+                WHERE Rostered = true";
+
+            migrationBuilder.Sql(sql.ToString());
+
             migrationBuilder.DropColumn(
                 name: "Rostered",
                 table: "Players");
