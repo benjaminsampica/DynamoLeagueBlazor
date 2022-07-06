@@ -47,7 +47,7 @@ public record Player : BaseEntity
     public int YearAcquired { get; set; }
     public int? TeamId { get; set; }
     public DateTime? EndOfFreeAgency { get; set; }
-    public PlayerState? State { get; set; } = PlayerState.Unsigned;
+    public PlayerState State { get; set; } = PlayerState.Unsigned;
 
     public Team Team { get; private set; } = null!;
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
