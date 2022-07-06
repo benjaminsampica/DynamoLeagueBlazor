@@ -25,20 +25,43 @@ public class PlayerTests
 public class PlayerStateTests
 {
     [Fact]
-    public void GivenAFreeAgent_ThenCanMoveToOfferMatching()
+    public void GivenAFreeAgent_WhenEndingBidding_ThenMovesToOfferMatching()
     {
-        var player = CreateFakePlayer();
-        player.State = PlayerState.FreeAgent;
+        var freeAgent = CreateFakePlayer();
+        freeAgent.State = PlayerState.FreeAgent;
 
-        player.SetToOfferMatching();
+        freeAgent.EndBidding();
+
+        freeAgent.State.Should().Be(PlayerState.OfferMatching);
     }
 
     [Fact]
-    public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
+    public void GivenAnOfferMatchingPlayer_WhenMatchingOffer_ThenMovesToUnsigned()
     {
-        var player = CreateFakePlayer();
-        player.State = PlayerState.FreeAgent;
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.OfferMatching;
 
-        FluentActions.Invoking(() => player.SetToOfferMatching()).Should().NotThrow();
+        offerMatchingPlayer.MatchOffer();
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
     }
+
+    [Fact]
+    public void GivenAnOfferMatchingPlayer_WhenMatchIsExpiring_ThenMovesToUnsigned()
+    {
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.OfferMatching;
+
+        offerMatchingPlayer.ExpireMatch();
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
+    }
+
+    //[Fact]
+    //public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
+    //{
+    //    var player = CreateFakePlayer();
+
+    //    FluentActions.Invoking(() => player.SOMETHING()).Should().NotThrow();
+    //}
 }

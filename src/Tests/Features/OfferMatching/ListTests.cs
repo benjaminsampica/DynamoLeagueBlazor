@@ -65,20 +65,23 @@ public class ListServerTests : IntegrationTestBase
         freeAgent.OfferingTeam.Should().Be(mockTeam.Name);
         freeAgent.Offer.Should().Be(bidAmount);
     }
+
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatched_ThenPlayerIsMovedToUnsignedStatus()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsignedStatus()
     {
         var application = CreateUserAuthenticatedApplication();
         var team = CreateFakeTeam();
         await application.AddAsync(team);
 
         var player = CreateFakePlayer();
-        player.YearContractExpires = DateTime.MaxValue.Year;
+        player.State = PlayerState.OfferMatching;
         player.AddBid(int.MaxValue, team.Id);
         await application.AddAsync(player);
 
-        var request = AutoFaker.Generate<MatchPlayerRequest>();
-        request.PlayerId = player.Id;
+        var request = new MatchPlayerRequest
+        {
+            PlayerId = player.Id
+        };
         var client = application.CreateClient();
 
         await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
@@ -89,28 +92,30 @@ public class ListServerTests : IntegrationTestBase
         result.EndOfFreeAgency.Should().Be(null);
         result.YearAcquired.Should().Be(DateTime.Today.Year);
         result.ContractValue.Should().Be(int.MaxValue);
+        result.State.Should().Be(PlayerState.Unsigned);
     }
 
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBids_ThenContractValueIsOne()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBids_ThenContractValueIsTheMinimumBid()
     {
-        int minimumBid = 1;
         var application = CreateUserAuthenticatedApplication();
         var team = CreateFakeTeam();
         await application.AddAsync(team);
 
         var player = CreateFakePlayer();
-        player.YearContractExpires = DateTime.MaxValue.Year;
+        player.State = PlayerState.OfferMatching;
         await application.AddAsync(player);
 
-        var request = AutoFaker.Generate<MatchPlayerRequest>();
-        request.PlayerId = player.Id;
+        var request = new MatchPlayerRequest
+        {
+            PlayerId = player.Id
+        };
         var client = application.CreateClient();
 
         await client.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, request);
 
         var result = await application.FirstOrDefaultAsync<Player>();
-        result!.ContractValue.Should().Be(minimumBid);
+        result!.ContractValue.Should().Be(Bid.MinimumAmount);
 
     }
 }

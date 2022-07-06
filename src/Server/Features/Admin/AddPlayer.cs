@@ -73,8 +73,6 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
             TeamId = request.TeamId
         };
 
-        player.SetToUnsigned();
-
         _dbContext.Add(player);
         await _dbContext.SaveChangesAsync(cancellationToken);
 

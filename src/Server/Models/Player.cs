@@ -5,7 +5,6 @@ namespace DynamoLeagueBlazor.Server.Models;
 public record Player : BaseEntity
 {
     private readonly StateMachine<PlayerState?, PlayerStateTrigger> _machine;
-    // TODO more states.
     //private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
     //private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
 
@@ -18,10 +17,10 @@ public record Player : BaseEntity
         _machine.Configure(PlayerState.FreeAgent)
             .Permit(PlayerStateTrigger.BiddingEnded, PlayerState.OfferMatching);
 
-        //_machine.Configure(PlayerState.OfferMatching)
-        //    .Permit(PlayerStateTrigger.OfferMatchedByTeam, PlayerState.Unsigned)
-        //    .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned)
-        //    .PermitIf(PlayerStateTrigger.UnwantedByLeague, PlayerState.Deleted, () => !Bids.Any());
+        _machine.Configure(PlayerState.OfferMatching)
+            .Permit(PlayerStateTrigger.OfferMatchedByTeam, PlayerState.Unsigned)
+            .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned)
+            .OnExit(() => SetToUnsigned());
     }
 
     public Player(string name, string position, string headShotUrl) : this()
@@ -37,17 +36,17 @@ public record Player : BaseEntity
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
-    public bool Rostered { get; set; }
+    public bool Rostered { get; set; } // TODO: Remove this when rostered is a state.
     public int? TeamId { get; set; }
     public DateTime? EndOfFreeAgency { get; set; }
-    public PlayerState? State { get; set; } // = PlayerState.REPLACEME; TODO: Eventually set an initial state.
+    public PlayerState? State { get; set; } = PlayerState.Unsigned;
 
     public Team Team { get; private set; } = null!;
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
-    private enum PlayerStateTrigger { NewSeasonStarted, AddedByAdmin, BiddingEnded, UnwantedByLeague, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
-    public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered, Deleted } // TODO: Admin added?
+    private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
+    public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered }
 
     public Player SetToRostered(int yearContractExpires, int contractValue)
     {
@@ -67,11 +66,18 @@ public record Player : BaseEntity
         return this;
     }
 
-    public Player SetToUnsigned()
+    public void MatchOffer() => _machine.Fire(PlayerStateTrigger.OfferMatchedByTeam);
+
+    public void ExpireMatch() => _machine.Fire(PlayerStateTrigger.MatchExpired);
+
+    public void EndBidding() => _machine.Fire(PlayerStateTrigger.BiddingEnded);
+
+    private Player SetToUnsigned()
     {
         Rostered = false;
         YearContractExpires = null;
         EndOfFreeAgency = null;
+        ContractValue = Bids.FindHighestBid()?.Amount ?? Bid.MinimumAmount;
         YearAcquired = DateTime.Today.Year;
 
         return this;
@@ -149,12 +155,6 @@ public static class PlayerExtensions
         => players.Where(p => p.Rostered == false
             && p.YearContractExpires != null
             && p.EndOfFreeAgency == null);
-
-    public static IQueryable<Player> WhereIsUnsigned(this IQueryable<Player> players)
-        => players.Where(p => p.Rostered == false
-            && p.YearContractExpires == null
-            && p.EndOfFreeAgency == null
-            && p.YearAcquired == DateTime.Today.Year);
 
     public static IQueryable<Player> WhereIsEligibleForFreeAgency(this IQueryable<Player> players)
         => players.Where(p => p.YearContractExpires < DateTime.Today.Year);

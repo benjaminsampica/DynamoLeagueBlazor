@@ -23,7 +23,7 @@ public class EndBiddingService : IInvocable
 
         foreach (var player in players)
         {
-            player.SetToOfferMatching();
+            player.EndBidding();
         }
 
         await _dbContext.SaveChangesAsync();

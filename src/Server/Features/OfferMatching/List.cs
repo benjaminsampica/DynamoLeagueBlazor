@@ -95,8 +95,8 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
             .AsTracking()
             .Include(p => p.Bids)
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
-        player.ContractValue = player.Bids.FindHighestBid()?.Amount ?? Bid.MinimumAmount;
-        player.SetToUnsigned();
+
+        player.MatchOffer();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

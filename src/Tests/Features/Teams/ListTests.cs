@@ -25,14 +25,17 @@ public class ListTests : IntegrationTestBase
 
         var rosteredPlayer = CreateFakePlayer().SetToRostered(DateTime.MaxValue.Year, int.MaxValue);
         rosteredPlayer.TeamId = mockTeam.Id;
+        rosteredPlayer.State = PlayerState.Rostered;
         await application.AddAsync(rosteredPlayer);
 
         var unrosteredPlayer = CreateFakePlayer().SetToUnrostered();
         unrosteredPlayer.TeamId = mockTeam.Id;
+        unrosteredPlayer.State = PlayerState.Unrostered;
         await application.AddAsync(unrosteredPlayer);
 
-        var unsignedPlayer = CreateFakePlayer().SetToUnsigned();
+        var unsignedPlayer = CreateFakePlayer();
         unsignedPlayer.TeamId = mockTeam.Id;
+        unsignedPlayer.State = PlayerState.Unsigned;
         await application.AddAsync(unsignedPlayer);
 
         var client = application.CreateClient();
