@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using MediatR;
@@ -72,14 +71,14 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
         var random = new Random();
 
         var players = _dbContext.Players
-            .WhereIsEligibleForFreeAgency()
+            .Where(p => p.YearContractExpires < DateTime.Today.Year)
             .AsTracking();
 
         foreach (var player in players)
         {
-            var date = GetRandomBoundariedDate(random, _boundaryStartDate, _boundaryEndDate);
+            var endOfFreeAgency = GetRandomBoundariedDate(random, _boundaryStartDate, _boundaryEndDate);
 
-            player.SetToFreeAgent(date);
+            player.BeginNewSeason(endOfFreeAgency);
         }
 
         var startOfTheCurrentYear = new DateTime(DateTime.Today.Year, 1, 1);

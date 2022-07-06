@@ -44,7 +44,7 @@
         </MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
         <MudTd DataLabel=@nameof(PlayerItem.Team)>@context.Team</MudTd>
-        <MudTd DataLabel="Contract Value">@context.ContractValue</MudTd>
+        <MudTd DataLabel="Contract Value">@context.ContractValue.ToString("C0")</MudTd>
         <MudTd DataLabel="Contract Length">@context.YearContractExpires</MudTd>
     </RowTemplate>
     <PagerContent>

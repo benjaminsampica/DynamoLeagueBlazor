@@ -59,19 +59,38 @@ public class PlayerStateTests
     [Fact]
     public void GivenAnUnsignedPlayer_WhenATeamSignsThePlayer_ThenMovesToRostered()
     {
-        var offerMatchingPlayer = CreateFakePlayer();
-        offerMatchingPlayer.State = PlayerState.Unsigned;
+        var unsignedPlayer = CreateFakePlayer();
+        unsignedPlayer.State = PlayerState.Unsigned;
 
-        offerMatchingPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+        unsignedPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
 
-        offerMatchingPlayer.State.Should().Be(PlayerState.Rostered);
+        unsignedPlayer.State.Should().Be(PlayerState.Rostered);
     }
 
-    //[Fact]
-    //public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifetime()
-    //{
-    //    var player = CreateFakePlayer();
+    [Fact]
+    public void GivenAnRosteredPlayer_WhenANewSeasonStarts_ThenMovesToFreeAgent()
+    {
+        var rosteredPlayer = CreateFakePlayer();
+        rosteredPlayer.State = PlayerState.Rostered;
 
-    //    FluentActions.Invoking(() => player.SOMETHING()).Should().NotThrow();
-    //}
+        rosteredPlayer.BeginNewSeason(DateTime.MaxValue);
+
+        rosteredPlayer.State.Should().Be(PlayerState.FreeAgent);
+    }
+
+    [Fact]
+    public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifecycle()
+    {
+        var player = CreateFakePlayer();
+
+        FluentActions.Invoking(() =>
+        {
+            player.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+            player.BeginNewSeason(DateTime.MaxValue);
+            player.EndBidding();
+            player.MatchOffer();
+        }).Should().NotThrow();
+
+        player.State.Should().Be(PlayerState.Unsigned);
+    }
 }

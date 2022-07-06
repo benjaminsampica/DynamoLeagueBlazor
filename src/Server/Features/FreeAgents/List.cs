@@ -7,6 +7,7 @@ using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
 
@@ -54,7 +55,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
             .Include(p => p.Team)
             .Include(p => p.Bids)
                 .ThenInclude(b => b.Team)
-            .WhereIsFreeAgent()
+            .Where(p => p.State == PlayerState.FreeAgent)
             .OrderBy(p => p.EndOfFreeAgency)
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
