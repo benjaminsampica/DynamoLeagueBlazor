@@ -4,31 +4,6 @@ namespace DynamoLeagueBlazor.Tests.Models;
 
 public class PlayerTests
 {
-    [Theory]
-    [InlineData(-1), InlineData(-2), InlineData(-3)]
-    public void WhereIsOfferMatching_GivenAPlayer_WhenTheirFreeAgencyIsThreeOrLessDaysFromToday_ThenShouldContainThePlayer(int daysAgo)
-    {
-        var player = CreateFakePlayer();
-        player.SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue);
-        player.SetToFreeAgent(DateTime.Today.AddDays(daysAgo));
-
-        var sut = new List<Player> { player }.AsQueryable();
-
-        sut.WhereIsOfferMatching().Should().Contain(player);
-    }
-
-    [Fact]
-    public void WhereIsOfferMatching_GivenAPlayer_WhenTheirFreeAgencyIsFourOrMoreDaysFromToday_ThenShouldNotContainThePlayer()
-    {
-        var player = CreateFakePlayer();
-        player.SetToRostered(DateTime.Today.AddYears(-1).Year, int.MaxValue);
-        player.SetToFreeAgent(DateTime.Today.AddDays(-4));
-
-        var sut = new List<Player> { player }.AsQueryable();
-
-        sut.WhereIsOfferMatching().Should().NotContain(player);
-    }
-
     [Fact]
     public void GivenAPlayerWithNoBids_WhenFindingTheHighestBid_ThenTheHighestBidIsTheMinimumAmount()
         => CreateFakePlayer()
@@ -43,5 +18,79 @@ public class PlayerTests
         player.AddBid(int.MaxValue, int.MaxValue);
 
         player.GetHighestBidAmount().Should().Be(int.MaxValue);
+    }
+}
+
+public class PlayerStateTests
+{
+    [Fact]
+    public void GivenAFreeAgent_WhenEndingBidding_ThenMovesToOfferMatching()
+    {
+        var freeAgent = CreateFakePlayer();
+        freeAgent.State = PlayerState.FreeAgent;
+
+        freeAgent.EndBidding();
+
+        freeAgent.State.Should().Be(PlayerState.OfferMatching);
+    }
+
+    [Fact]
+    public void GivenAnOfferMatchingPlayer_WhenMatchingOffer_ThenMovesToUnsigned()
+    {
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.OfferMatching;
+
+        offerMatchingPlayer.MatchOffer();
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
+    }
+
+    [Fact]
+    public void GivenAnOfferMatchingPlayer_WhenMatchIsExpiring_ThenMovesToUnsigned()
+    {
+        var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.State = PlayerState.OfferMatching;
+
+        offerMatchingPlayer.ExpireMatch();
+
+        offerMatchingPlayer.State.Should().Be(PlayerState.Unsigned);
+    }
+
+    [Fact]
+    public void GivenAnUnsignedPlayer_WhenATeamSignsThePlayer_ThenMovesToRostered()
+    {
+        var unsignedPlayer = CreateFakePlayer();
+        unsignedPlayer.State = PlayerState.Unsigned;
+
+        unsignedPlayer.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+
+        unsignedPlayer.State.Should().Be(PlayerState.Rostered);
+    }
+
+    [Fact]
+    public void GivenAnRosteredPlayer_WhenANewSeasonStarts_ThenMovesToFreeAgent()
+    {
+        var rosteredPlayer = CreateFakePlayer();
+        rosteredPlayer.State = PlayerState.Rostered;
+
+        rosteredPlayer.BeginNewSeason(DateTime.MaxValue);
+
+        rosteredPlayer.State.Should().Be(PlayerState.FreeAgent);
+    }
+
+    [Fact]
+    public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifecycle()
+    {
+        var player = CreateFakePlayer();
+
+        FluentActions.Invoking(() =>
+        {
+            player.SignForCurrentTeam(int.MaxValue, int.MaxValue);
+            player.BeginNewSeason(DateTime.MaxValue);
+            player.EndBidding();
+            player.MatchOffer();
+        }).Should().NotThrow();
+
+        player.State.Should().Be(PlayerState.Unsigned);
     }
 }

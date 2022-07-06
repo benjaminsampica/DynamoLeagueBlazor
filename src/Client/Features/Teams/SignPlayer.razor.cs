@@ -9,7 +9,7 @@ namespace DynamoLeagueBlazor.Client.Features.Teams;
 public sealed partial class SignPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [CascadingParameter] public MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
     private SignPlayerRequest _form = null!;
@@ -46,11 +46,11 @@ public sealed partial class SignPlayer : IDisposable
 
             if (response.IsSuccessStatusCode)
             {
-                SnackBar.Add("Successfully signed player.", Severity.Success);
+                Snackbar.Add("Successfully signed player.", Severity.Success);
             }
             else
             {
-                SnackBar.Add("Something went wrong...", Severity.Error);
+                Snackbar.Add("Something went wrong...", Severity.Error);
             }
         }
         catch (AccessTokenNotAvailableException exception)

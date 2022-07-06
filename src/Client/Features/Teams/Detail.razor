@@ -54,20 +54,20 @@ else
                             <MudText Typo="Typo.h6">@_playerTableHeader</MudText>
                         </ToolBarContent>
                         <HeaderContent>
-                            @if(_isSignedPlayersShowing && _isUsersTeam)
+                            @if(_isUsersTeam && _onPlayerTableActionClick != null)
                             {
-                                <MudTh>Sign</MudTh>
+                                <MudTh>Actions</MudTh>
                             }
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Name)">@nameof(PlayerItem.Name)</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.Position)">@nameof(PlayerItem.Position)</MudTableSortLabel></MudTh>
                             <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.ContractValue)">Contract Value</MudTableSortLabel></MudTh>
-                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires)">Contract Length</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<PlayerItem,object>(x=> x.YearContractExpires ?? 0)">Contract Length</MudTableSortLabel></MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            @if(_isSignedPlayersShowing && _isUsersTeam)
+                            @if(_isUsersTeam && _onPlayerTableActionClick != null)
                             { 
                                 <MudTd DataLabel="Actions">
-                                    <MudIconButton Icon="@Icons.Filled.AssignmentLate" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" OnClick="(e) => OpenSignPlayerDialog(context.Id)" />
+                                    <MudIconButton Icon="@_tableActionIcon" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" OnClick="() => _onPlayerTableActionClick.Invoke(context.Id)" />
                                 </MudTd>
                             }
                             <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>

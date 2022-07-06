@@ -29,9 +29,9 @@ public class SignPlayerServerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAuthenticatedAdmin_ThenSignsPlayer()
+    public async Task GivenAuthenticatedUser_ThenSignsPlayer()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = CreateUserAuthenticatedApplication();
         var player = CreateFakePlayer();
         player.Position = Position.QuarterBack.Name;
         player.YearContractExpires = DateTime.Now.Year;
@@ -47,7 +47,6 @@ public class SignPlayerServerTests : IntegrationTestBase
 
         result.Should().NotBeNull();
         result!.YearContractExpires.Should().Be(request.YearContractExpires);
-        result.Rostered.Should().BeTrue();
         result.EndOfFreeAgency.Should().BeNull();
         var position = Position.FromName(player.Position);
         var expectedContractValue = position.GetContractValue(request.YearContractExpires, player.ContractValue);

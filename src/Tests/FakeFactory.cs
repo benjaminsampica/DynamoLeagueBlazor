@@ -33,6 +33,7 @@ public class FakeFactory
             .Ignore(f => f.Bids)
             .Ignore(f => f.Team)
             .Ignore(f => f.Fines)
+            .Ignore(f => f.State)
             .RuleFor(f => f.TeamId, teamId ?? null);
 
         return faker.Generate();

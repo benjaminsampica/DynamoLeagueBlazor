@@ -7,6 +7,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Server.Models.Player;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
@@ -50,8 +51,8 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
             .SingleAsync(cancellationToken);
 
         var rosteredPlayersQuery = _dbContext.Players
-            .Where(p => p.TeamId == request.TeamId)
-            .WhereIsRostered();
+            .Where(p => p.TeamId == request.TeamId
+                && p.State == PlayerState.Rostered);
         var rosteredPlayers = await rosteredPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
@@ -60,8 +61,8 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
         var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
         var unrosteredPlayersQuery = _dbContext.Players
-            .Where(p => p.TeamId == request.TeamId)
-            .WhereIsUnrostered();
+            .Where(p => p.TeamId == request.TeamId
+                && p.State == PlayerState.Unrostered);
         var unrosteredPlayers = await unrosteredPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
@@ -70,8 +71,8 @@ public class DetailHandler : IRequestHandler<DetailQuery, TeamDetailResult>
         var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
 
         var unsignedPlayersQuery = _dbContext.Players
-            .Where(p => p.TeamId == request.TeamId)
-            .WhereIsUnsigned();
+            .Where(p => p.TeamId == request.TeamId
+                && p.State == PlayerState.Unsigned);
         var unsignedPlayers = await unsignedPlayersQuery
             .ProjectTo<PlayerItem>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

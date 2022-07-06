@@ -70,7 +70,7 @@ public class SignPlayerCommandHandler : IRequestHandler<SignPlayerCommand, int>
         var position = Position.FromName(player.Position);
         var contractValue = position.GetContractValue(request.YearContractExpires, player.ContractValue);
 
-        player.SetToRostered(request.YearContractExpires, contractValue);
+        player.SignForCurrentTeam(request.YearContractExpires, contractValue);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

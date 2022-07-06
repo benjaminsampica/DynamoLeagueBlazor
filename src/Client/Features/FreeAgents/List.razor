@@ -45,7 +45,7 @@
                 </MudTd>
                 <MudTd DataLabel="Highest Bid">
                     <span>
-                        @context.HighestBid.ToString("C")
+                        @context.HighestBid.ToString("C0")
                         @if (context.CurrentUserIsHighestBidder)
                         {
                             <MudChip Color=Color.Success Size=Size.Small>You!</MudChip>

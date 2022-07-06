@@ -1,7 +1,10 @@
+using Coravel;
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Admin.Shared;
 using DynamoLeagueBlazor.Server.Features.Fines;
+using DynamoLeagueBlazor.Server.Features.FreeAgents;
+using DynamoLeagueBlazor.Server.Features.OfferMatching;
 using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
@@ -81,7 +84,7 @@ try
         fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     });
 
-    builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
+    builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
@@ -95,6 +98,10 @@ try
     {
         builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
     }
+
+    builder.Services.AddScheduler();
+    builder.Services.AddScoped<EndBiddingService>();
+    builder.Services.AddScoped<ExpireOfferMatchingService>();
 
     var app = builder.Build();
 
@@ -127,6 +134,18 @@ try
     app.MapRazorPages();
     app.MapControllers().RequireAuthorization();
     app.MapFallbackToFile("index.html");
+
+    app.Services.UseScheduler(scheduler =>
+    {
+        var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+        scheduler.Schedule<EndBiddingService>()
+            .DailyAtHour(22)
+            .Zoned(centralStandardTimeZone);
+
+        scheduler.Schedule<ExpireOfferMatchingService>()
+            .Daily()
+            .Zoned(centralStandardTimeZone);
+    });
 
     await using (var scope = app.Services.CreateAsyncScope())
     {

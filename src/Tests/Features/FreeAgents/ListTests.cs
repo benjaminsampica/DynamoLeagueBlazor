@@ -40,9 +40,9 @@ public class ListTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        mockPlayer.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
+        mockPlayer.SignForCurrentTeam(DateTime.MinValue.Year, int.MaxValue);
         var biddingEnds = DateTime.MaxValue;
-        mockPlayer.SetToFreeAgent(biddingEnds);
+        mockPlayer.BeginNewSeason(biddingEnds);
         await application.AddAsync(mockPlayer);
 
         var bidAmount = int.MaxValue;
@@ -77,9 +77,9 @@ public class ListTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        mockPlayer.SetToRostered(DateTime.MinValue.Year, int.MaxValue);
+        mockPlayer.SignForCurrentTeam(DateTime.MinValue.Year, int.MaxValue);
         var biddingEnds = DateTime.MaxValue;
-        mockPlayer.SetToFreeAgent(biddingEnds);
+        mockPlayer.BeginNewSeason(biddingEnds);
         await application.AddAsync(mockPlayer);
 
         var winningTeam = CreateFakeTeam();

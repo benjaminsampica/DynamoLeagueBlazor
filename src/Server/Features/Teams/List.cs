@@ -7,6 +7,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static DynamoLeagueBlazor.Server.Models.Player;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
@@ -57,24 +58,24 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
             using var dbContext = await _dbContext.CreateDbContextAsync(cancellationToken);
 
             var rosteredPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsRostered();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Rostered);
             var rosteredPlayerCount = await rosteredPlayersQuery.CountAsync(cancellationToken);
             team.RosteredPlayerCount = rosteredPlayerCount.ToString();
 
             var rosteredPlayersContractValue = await rosteredPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
             var unrosteredPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsUnrostered();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Unrostered);
             var unrosteredPlayerCount = await unrosteredPlayersQuery.CountAsync(cancellationToken);
             team.UnrosteredPlayerCount = unrosteredPlayerCount.ToString();
 
             var unrosteredPlayersContractValue = await unrosteredPlayersQuery.SumAsync(urp => urp.ContractValue, cancellationToken);
 
             var unsignedPlayersQuery = dbContext.Players
-                .Where(p => p.TeamId == team.Id)
-                .WhereIsUnsigned();
+                .Where(p => p.TeamId == team.Id
+                    && p.State == PlayerState.Unsigned);
             var unsignedPlayerCount = await unsignedPlayersQuery.CountAsync(cancellationToken);
             team.UnsignedPlayerCount = unsignedPlayerCount.ToString();
 

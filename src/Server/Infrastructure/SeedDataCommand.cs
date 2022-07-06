@@ -83,32 +83,33 @@ public class Handler : IRequestHandler<SeedDataCommand>
                     TeamId = new Random().Next(1, 10)
                 };
 
-                if (i % 2 == 0)
-                {
-                    player.SetToRostered(DateTime.Today.AddYears(1).Year, 1);
+                // TODO: Come back and redo this with the state machine.
+                //if (i % 2 == 0)
+                //{
+                //    player.SetToRostered(DateTime.Today.AddYears(1).Year, 1);
 
-                    if (i % 10 == 0)
-                    {
-                        player.SetToUnrostered();
-                    }
-                }
-                else if (i % 5 == 0)
-                {
-                    player.SetToUnsigned();
-                }
-                else
-                {
-                    player.SetToRostered(DateTime.Today.AddYears(-1).Year, 1);
-                    if (i % 7 == 0)
-                    {
-                        player.SetToFreeAgent(DateTime.Today.AddYears(1));
-                    }
-                    else
-                    {
-                        player.SetToFreeAgent(DateTime.Today.AddDays(-2));
-                        player.TeamId = 1;
-                    }
-                }
+                //    if (i % 10 == 0)
+                //    {
+                //        player.SetToUnrostered();
+                //    }
+                //}
+                //else if (i % 5 == 0)
+                //{
+                //    player.SetToUnsigned();
+                //}
+                //else
+                //{
+                //    player.SetToRostered(DateTime.Today.AddYears(-1).Year, 1);
+                //    if (i % 7 == 0)
+                //    {
+                //        player.SetToFreeAgent(DateTime.Today.AddYears(1));
+                //    }
+                //    else
+                //    {
+                //        player.SetToFreeAgent(DateTime.Today.AddDays(-2));
+                //        player.TeamId = 1;
+                //    }
+                //}
 
                 _dbContext.Players.Add(player);
             }
