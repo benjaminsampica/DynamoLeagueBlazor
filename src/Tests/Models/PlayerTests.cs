@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Server.Models;
+using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Tests.Models;
 

@@ -90,6 +90,13 @@ public record Player : BaseEntity
         return this;
     }
 
+    public Player SetToOfferMatching()
+    {
+        _machine.Fire(PlayerStateTrigger.BiddingEnded);
+
+        return this;
+    }
+
     public void GrantExtensionToFreeAgency()
     {
         EndOfFreeAgency = EndOfFreeAgency?.AddDays(1);
