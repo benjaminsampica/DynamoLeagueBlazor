@@ -61,33 +61,33 @@ else
                                     }
                                     <MudTimelineItem Icon=@Icons.Outlined.Money Size=Size.Large Color=Color.Success>
                                         <ItemOpposite>
-                                           <MudText Color="Color.Success" Typo="Typo.h3">
+                                           <MudText Color="Color.Success" Typo="Typo.h4">
                                                @firstBid.Amount
                                            </MudText>
                                         </ItemOpposite>
                                         <ItemContent>
-                                            <MudText Color="Color.Success" Typo="Typo.h4">
+                                            <MudText Color="Color.Success" Typo="Typo.h5">
                                                 @firstBid.Team
                                             </MudText>
-                                            <MudText Color=Color.Default>
+                                            <MudText Typo="Typo.subtitle2">
                                                 @firstBid.CreatedOn
                                             </MudText>
                                         </ItemContent>
                                     </MudTimelineItem>
                                     @foreach(var bid in _result.Bids.Skip(1))
                                     {
-                                        <MudTimelineItem Icon=@Icons.Outlined.Money>
-                                          <ItemOpposite>
-                                               <MudText Typo="Typo.h5">
-                                                   @firstBid.Amount
+                                        <MudTimelineItem TimelineAlign="TimelineAlign.End">
+                                            <ItemOpposite>
+                                               <MudText Typo="Typo.h6">
+                                                   @bid.Amount
                                                </MudText>
                                             </ItemOpposite>
                                             <ItemContent>
-                                                <MudText Color="Color.Success" Typo="Typo.h6">
-                                                    @firstBid.Team
+                                                <MudText Typo="Typo.h6">
+                                                    @bid.Team
                                                 </MudText>
-                                                <MudText Color=Color.Default>
-                                                    @firstBid.CreatedOn
+                                                <MudText Typo="Typo.subtitle2">
+                                                    @bid.CreatedOn
                                                 </MudText>
                                             </ItemContent>
                                         </MudTimelineItem>
