@@ -53,11 +53,6 @@ public record Player : BaseEntity
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
-    // TODO: For reference when doing unrostering/dropping players. Remove when that state is added.
-    //public static IQueryable<Player> WhereIsUnrostered(this IQueryable<Player> players)
-    //    => players.Where(p => p.Rostered == false
-    //        && p.YearContractExpires != null
-    //        && p.EndOfFreeAgency == null);
     private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
     public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered }
 
@@ -108,6 +103,8 @@ public record Player : BaseEntity
 
         return bid;
     }
+
+    public void DropFromCurrentTeam() => _machine.Fire(PlayerStateTrigger.DroppedByTeam);
 
     private void GrantExtensionToFreeAgency()
     {

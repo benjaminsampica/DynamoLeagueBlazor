@@ -13,16 +13,18 @@ public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-    [Parameter] public int TeamId { get; set; }
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+    [Parameter, EditorRequired] public int TeamId { get; set; }
 
     private TeamDetailResult? _result;
     private bool _isUsersTeam = false;
-    private bool _isSignedPlayersShowing = false;
     private string _playerTableHeader = "Rostered Players";
     private IEnumerable<PlayerItem> _playersToDisplay = Array.Empty<PlayerItem>();
     private string _title = string.Empty;
     private readonly CancellationTokenSource _cts = new();
+    private Func<int, Task>? _onPlayerTableActionClick;
+    private string? _tableActionIcon;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,9 +32,10 @@ public sealed partial class Detail : IDisposable
         var user = authenticationState.User!;
 
         var claim = user.FindFirst(nameof(IUser.TeamId));
-        if (int.Parse(claim!.Value) == TeamId) _isUsersTeam = true;
+        _isUsersTeam = int.Parse(claim!.Value) == TeamId;
 
         await LoadDataAsync();
+        ShowRosteredPlayers();
     }
 
     private async Task LoadDataAsync()
@@ -41,7 +44,6 @@ public sealed partial class Detail : IDisposable
         {
             _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>(TeamDetailRouteFactory.Create(TeamId), _cts.Token);
             _title = $"Team Detail - {_result!.Name}";
-            ShowRosteredPlayers();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -53,24 +55,50 @@ public sealed partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
-        _isSignedPlayersShowing = false;
+        _onPlayerTableActionClick = DropPlayerAsync;
+        _tableActionIcon = Icons.Outlined.PersonRemove;
     }
 
     private void ShowUnrosteredPlayers()
     {
         _playersToDisplay = _result!.UnrosteredPlayers;
         _playerTableHeader = "Unrostered Players";
-        _isSignedPlayersShowing = false;
+        _onPlayerTableActionClick = null;
     }
 
     private void ShowUnsignedPlayers()
     {
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
-        _isSignedPlayersShowing = true;
+        _onPlayerTableActionClick = OpenSignPlayerDialogAsync;
+        _tableActionIcon = Icons.Filled.AssignmentLate;
     }
 
-    private async void OpenSignPlayerDialog(int playerId)
+    private async Task DropPlayerAsync(int playerId)
+    {
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync(DropPlayerRouteFactory.Uri, new DropPlayerRequest { PlayerId = playerId }, _cts.Token);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully dropped player.", Severity.Success);
+
+                await LoadDataAsync();
+                ShowRosteredPlayers();
+            }
+            else
+            {
+                Snackbar.Add("Something went wrong...", Severity.Error);
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task OpenSignPlayerDialogAsync(int playerId)
     {
         var maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
@@ -81,10 +109,10 @@ public sealed partial class Detail : IDisposable
         var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
         var result = await dialog.Result;
 
-
         if (!result.Cancelled)
         {
             await LoadDataAsync();
+            ShowUnsignedPlayers();
         }
     }
 
@@ -92,5 +120,7 @@ public sealed partial class Detail : IDisposable
     {
         _cts.Cancel();
         _cts.Dispose();
+
+        _onPlayerTableActionClick = null;
     }
 }
