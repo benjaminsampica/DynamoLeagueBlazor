@@ -1,9 +1,12 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Client.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
-public class DetailTests : IntegrationTestBase
+public class DetailServerTests : IntegrationTestBase
 {
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -53,5 +56,35 @@ public class DetailTests : IntegrationTestBase
         bid.Team.Should().Be(mockTeam.Name);
         bid.Amount.Should().Be(bidAmount.ToString("C0"));
         DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
+    }
+}
+
+public class DetailClientTests : UITestBase
+{
+    [Fact]
+    public void WhenLoading_ThenShowsLoading()
+    {
+        TestContext!.Services.AddSingleton(Mock.Of<IBidValidator>());
+
+        GetHttpHandler.When(HttpMethod.Get)
+            .TimesOutAfter(5000);
+
+        var cut = RenderComponent<Detail>();
+
+        cut.HasComponent<MudSkeleton>().Should().BeTrue();
+    }
+
+    [Fact]
+    public void GivenData_ThenShowsFormAndTimeline()
+    {
+        TestContext!.Services.AddSingleton(Mock.Of<IBidValidator>());
+
+        GetHttpHandler.When(HttpMethod.Get)
+            .RespondsWithJson(AutoFaker.Generate<FreeAgentDetailResult>());
+
+        var cut = RenderComponent<Detail>();
+
+        cut.HasComponent<MudTimeline>().Should().BeTrue();
+        cut.HasComponent<MudNumericField<int>>().Should().BeTrue();
     }
 }

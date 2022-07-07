@@ -54,15 +54,6 @@ public class DetailHandler : IRequestHandler<DetailQuery, FreeAgentDetailResult>
     }
 }
 
-public class DetailValidator : AbstractValidator<DetailQuery>
-{
-    public DetailValidator(ApplicationDbContext dbContext)
-    {
-        RuleFor(p => p.PlayerId)
-            .Must(value => dbContext.Players.Any(p => p.Id == value));
-    }
-}
-
 public class DetailMappingProfile : Profile
 {
     public DetailMappingProfile()
@@ -74,6 +65,6 @@ public class DetailMappingProfile : Profile
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))
-            .ForMember(d => d.CreatedOn, mo => mo.MapFrom(s => s.CreatedOn.ToShortDateString()));
+            .ForMember(d => d.CreatedOn, mo => mo.MapFrom(s => s.CreatedOn.ToString("g")));
     }
 }
