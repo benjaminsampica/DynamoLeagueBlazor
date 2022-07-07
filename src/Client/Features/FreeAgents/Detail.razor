@@ -29,7 +29,7 @@ else
                     <MudText Typo=Typo.h5 Align=Align.Center Color=Color.Tertiary>
                         @_result.Name
                     </MudText>
-                    <MudText Typo=Typo.h6>Team Owner</MudText>
+                    <MudText Typo=Typo.h6>Former Team</MudText>
                     <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Team</MudText>
                     <MudText Typo=Typo.h6>Position</MudText>
                     <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Position</MudText>
@@ -60,15 +60,35 @@ else
                                         var firstBid = _result.Bids.First();
                                     }
                                     <MudTimelineItem Icon=@Icons.Outlined.Money Size=Size.Large Color=Color.Success>
-                                        <MudAlert Severity="Severity.Success">
-                                            @firstBid!.Team is winning with a bid of <b>@firstBid.Amount</b> on @(firstBid.CreatedOn)!
-                                        </MudAlert>
+                                        <ItemOpposite>
+                                           <MudText Color="Color.Success" Typo="Typo.h4">
+                                               @firstBid.Amount
+                                           </MudText>
+                                        </ItemOpposite>
+                                        <ItemContent>
+                                            <MudText Color="Color.Success" Typo="Typo.h5">
+                                                @firstBid.Team
+                                            </MudText>
+                                            <MudText Typo="Typo.subtitle2">
+                                                @firstBid.CreatedOn
+                                            </MudText>
+                                        </ItemContent>
                                     </MudTimelineItem>
                                     @foreach(var bid in _result.Bids.Skip(1))
                                     {
-                                        <MudTimelineItem Icon=@Icons.Outlined.Money>
+                                        <MudTimelineItem TimelineAlign="TimelineAlign.End">
+                                            <ItemOpposite>
+                                               <MudText Typo="Typo.h6">
+                                                   @bid.Amount
+                                               </MudText>
+                                            </ItemOpposite>
                                             <ItemContent>
-                                                @bid!.Team bid @bid.Amount on @(bid.CreatedOn).
+                                                <MudText Typo="Typo.h6">
+                                                    @bid.Team
+                                                </MudText>
+                                                <MudText Typo="Typo.subtitle2">
+                                                    @bid.CreatedOn
+                                                </MudText>
                                             </ItemContent>
                                         </MudTimelineItem>
                                     }

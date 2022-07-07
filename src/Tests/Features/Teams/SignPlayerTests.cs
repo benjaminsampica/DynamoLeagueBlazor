@@ -61,12 +61,7 @@ public class SignPlayerUITests : UITestBase
     {
         // Delay the response.
         GetHttpHandler.When(HttpMethod.Get)
-            .Respond(async () =>
-            {
-                await Task.Delay(2000);
-
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            });
+            .TimesOutAfter(5000);
         var component = RenderComponent<SignPlayer>();
 
         component.HasComponent<MudDialog>().Should().BeTrue();

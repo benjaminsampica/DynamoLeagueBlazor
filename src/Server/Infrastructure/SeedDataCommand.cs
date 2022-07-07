@@ -83,33 +83,28 @@ public class Handler : IRequestHandler<SeedDataCommand>
                     TeamId = new Random().Next(1, 10)
                 };
 
-                // TODO: Come back and redo this with the state machine.
-                //if (i % 2 == 0)
-                //{
-                //    player.SetToRostered(DateTime.Today.AddYears(1).Year, 1);
 
-                //    if (i % 10 == 0)
-                //    {
-                //        player.SetToUnrostered();
-                //    }
-                //}
-                //else if (i % 5 == 0)
-                //{
-                //    player.SetToUnsigned();
-                //}
-                //else
-                //{
-                //    player.SetToRostered(DateTime.Today.AddYears(-1).Year, 1);
-                //    if (i % 7 == 0)
-                //    {
-                //        player.SetToFreeAgent(DateTime.Today.AddYears(1));
-                //    }
-                //    else
-                //    {
-                //        player.SetToFreeAgent(DateTime.Today.AddDays(-2));
-                //        player.TeamId = 1;
-                //    }
-                //}
+
+                if (i % 2 == 0)
+                {
+                    player.SignForCurrentTeam(DateTime.Today.AddYears(1).Year, i);
+
+
+                    if (i % 4 == 0)
+                    {
+                        player.BeginNewSeason(DateTime.Today.AddYears(1));
+                    }
+
+                    if (i % 8 == 0)
+                    {
+                        player.EndBidding();
+                    }
+
+                    if (i % 16 == 0)
+                    {
+                        player.ExpireMatch();
+                    }
+                }
 
                 _dbContext.Players.Add(player);
             }
