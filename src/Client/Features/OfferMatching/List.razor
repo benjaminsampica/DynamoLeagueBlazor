@@ -27,7 +27,7 @@
                 </MudTd>
                 <MudTd DataLabel="Player Position">@context.Position</MudTd>
                 <MudTd DataLabel="Offering Team">@context.OfferingTeam</MudTd>
-                <MudTd DataLabel="Offer">@context.Offer</MudTd>
+                <MudTd DataLabel="Offer">@context.Offer.ToString("C0")</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
