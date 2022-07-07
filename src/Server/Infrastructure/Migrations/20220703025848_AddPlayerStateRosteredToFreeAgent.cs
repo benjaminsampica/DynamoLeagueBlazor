@@ -8,6 +8,13 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Data cleansing - this shouldn't be happening.
+            var sql2 = $@"UPDATE Players
+                SET Rostered = 0 
+                WHERE EndOfFreeAgency IS NOT NULL";
+
+            migrationBuilder.Sql(sql2);
+
             // Convert Signed to use state.
             var sql = $@"UPDATE Players
                 SET State = 3

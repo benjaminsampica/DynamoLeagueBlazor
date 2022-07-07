@@ -12,7 +12,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
             // Convert Offer Matches to use state.
             var sql = $@"UPDATE Players
                 SET State = 1
-                WHERE DATEADD(day, 3, {nameof(Player.EndOfFreeAgency)}) <= getdate()";
+                WHERE DATEADD(day, 3, {nameof(Player.EndOfFreeAgency)}) >= getdate()";
 
             migrationBuilder.Sql(sql);
         }

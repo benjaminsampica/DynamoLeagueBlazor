@@ -12,7 +12,9 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
             // Convert Unsigned to use state.
             var sql = $@"UPDATE Players
                 SET State = 2
-                WHERE DATEADD(day, 3, {nameof(Player.EndOfFreeAgency)}) >= getdate()";
+                WHERE {nameof(Player.EndOfFreeAgency)} IS NULL
+                    AND {nameof(Player.YearContractExpires)} IS NULL
+                    AND {nameof(Player.YearAcquired)} = 2022";
 
             migrationBuilder.Sql(sql);
         }
