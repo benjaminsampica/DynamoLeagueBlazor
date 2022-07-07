@@ -84,7 +84,7 @@ try
         fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     });
 
-    builder.Services.AddTransient<IBidAmountValidator, BidAmountValidator>();
+    builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))

@@ -4,9 +4,9 @@ namespace DynamoLeagueBlazor.Server.Models;
 
 public record Player : BaseEntity
 {
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger> _machine;
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
-    private readonly StateMachine<PlayerState?, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger> _machine;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
 
     public Player()
     {
@@ -47,7 +47,7 @@ public record Player : BaseEntity
     public int YearAcquired { get; set; }
     public int? TeamId { get; set; }
     public DateTime? EndOfFreeAgency { get; set; }
-    public PlayerState? State { get; set; } = PlayerState.Unsigned;
+    public PlayerState State { get; set; } = PlayerState.Unsigned;
 
     public Team Team { get; private set; } = null!;
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();

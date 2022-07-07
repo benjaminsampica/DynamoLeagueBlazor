@@ -17,7 +17,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
 
             // Convert Free Agents to use state.
             var sql = $@"UPDATE Players
-                    SET State = 1
+                    SET State = 0
                     WHERE {nameof(Player.EndOfFreeAgency)} >= getdate()
                     AND {nameof(Player.YearContractExpires)} < YEAR(getdate())";
 
