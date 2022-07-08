@@ -43,7 +43,7 @@ try
 
     builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
-    builder.Services.AddScoped<ConfirmDialogService>();
+    builder.Services.AddScoped<IConfirmDialogService, ConfirmDialogService>();
 
     var host = builder.Build();
 

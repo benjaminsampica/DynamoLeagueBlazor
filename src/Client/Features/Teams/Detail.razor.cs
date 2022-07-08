@@ -14,7 +14,7 @@ public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
-    [Inject] private ConfirmDialogService ConfirmDialogService { get; set; } = null!;
+    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
     [Parameter, EditorRequired] public int TeamId { get; set; }

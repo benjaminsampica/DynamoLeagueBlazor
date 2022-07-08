@@ -11,7 +11,7 @@ public sealed partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject] private ConfirmDialogService ConfirmDialogService { get; set; } = null!;
+    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
 
     private const string _title = "Offer Matching";
     private bool _loading;

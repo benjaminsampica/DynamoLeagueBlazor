@@ -10,7 +10,12 @@ public partial class ConfirmDialog
     private void Confirm() => MudDialog.Close(DialogResult.Ok(true));
 }
 
-public class ConfirmDialogService
+public interface IConfirmDialogService
+{
+    Task<bool> IsCancelledAsync();
+}
+
+public class ConfirmDialogService : IConfirmDialogService
 {
     private readonly IDialogService _dialogService;
 
