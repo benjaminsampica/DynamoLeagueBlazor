@@ -29,7 +29,7 @@ public sealed partial class AddFine : IDisposable
     {
         try
         {
-            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token) ?? new();
+            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token);
         }
         catch (AccessTokenNotAvailableException exception)
         {
