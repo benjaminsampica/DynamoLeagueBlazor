@@ -23,15 +23,16 @@ public partial class BidCountdown
 
     private void CountDown(object? source, ElapsedEventArgs e)
     {
-        var remainingTime = (DateTime - DateTime.Now);
+        var remainingTime = DateTime - DateTime.Now;
 
         if (remainingTime <= TimeSpan.FromDays(1))
         {
             _color = Color.Error;
 
-            if (remainingTime == TimeSpan.Zero)
+            if (remainingTime <= TimeSpan.Zero)
             {
                 _timer.Enabled = false;
+                remainingTime = TimeSpan.Zero;
             }
         }
 
