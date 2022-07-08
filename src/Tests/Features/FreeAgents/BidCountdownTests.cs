@@ -9,7 +9,7 @@ public class BidCountdownTests : UITestBase
     {
         var cut = RenderComponent<BidCountdown>(parameters =>
         {
-            parameters.Add(p => p.DateTime, DateTime.Now.AddSeconds(4));
+            parameters.Add(p => p.DateTime, DateTime.Now.AddSeconds(5));
         });
 
         cut.WaitForState(() => cut.Markup.Contains("2 seconds"));
