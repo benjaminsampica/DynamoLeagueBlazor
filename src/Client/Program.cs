@@ -2,6 +2,7 @@ using DynamoLeagueBlazor.Client;
 using DynamoLeagueBlazor.Client.Areas.Identity;
 using DynamoLeagueBlazor.Client.Features.Admin;
 using DynamoLeagueBlazor.Client.Features.FreeAgents;
+using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
@@ -37,10 +38,12 @@ try
     builder.Services.AddMudServices(config =>
     {
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
+        config.SnackbarConfiguration.PreventDuplicates = false;
     });
 
     builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
+    builder.Services.AddScoped<IConfirmDialogService, ConfirmDialogService>();
 
     var host = builder.Build();
 

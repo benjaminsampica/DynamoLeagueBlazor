@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.OfferMatching;
+﻿using DynamoLeagueBlazor.Client.Shared.Components;
+using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
@@ -10,6 +11,8 @@ public sealed partial class List : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
+
     private const string _title = "Offer Matching";
     private bool _loading;
     private readonly CancellationTokenSource _cts = new();
@@ -36,8 +39,10 @@ public sealed partial class List : IDisposable
         _result = await HttpClient.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri, _cts.Token) ?? new();
     }
 
-    private async Task MatchPlayerAsync(int playerId, int amount)
+    private async Task MatchPlayerAsync(int playerId)
     {
+        if (await ConfirmDialogService.IsCancelledAsync()) return;
+
         var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId });
 
         if (response.IsSuccessStatusCode)

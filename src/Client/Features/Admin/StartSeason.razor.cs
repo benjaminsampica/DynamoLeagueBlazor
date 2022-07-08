@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Client.Shared.Components;
+using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +13,8 @@ public sealed partial class StartSeason : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
+
 
     private bool _isDisabled = true;
     private const string _title = "Start Season";
@@ -24,6 +27,8 @@ public sealed partial class StartSeason : IDisposable
 
     private async Task StartSeasonAsync()
     {
+        if (await ConfirmDialogService.IsCancelledAsync()) return;
+
         await HttpClient.PostAsync(StartSeasonRouteFactory.Uri, null);
 
         SnackBar.Add("A new season has begun!", Severity.Success);

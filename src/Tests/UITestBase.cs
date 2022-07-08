@@ -1,4 +1,5 @@
 ﻿using Bunit.TestDoubles;
+using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MockHttp.Json;
@@ -25,6 +26,7 @@ public class UITestBase : TestContextWrapper, IDisposable
 
         testContext.Services.AddMudServices();
         testContext.Services.AddSingleton(mockSnackBar.Object);
+        testContext.Services.AddSingleton(Mock.Of<IConfirmDialogService>());
         testContext.JSInterop.SetupVoid();
 
         var mockHttpHandler = new MockHttpHandler();

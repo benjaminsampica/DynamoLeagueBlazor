@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Client.Shared.Components;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,6 +14,7 @@ public sealed partial class Detail : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
     [Parameter, EditorRequired] public int TeamId { get; set; }
@@ -55,7 +57,7 @@ public sealed partial class Detail : IDisposable
     {
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
-        _onPlayerTableActionClick = DropPlayerAsync;
+        _onPlayerTableActionClick = UnrosterPlayerAsync;
         _tableActionIcon = Icons.Outlined.PersonRemove;
     }
 
@@ -74,15 +76,17 @@ public sealed partial class Detail : IDisposable
         _tableActionIcon = Icons.Filled.AssignmentLate;
     }
 
-    private async Task DropPlayerAsync(int playerId)
+    private async Task UnrosterPlayerAsync(int playerId)
     {
+        if (await ConfirmDialogService.IsCancelledAsync()) return;
+
         try
         {
             var response = await HttpClient.PostAsJsonAsync(DropPlayerRouteFactory.Uri, new DropPlayerRequest { PlayerId = playerId }, _cts.Token);
 
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add("Successfully dropped player.", Severity.Success);
+                Snackbar.Add("Successfully unrostered player.", Severity.Success);
 
                 await LoadDataAsync();
                 ShowRosteredPlayers();
@@ -100,13 +104,13 @@ public sealed partial class Detail : IDisposable
 
     private async Task OpenSignPlayerDialogAsync(int playerId)
     {
-        var maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         var parameters = new DialogParameters
         {
             { nameof(SignPlayer.PlayerId), playerId }
         };
 
-        var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, maxWidth);
+        var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, dialogOptions);
         var result = await dialog.Result;
 
         if (!result.Cancelled)

@@ -19,7 +19,7 @@ public record Player : BaseEntity
 
         _machine.Configure(PlayerState.Rostered)
             .OnEntryFrom(_rosteredTrigger, (yearContractExpires, contractValue) => SetToRostered(yearContractExpires, contractValue))
-            .Permit(PlayerStateTrigger.DroppedByTeam, PlayerState.Unrostered)
+            .Permit(PlayerStateTrigger.UnrosteredByTeam, PlayerState.Unrostered)
             .Permit(PlayerStateTrigger.NewSeasonStarted, PlayerState.FreeAgent);
 
         _machine.Configure(PlayerState.FreeAgent)
@@ -53,7 +53,7 @@ public record Player : BaseEntity
     public ICollection<Bid> Bids { get; private set; } = new HashSet<Bid>();
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
 
-    private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, DroppedByTeam }
+    private enum PlayerStateTrigger { NewSeasonStarted, BiddingEnded, OfferMatchedByTeam, MatchExpired, SignedByTeam, UnrosteredByTeam }
     public enum PlayerState { FreeAgent, OfferMatching, Unsigned, Rostered, Unrostered }
 
     public Player SetToUnrostered()
@@ -104,7 +104,7 @@ public record Player : BaseEntity
         return bid;
     }
 
-    public void DropFromCurrentTeam() => _machine.Fire(PlayerStateTrigger.DroppedByTeam);
+    public void DropFromCurrentTeam() => _machine.Fire(PlayerStateTrigger.UnrosteredByTeam);
 
     private void GrantExtensionToFreeAgency()
     {
