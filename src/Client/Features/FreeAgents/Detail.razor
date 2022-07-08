@@ -35,11 +35,9 @@ else
                     <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Position</MudText>
                     <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
                     <MudText Typo=Typo.h6>
-                        Bidding Ends on
+                        Bidding Ends In
                     </MudText>
-                    <MudText Typo=Typo.h6 Color=Color.Warning Align=Align.Center>
-                        @_result.EndOfFreeAgency
-                    </MudText>
+                    <BidCountdown DateTime=@_result.EndOfFreeAgency />
                 </MudItem>
                 <MudItem lg=9 xs=12>
                      <MudGrid>

@@ -59,7 +59,7 @@ public class DetailMappingProfile : Profile
     public DetailMappingProfile()
     {
         CreateMap<Player, FreeAgentDetailResult>()
-            .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value.ToShortDateString()))
+            .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.OrderByDescending(b => b.CreatedOn)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()

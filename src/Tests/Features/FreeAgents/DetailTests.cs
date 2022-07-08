@@ -49,7 +49,7 @@ public class DetailServerTests : IntegrationTestBase
         response.Position.Should().Be(mockFreeAgent.Position);
         response.Team.Should().Be(mockTeam.Name);
         response.HeadShotUrl.Should().Be(mockFreeAgent.HeadShotUrl);
-        response.EndOfFreeAgency.Should().Be(mockFreeAgent.EndOfFreeAgency!.Value.ToShortDateString());
+        response.EndOfFreeAgency.Should().Be(mockFreeAgent.EndOfFreeAgency!.Value);
 
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
