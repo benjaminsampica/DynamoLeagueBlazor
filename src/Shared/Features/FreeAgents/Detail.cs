@@ -6,7 +6,7 @@ public class FreeAgentDetailResult
     public string Position { get; set; } = null!;
     public string HeadShotUrl { get; set; } = null!;
     public string Team { get; set; } = null!;
-    public string EndOfFreeAgency { get; set; } = null!;
+    public DateTime EndOfFreeAgency { get; set; }
 
     public IEnumerable<BidItem> Bids { get; set; } = Enumerable.Empty<BidItem>();
 
