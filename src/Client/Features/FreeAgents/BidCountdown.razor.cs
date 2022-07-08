@@ -11,7 +11,7 @@ public partial class BidCountdown
 {
     [Parameter, EditorRequired] public DateTime DateTime { get; set; }
 
-    private Timer _timer = new(1000);
+    private readonly Timer _timer = new(1000);
     private string _remainingTime = string.Empty;
     private Color _color = Color.Warning;
 
@@ -37,6 +37,6 @@ public partial class BidCountdown
 
         _remainingTime = remainingTime.Humanize(4, maxUnit: TimeUnit.Day, minUnit: TimeUnit.Second);
 
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 }
