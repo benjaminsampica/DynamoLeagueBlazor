@@ -145,6 +145,9 @@ try
         scheduler.Schedule<ExpireOfferMatchingService>()
             .Daily()
             .Zoned(centralStandardTimeZone);
+    }).OnError((ex) =>
+    {
+        Log.Logger.Error(ex, "An exception occured when trying to run a scheduled job.");
     });
 
     await using (var scope = app.Services.CreateAsyncScope())
