@@ -71,11 +71,12 @@ public record Player : BaseEntity
 
     private Player SetToUnsigned()
     {
+        var topBid = Bids.FindHighestBid();
         YearContractExpires = null;
         EndOfFreeAgency = null;
-        ContractValue = Bids.FindHighestBid()?.Amount ?? Bid.MinimumAmount;
+        ContractValue = topBid?.Amount ?? Bid.MinimumAmount;
+        TeamId = topBid?.TeamId ?? TeamId;
         YearAcquired = DateTime.Today.Year;
-
         return this;
     }
 
