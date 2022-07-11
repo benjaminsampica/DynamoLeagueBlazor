@@ -58,6 +58,7 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
 
         var unsignedPlayer = await application.FirstOrDefaultAsync<Player>();
         unsignedPlayer!.State.Should().Be(PlayerState.Unsigned);
+        unsignedPlayer!.TeamId.Should().Be(stubTeam.Id);
     }
 
     [Fact]
