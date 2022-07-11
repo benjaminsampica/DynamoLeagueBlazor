@@ -8,7 +8,7 @@ namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 public class ExpireOfferMatchingService : IInvocable
 {
     private readonly ApplicationDbContext _dbContext;
-    private ILogger<ExpireOfferMatchingService> _logger;
+    private readonly ILogger<ExpireOfferMatchingService> _logger;
 
     public ExpireOfferMatchingService(ApplicationDbContext dbContext, ILogger<ExpireOfferMatchingService> logger)
     {
@@ -27,7 +27,7 @@ public class ExpireOfferMatchingService : IInvocable
 
         if (!players.Any()) return;
 
-        _logger.LogInformation($"Expiring offer matching for {players.Count} players.");
+        _logger.LogInformation("Expiring offer matching for {playersCount} players.", players.Count);
 
         foreach (var player in players)
         {
@@ -35,7 +35,7 @@ public class ExpireOfferMatchingService : IInvocable
             {
                 _dbContext.Remove(player);
 
-                _logger.LogInformation($"Deleted {player.Name} from the league.");
+                _logger.LogInformation("Deleted {playerName} from the league.", player.Name);
             }
             else
             {

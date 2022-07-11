@@ -115,6 +115,24 @@ try
         app.UseExceptionHandler("/Error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
+
+        app.Services.UseScheduler(scheduler =>
+        {
+            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+
+            scheduler.Schedule<EndBiddingService>()
+                .DailyAtHour(22)
+                .Zoned(centralStandardTimeZone)
+                .RunOnceAtStart();
+
+            scheduler.Schedule<ExpireOfferMatchingService>()
+                .Daily()
+                .Zoned(centralStandardTimeZone)
+                .RunOnceAtStart();
+        }).OnError((ex) =>
+        {
+            Log.Logger.Error(ex, "An exception occured when trying to run a scheduled job.");
+        });
     }
 
     app.UseHttpsRedirection();
@@ -134,21 +152,6 @@ try
     app.MapRazorPages();
     app.MapControllers().RequireAuthorization();
     app.MapFallbackToFile("index.html");
-
-    app.Services.UseScheduler(scheduler =>
-    {
-        var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-        scheduler.Schedule<EndBiddingService>()
-            .DailyAtHour(22)
-            .Zoned(centralStandardTimeZone);
-
-        scheduler.Schedule<ExpireOfferMatchingService>()
-            .Daily()
-            .Zoned(centralStandardTimeZone);
-    }).OnError((ex) =>
-    {
-        Log.Logger.Error(ex, "An exception occured when trying to run a scheduled job.");
-    });
 
     await using (var scope = app.Services.CreateAsyncScope())
     {

@@ -26,7 +26,7 @@ public class EndBiddingService : IInvocable
 
         if (!players.Any()) return;
 
-        _logger.LogInformation($"Ending bidding for {players.Count} players.");
+        _logger.LogInformation("Ending bidding for {playerCount} players.", players.Count);
 
         foreach (var player in players)
         {
