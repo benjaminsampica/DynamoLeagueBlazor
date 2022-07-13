@@ -66,7 +66,7 @@ public class ListServerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsigned()
+    public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsignedForTheMatchingTeam()
     {
         var application = CreateUserAuthenticatedApplication();
 
