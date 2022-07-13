@@ -11,25 +11,26 @@ public record Player : BaseEntity
     public Player()
     {
         _machine = new(() => State, state => State = state);
-        _rosteredTrigger = _machine.SetTriggerParameters<int, int>(PlayerStateTrigger.SignedByTeam);
-        _freeAgentTrigger = _machine.SetTriggerParameters<DateTime>(PlayerStateTrigger.NewSeasonStarted);
 
         _machine.Configure(PlayerState.Unsigned)
+            .OnEntryFrom(PlayerStateTrigger.OfferMatchedByTeam, () => SetToUnsigned(TeamId!.Value))
+            .OnEntryFrom(PlayerStateTrigger.MatchExpired, () => SetToUnsigned(Bids.FindHighestBid()!.TeamId))
             .Permit(PlayerStateTrigger.SignedByTeam, PlayerState.Rostered);
 
+        _rosteredTrigger = _machine.SetTriggerParameters<int, int>(PlayerStateTrigger.SignedByTeam);
         _machine.Configure(PlayerState.Rostered)
             .OnEntryFrom(_rosteredTrigger, (yearContractExpires, contractValue) => SetToRostered(yearContractExpires, contractValue))
             .Permit(PlayerStateTrigger.UnrosteredByTeam, PlayerState.Unrostered)
             .Permit(PlayerStateTrigger.NewSeasonStarted, PlayerState.FreeAgent);
 
+        _freeAgentTrigger = _machine.SetTriggerParameters<DateTime>(PlayerStateTrigger.NewSeasonStarted);
         _machine.Configure(PlayerState.FreeAgent)
             .OnEntryFrom(_freeAgentTrigger, (endOfFreeAgency) => EndOfFreeAgency = endOfFreeAgency)
             .Permit(PlayerStateTrigger.BiddingEnded, PlayerState.OfferMatching);
 
         _machine.Configure(PlayerState.OfferMatching)
             .Permit(PlayerStateTrigger.OfferMatchedByTeam, PlayerState.Unsigned)
-            .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned)
-            .OnExit(() => SetToUnsigned());
+            .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned);
     }
 
     public Player(string name, string position, string headShotUrl) : this()
@@ -69,13 +70,13 @@ public record Player : BaseEntity
 
     public void ExpireMatch() => _machine.Fire(PlayerStateTrigger.MatchExpired);
 
-    private Player SetToUnsigned()
+    private Player SetToUnsigned(int teamId)
     {
         var topBid = Bids.FindHighestBid();
         YearContractExpires = null;
         EndOfFreeAgency = null;
         ContractValue = topBid?.Amount ?? Bid.MinimumAmount;
-        TeamId = topBid?.TeamId ?? TeamId;
+        TeamId = teamId;
         YearAcquired = DateTime.Today.Year;
         return this;
     }

@@ -38,6 +38,7 @@ public class PlayerStateTests
     public void GivenAnOfferMatchingPlayer_WhenMatchingOffer_ThenMovesToUnsigned()
     {
         var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.TeamId = int.MaxValue;
         offerMatchingPlayer.State = PlayerState.OfferMatching;
 
         offerMatchingPlayer.MatchOffer();
@@ -49,6 +50,7 @@ public class PlayerStateTests
     public void GivenAnOfferMatchingPlayer_WhenMatchIsExpiring_ThenMovesToUnsigned()
     {
         var offerMatchingPlayer = CreateFakePlayer();
+        offerMatchingPlayer.AddBid(int.MaxValue, int.MaxValue);
         offerMatchingPlayer.State = PlayerState.OfferMatching;
 
         offerMatchingPlayer.ExpireMatch();
@@ -82,6 +84,7 @@ public class PlayerStateTests
     public void GivenABrandNewPlayer_ThenCanGoThroughTheCompleteLifecycle()
     {
         var player = CreateFakePlayer();
+        player.TeamId = int.MaxValue;
 
         FluentActions.Invoking(() =>
         {

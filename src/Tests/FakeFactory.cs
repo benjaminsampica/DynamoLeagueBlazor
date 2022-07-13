@@ -26,7 +26,7 @@ public class FakeFactory
         return faker.Generate();
     }
 
-    public static Player CreateFakePlayer(int? teamId = null)
+    public static Player CreateFakePlayer()
     {
         var faker = new AutoFaker<Player>()
             .Ignore(f => f.Id)
@@ -34,30 +34,6 @@ public class FakeFactory
             .Ignore(f => f.Team)
             .Ignore(f => f.Fines)
             .Ignore(f => f.State)
-            .RuleFor(f => f.TeamId, teamId ?? null);
-
-        return faker.Generate();
-    }
-
-    public static Fine CreateFakeFine(int playerId, int teamId)
-    {
-        var faker = new AutoFaker<Fine>()
-            .Ignore(f => f.Id)
-            .Ignore(f => f.Player)
-            .Ignore(f => f.Team)
-            .RuleFor(f => f.PlayerId, playerId)
-            .RuleFor(f => f.TeamId, teamId);
-
-        return faker.Generate();
-    }
-
-    public static Bid CreateFakeBid()
-    {
-        var faker = new AutoFaker<Bid>()
-            .Ignore(f => f.Id)
-            .Ignore(f => f.Player)
-            .Ignore(f => f.PlayerId)
-            .Ignore(f => f.Team)
             .Ignore(f => f.TeamId);
 
         return faker.Generate();
