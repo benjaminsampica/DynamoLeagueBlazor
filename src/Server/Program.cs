@@ -118,13 +118,17 @@ try
 
         app.Services.UseScheduler(scheduler =>
         {
+            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+
             // Hosting provider is in pacific time.
             scheduler.Schedule<EndBiddingService>()
-                .DailyAtHour(20) // 10pm CST.
+                .DailyAtHour(22)
+                .Zoned(centralStandardTimeZone)
                 .RunOnceAtStart();
 
             scheduler.Schedule<ExpireOfferMatchingService>()
-                .DailyAtHour(22) // 12AM CST.
+                .Daily()
+                .Zoned(centralStandardTimeZone)
                 .RunOnceAtStart();
         }).OnError((ex) =>
         {
