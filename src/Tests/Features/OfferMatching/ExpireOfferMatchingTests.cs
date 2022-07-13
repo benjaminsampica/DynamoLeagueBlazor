@@ -39,17 +39,17 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnOfferMatchingPlayerWithBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenSetsToUnsigned()
+    public async Task GivenAnOfferMatchingPlayerWithBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenSetsToUnsignedForTheBiddingTeam()
     {
         var application = CreateUnauthenticatedApplication();
 
-        var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        var biddingTeam = CreateFakeTeam();
+        await application.AddAsync(biddingTeam);
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.AddBid(int.MaxValue, stubTeam.Id);
-        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         mockPlayer.State = PlayerState.OfferMatching;
+        mockPlayer.AddBid(int.MaxValue, biddingTeam.Id);
+        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         await application.AddAsync(mockPlayer);
 
         var sut = GetRequiredService<ExpireOfferMatchingService>();
@@ -58,7 +58,8 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
 
         var unsignedPlayer = await application.FirstOrDefaultAsync<Player>();
         unsignedPlayer!.State.Should().Be(PlayerState.Unsigned);
-        unsignedPlayer!.TeamId.Should().Be(stubTeam.Id);
+        unsignedPlayer!.TeamId.Should().Be(biddingTeam.Id);
+        unsignedPlayer.ContractValue.Should().Be(int.MaxValue);
     }
 
     [Fact]
