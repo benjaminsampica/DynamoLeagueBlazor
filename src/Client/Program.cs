@@ -53,8 +53,7 @@ try
         .WriteTo.BrowserHttp($"{builder.HostEnvironment.BaseAddress}ingest",
             controlLevelSwitch: levelSwitch,
             messageHandler: host.Services.GetRequiredService<BaseAddressAuthorizationMessageHandler>()
-        ).WriteTo.BrowserConsole()
-        .CreateLogger();
+        ).CreateLogger();
 
     await host.RunAsync();
 }
