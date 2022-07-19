@@ -18,9 +18,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Security.Claims;
 
 try
 {
@@ -33,7 +35,7 @@ try
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
         .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-        .WriteTo.File(".logs/log.log", rollingInterval: RollingInterval.Day);
+        .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
 
     Log.Logger = loggerConfiguration.CreateLogger();
 
@@ -83,7 +85,6 @@ try
     {
         fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     });
-
     builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
 
@@ -146,6 +147,12 @@ try
     app.UseIdentityServer();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.Use((context, next) =>
+    {
+        using var _ = LogContext.PushProperty(nameof(ClaimTypes.Name), context.User.FindFirst(ClaimTypes.Name)?.Value);
+        return next(context);
+    });
 
     app.UseSerilogIngestion();
     app.UseSerilogRequestLogging();
