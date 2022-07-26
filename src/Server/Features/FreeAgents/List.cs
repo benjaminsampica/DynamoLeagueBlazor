@@ -58,6 +58,7 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
             .Where(p => p.State == PlayerState.FreeAgent)
             .OrderBy(p => p.EndOfFreeAgency)
             .ProjectTo<FreeAgentListResult.FreeAgentItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
 
         return new FreeAgentListResult
