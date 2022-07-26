@@ -1,6 +1,4 @@
 ﻿using Coravel.Invocable;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using static DynamoLeagueBlazor.Server.Models.Player;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;

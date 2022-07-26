@@ -1,12 +1,5 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Utilities;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using static DynamoLeagueBlazor.Server.Models.Player;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 

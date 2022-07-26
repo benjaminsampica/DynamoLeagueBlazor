@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+﻿using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure.Identity;

@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Client.Shared.Components;
-using MudBlazor;
 
 namespace DynamoLeagueBlazor.Tests.Shared.Components;
 

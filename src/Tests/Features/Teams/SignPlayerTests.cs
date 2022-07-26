@@ -1,8 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Features.Teams;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.Teams;
-using MudBlazor;
 using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;

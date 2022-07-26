@@ -3,9 +3,7 @@ using Duende.IdentityServer.EntityFramework.Extensions;
 using Duende.IdentityServer.EntityFramework.Interfaces;
 using Duende.IdentityServer.EntityFramework.Options;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Server.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure;

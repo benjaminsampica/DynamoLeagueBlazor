@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 

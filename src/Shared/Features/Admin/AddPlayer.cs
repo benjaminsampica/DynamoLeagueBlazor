@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Enums;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Helpers;
-using FluentValidation;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace DynamoLeagueBlazor.Shared.Features.Admin;

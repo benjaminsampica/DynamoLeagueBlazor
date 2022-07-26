@@ -1,13 +1,7 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Users;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin.Users;
 

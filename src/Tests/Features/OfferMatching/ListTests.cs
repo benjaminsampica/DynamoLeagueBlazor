@@ -1,7 +1,5 @@
 ﻿using DynamoLeagueBlazor.Client.Features.OfferMatching;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.OfferMatching;
 

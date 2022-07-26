@@ -1,9 +1,5 @@
 ﻿using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using MudBlazor;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.OfferMatching;
 

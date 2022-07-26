@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Server.Features.FreeAgents;
-using DynamoLeagueBlazor.Server.Models;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 

@@ -1,11 +1,8 @@
 ﻿
 using DynamoLeagueBlazor.Client.Features.Admin;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using Microsoft.Extensions.DependencyInjection;
-using MudBlazor;
-using System.Net.Http.Json;
 using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
 using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 

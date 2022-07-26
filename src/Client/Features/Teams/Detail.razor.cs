@@ -1,11 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using MudBlazor;
-using System.Net.Http.Json;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;

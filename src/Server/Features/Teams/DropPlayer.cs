@@ -1,8 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Shared.Features.Teams;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 

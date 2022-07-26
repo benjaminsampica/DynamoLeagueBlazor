@@ -1,6 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Players;
 

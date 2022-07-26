@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Enums;
 
 namespace DynamoLeagueBlazor.Tests;

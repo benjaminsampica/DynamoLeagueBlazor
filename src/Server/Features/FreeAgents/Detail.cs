@@ -1,12 +1,5 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
 
