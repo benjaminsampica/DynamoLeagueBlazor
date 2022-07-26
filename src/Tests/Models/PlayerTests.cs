@@ -1,6 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-
-namespace DynamoLeagueBlazor.Tests.Models;
+﻿namespace DynamoLeagueBlazor.Tests.Models;
 
 public class PlayerTests
 {

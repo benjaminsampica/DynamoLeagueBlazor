@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
-
-namespace DynamoLeagueBlazor.Client.Shared.Components;
+﻿namespace DynamoLeagueBlazor.Client.Shared.Components;
 
 public partial class ConfirmDialog
 {

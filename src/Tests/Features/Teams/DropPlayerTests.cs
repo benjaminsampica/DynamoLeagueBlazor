@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
 

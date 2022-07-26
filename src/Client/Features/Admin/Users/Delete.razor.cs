@@ -1,8 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Admin.Users;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
-using MudBlazor;
 
 namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 

@@ -1,8 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Features.Teams;
 using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Utilities;
-using MudBlazor;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
 

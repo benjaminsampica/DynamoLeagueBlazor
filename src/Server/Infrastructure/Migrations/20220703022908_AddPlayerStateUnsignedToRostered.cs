@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

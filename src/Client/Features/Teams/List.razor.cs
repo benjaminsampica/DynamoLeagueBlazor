@@ -1,7 +1,4 @@
 using DynamoLeagueBlazor.Shared.Features.Teams;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;
 

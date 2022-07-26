@@ -1,14 +1,6 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;

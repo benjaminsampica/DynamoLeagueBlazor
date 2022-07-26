@@ -1,7 +1,5 @@
 ﻿using Humanizer;
 using Humanizer.Localisation;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using System.Timers;
 using Timer = System.Timers.Timer;
 

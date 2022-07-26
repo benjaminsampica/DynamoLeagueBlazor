@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 

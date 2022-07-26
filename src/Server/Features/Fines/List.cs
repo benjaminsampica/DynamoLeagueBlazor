@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Fines;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using DynamoLeagueBlazor.Shared.Features.Fines;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 

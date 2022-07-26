@@ -1,8 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Fines;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using MudBlazor;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Client.Features.Fines;
 

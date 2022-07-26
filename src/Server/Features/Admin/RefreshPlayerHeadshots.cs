@@ -1,11 +1,6 @@
-﻿using DynamoLeagueBlazor.Server.Infrastructure;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
 

@@ -1,8 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using Microsoft.Extensions.DependencyInjection;
-using MudBlazor;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 

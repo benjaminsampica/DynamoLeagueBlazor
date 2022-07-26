@@ -1,5 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Admin;
+﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 

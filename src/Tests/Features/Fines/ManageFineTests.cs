@@ -1,6 +1,4 @@
-﻿using DynamoLeagueBlazor.Server.Models;
-using DynamoLeagueBlazor.Shared.Features.Fines;
-using System.Net.Http.Json;
+﻿using DynamoLeagueBlazor.Shared.Features.Fines;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 

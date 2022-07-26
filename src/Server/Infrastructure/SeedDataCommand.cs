@@ -1,9 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Server.Models;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace DynamoLeagueBlazor.Server.Infrastructure;
 

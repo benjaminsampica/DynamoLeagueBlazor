@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace DynamoLeagueBlazor.Shared.Features.Fines;
+﻿namespace DynamoLeagueBlazor.Shared.Features.Fines;
 
 public class ManageFineRequest
 {

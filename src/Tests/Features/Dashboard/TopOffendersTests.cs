@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Dashboard;
-using System.Net.Http.Json;
 
 namespace DynamoLeagueBlazor.Tests.Features.Dashboard;
 
