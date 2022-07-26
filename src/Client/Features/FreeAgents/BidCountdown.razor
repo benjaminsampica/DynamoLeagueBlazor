@@ -1,3 +1,9 @@
-﻿<MudText Typo=Typo.h6 Color=_color Align=Align.Center>
-    @_remainingTime
-</MudText>
+﻿@if(string.IsNullOrEmpty(_remainingTime))
+{
+    <MudProgressCircular Color="Color.Warning" Indeterminate="true" />
+}
+else {
+    <MudText Typo=Typo.h6 Color=_color Align=Align.Center>
+        @_remainingTime
+    </MudText>
+}

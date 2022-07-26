@@ -70,7 +70,9 @@ else
                                     <MudIconButton Icon="@_tableActionIcon" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small" OnClick="() => _onPlayerTableActionClick.Invoke(context.Id)" />
                                 </MudTd>
                             }
-                            <MudTd DataLabel=@nameof(PlayerItem.Name)>@context.Name</MudTd>
+                            <MudTd DataLabel=@nameof(PlayerItem.Name)>
+                                <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
+                            </MudTd>
                             <MudTd DataLabel=@nameof(PlayerItem.Position)>@context.Position</MudTd>
                             <MudTd DataLabel="Contract Value">@context.ContractValue.ToString("C0")</MudTd>
                             <MudTd DataLabel="Contract Length">@context.YearContractExpires.ToString()</MudTd>

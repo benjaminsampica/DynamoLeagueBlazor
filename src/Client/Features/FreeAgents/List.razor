@@ -16,7 +16,7 @@
         </MudAlert>
     </MudItem>
     <MudItem xs=12>
-        <MudTable Items="_result.FreeAgents" Dense=true Loading=_loading Filter="new Func<FreeAgentItem, bool>(FilterFunc)" SortLabel="Sort By">
+        <MudTable Items="_result.FreeAgents" Dense=true Loading=_loading Filter="new Func<FreeAgentItem, bool>(FilterFunc)" SortLabel="Sort By" Striped=true>
             <ToolBarContent>
                 <MudTextField @bind-Value="_searchValue" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mt-0"></MudTextField>
             </ToolBarContent>
