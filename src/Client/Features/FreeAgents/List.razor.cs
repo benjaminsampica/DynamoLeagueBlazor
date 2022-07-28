@@ -14,16 +14,9 @@ public sealed partial class List : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri, _cts.Token) ?? new();
-            _loading = false;
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _loading = true;
+        _result = await HttpClient.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri, _cts.Token) ?? new();
+        _loading = false;
     }
 
     private bool FilterFunc(FreeAgentListResult.FreeAgentItem item)

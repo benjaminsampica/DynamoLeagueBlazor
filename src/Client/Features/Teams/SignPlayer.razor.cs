@@ -22,36 +22,22 @@ public sealed partial class SignPlayer : IDisposable
 
     private async Task SignPlayerDetailsAsync()
     {
-        try
-        {
-            _signPlayerDetailResult = await HttpClient.GetFromJsonAsync<SignPlayerDetailResult>(SignPlayerRouteFactory.Create(PlayerId), _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _signPlayerDetailResult = await HttpClient.GetFromJsonAsync<SignPlayerDetailResult>(SignPlayerRouteFactory.Create(PlayerId), _cts.Token);
     }
 
     private async Task OnValidSubmitAsync()
     {
         _processingForm = true;
 
-        try
-        {
-            var response = await HttpClient.PostAsJsonAsync(SignPlayerRouteFactory.Uri, _form);
+        var response = await HttpClient.PostAsJsonAsync(SignPlayerRouteFactory.Uri, _form);
 
-            if (response.IsSuccessStatusCode)
-            {
-                Snackbar.Add("Successfully signed player.", Severity.Success);
-            }
-            else
-            {
-                Snackbar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            Snackbar.Add("Successfully signed player.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Something went wrong...", Severity.Error);
         }
 
         _processingForm = false;

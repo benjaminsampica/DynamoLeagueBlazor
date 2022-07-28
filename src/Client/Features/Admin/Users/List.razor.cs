@@ -23,16 +23,9 @@ public sealed partial class List : IDisposable
 
     private async Task LoadDataAsync()
     {
-        try
-        {
-            _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<UserListResult>("api/admin/users", _cts.Token) ?? new();
-            _loading = false;
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _loading = true;
+        _result = await HttpClient.GetFromJsonAsync<UserListResult>("api/admin/users", _cts.Token) ?? new();
+        _loading = false;
     }
 
     private bool FilterFunc(UserListResult.UserItem item)

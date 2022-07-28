@@ -26,37 +26,23 @@ public sealed partial class AddPlayer : IDisposable
     {
         _validator = new(PlayerHeadshotService);
 
-        try
-        {
-            _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.GetTeamListUri, _cts.Token) ?? new TeamNameListResult();
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.GetTeamListUri, _cts.Token) ?? new TeamNameListResult();
     }
 
     private async Task OnValidSubmitAsync()
     {
         _isProcessingForm = true;
 
-        try
-        {
-            var response = await HttpClient.PostAsJsonAsync(AddPlayerRouteFactory.Uri, _addPlayerForm);
+        var response = await HttpClient.PostAsJsonAsync(AddPlayerRouteFactory.Uri, _addPlayerForm);
 
-            if (response.IsSuccessStatusCode)
-            {
-                SnackBar.Add("Player successfully added.", Severity.Success);
-                _addPlayerForm = new();
-            }
-            else
-            {
-                SnackBar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            SnackBar.Add("Player successfully added.", Severity.Success);
+            _addPlayerForm = new();
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
         }
 
         _isProcessingForm = false;
@@ -66,21 +52,14 @@ public sealed partial class AddPlayer : IDisposable
     {
         _isPreviewButtonDisabled = true;
 
-        try
-        {
-            var response = await HttpClient.GetFromJsonAsync<PlayerPreviewResponse>(AddPlayerRouteFactory.CreatePlayerPreviewUri(_playerPreviewForm.Name, _playerPreviewForm.Position), _cts.Token);
+        var response = await HttpClient.GetFromJsonAsync<PlayerPreviewResponse>(AddPlayerRouteFactory.CreatePlayerPreviewUri(_playerPreviewForm.Name, _playerPreviewForm.Position), _cts.Token);
 
-            if (response!.HeadshotUrl is null)
-            {
-                SnackBar.Add("Player headshot not found - check the name or position.", Severity.Warning);
-            }
-
-            _previewHeadshotUrl = response.HeadshotUrl ?? string.Empty;
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response!.HeadshotUrl is null)
         {
-            exception.Redirect();
+            SnackBar.Add("Player headshot not found - check the name or position.", Severity.Warning);
         }
+
+        _previewHeadshotUrl = response.HeadshotUrl ?? string.Empty;
 
         _isPreviewButtonDisabled = false;
     }

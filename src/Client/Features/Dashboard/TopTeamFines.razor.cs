@@ -11,14 +11,7 @@ public sealed partial class TopTeamFines : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _result = await HttpClient.GetFromJsonAsync<TopTeamFinesResult>(TopTeamFinesRouteFactory.Uri, _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _result = await HttpClient.GetFromJsonAsync<TopTeamFinesResult>(TopTeamFinesRouteFactory.Uri, _cts.Token);
     }
 
     public void Dispose()

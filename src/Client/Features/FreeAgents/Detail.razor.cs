@@ -27,23 +27,16 @@ public sealed partial class Detail : IDisposable
     {
         _processingForm = true;
 
-        try
-        {
-            var response = await HttpClient.PostAsJsonAsync(AddBidRouteFactory.Uri, _form);
+        var response = await HttpClient.PostAsJsonAsync(AddBidRouteFactory.Uri, _form);
 
-            if (response.IsSuccessStatusCode)
-            {
-                await RefreshPageStateAsync();
-                SnackBar.Add("Successfully added bid.", Severity.Success);
-            }
-            else
-            {
-                SnackBar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            await RefreshPageStateAsync();
+            SnackBar.Add("Successfully added bid.", Severity.Success);
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
         }
 
         _processingForm = false;
@@ -53,14 +46,7 @@ public sealed partial class Detail : IDisposable
     {
         _form = new() { PlayerId = PlayerId };
 
-        try
-        {
-            _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>(FreeAgentDetailFactory.Create(PlayerId), _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _result = await HttpClient.GetFromJsonAsync<FreeAgentDetailResult>(FreeAgentDetailFactory.Create(PlayerId), _cts.Token);
     }
 
     public void Dispose()

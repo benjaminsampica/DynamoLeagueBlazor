@@ -20,16 +20,9 @@ public sealed partial class List : IDisposable
 
     private async Task LoadDataAsync()
     {
-        try
-        {
-            _loading = true;
-            _result = await HttpClient.GetFromJsonAsync<FineListResult>(FineListRouteFactory.Uri, _cts.Token) ?? new();
-            _loading = false;
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _loading = true;
+        _result = await HttpClient.GetFromJsonAsync<FineListResult>(FineListRouteFactory.Uri, _cts.Token) ?? new();
+        _loading = false;
     }
 
     private bool FilterFunc(FineListResult.FineItem item)

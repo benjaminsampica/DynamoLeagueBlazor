@@ -23,36 +23,22 @@ public sealed partial class AddFine : IDisposable
 
     private async Task GetPlayerFineDetailsAsync()
     {
-        try
-        {
-            _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token);
     }
 
     private async Task OnValidSubmitAsync()
     {
         _processingForm = true;
 
-        try
-        {
-            var response = await HttpClient.PostAsJsonAsync(AddFineRouteFactory.Uri, _form);
+        var response = await HttpClient.PostAsJsonAsync(AddFineRouteFactory.Uri, _form);
 
-            if (response.IsSuccessStatusCode)
-            {
-                SnackBar.Add("Successfully added a fine. An administrator will either approve or deny the fine.", Severity.Success);
-            }
-            else
-            {
-                SnackBar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            SnackBar.Add("Successfully added a fine. An administrator will either approve or deny the fine.", Severity.Success);
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
         }
 
         _processingForm = false;
