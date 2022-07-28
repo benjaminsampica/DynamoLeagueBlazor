@@ -39,11 +39,11 @@ public sealed partial class List : IDisposable
     {
         if (await ConfirmDialogService.IsCancelledAsync()) return;
 
-        var response = await HttpClient.PostAsJsonAsync(OfferMatchingListRouteFactory.Uri, new MatchPlayerRequest() { PlayerId = playerId });
+        var response = await HttpClient.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, new MatchPlayerRequest(playerId));
 
         if (response.IsSuccessStatusCode)
         {
-            SnackBar.Add("Successfully retained player.", Severity.Success);
+            SnackBar.Add("Successfully matched player.", Severity.Success);
             await LoadDataAsync();
         }
         else

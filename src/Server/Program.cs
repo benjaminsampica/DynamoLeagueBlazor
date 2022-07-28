@@ -8,6 +8,7 @@ using DynamoLeagueBlazor.Server.Features.OfferMatching;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
@@ -84,6 +85,7 @@ try
     });
     builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
+    builder.Services.AddTransient<IMatchPlayerValidator, MatchPlayerValidator>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
         .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);

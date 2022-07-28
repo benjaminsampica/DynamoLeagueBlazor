@@ -127,6 +127,8 @@ public record Player : BaseEntity
 
     public int GetHighestBidAmount() => Bids.Any() ? Bids.FindHighestBid()!.Amount : Bid.MinimumAmount;
 
+    public TimeSpan GetRemainingFreeAgencyTime() => EndOfFreeAgency!.Value.AddDays(3) - DateTime.Now;
+
     private bool IsEligibleForFreeAgencyExtension(int teamId)
     {
         var isBidByTheSameTeam = teamId == TeamId;

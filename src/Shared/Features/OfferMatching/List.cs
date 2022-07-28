@@ -12,6 +12,8 @@ public class OfferMatchingListResult
         public string HeadShotUrl { get; set; } = null!;
         public string OfferingTeam { get; set; } = null!;
         public int Offer { get; set; }
+        public TimeSpan RemainingTime { get; set; }
+        public bool CurrentUserIsOfferMatching { get; set; }
     }
 }
 
@@ -19,4 +21,3 @@ public static class OfferMatchingListRouteFactory
 {
     public const string Uri = "api/offermatching";
 }
-
