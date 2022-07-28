@@ -12,7 +12,7 @@ public class BidCountdownTests : UITestBase
             parameters.Add(p => p.DateTime, DateTime.Now.AddSeconds(4));
         });
 
-        cut.WaitForState(() => cut.Markup.Contains("1 second"), TimeSpan.FromSeconds(4));
+        cut.WaitForState(() => cut.Markup.Contains("1 second"), TimeSpan.FromSeconds(5));
         cut.WaitForState(() => cut.Markup.Contains("0 seconds"));
 
         cut.Render();
