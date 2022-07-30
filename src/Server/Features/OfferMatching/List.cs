@@ -63,6 +63,7 @@ public class ListMappingProfile : Profile
         int currentUserTeamId = 0;
 
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s => s.GetHighestBidAmount()))
             .ForMember(d => d.CurrentUserIsOfferMatching, mo => mo.MapFrom(s => s.TeamId == currentUserTeamId))

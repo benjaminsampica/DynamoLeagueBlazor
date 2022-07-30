@@ -15,7 +15,8 @@
             <HeaderContent>
                 <MudTh>Actions</MudTh>
                 <MudTh>Player Name</MudTh>
-                <MudTh>Player Position</MudTh>
+                <MudTh>Position</MudTh>
+                <MudTh>Team</MudTh>
                 <MudTh>Offering Team</MudTh>
                 <MudTh>Offer</MudTh>
                 <MudTh>Remaining Time</MudTh>
@@ -30,7 +31,8 @@
                 <MudTd DataLabel="Player Name">
                     <NameWithImage Name="@context.Name" ImageUrl="@context.HeadShotUrl" />
                 </MudTd>
-                <MudTd DataLabel="Player Position">@context.Position</MudTd>
+                <MudTd DataLabel="Position">@context.Position</MudTd>
+                <MudTd DataLabel="Team">@context.Team</MudTd>
                 <MudTd DataLabel="Offering Team">@context.OfferingTeam</MudTd>
                 <MudTd DataLabel="Offer">@context.Offer.ToString("C0")</MudTd>
                 <MudTd DataLabel="Remaining Time">@context.RemainingTime.Humanize(2)</MudTd>
