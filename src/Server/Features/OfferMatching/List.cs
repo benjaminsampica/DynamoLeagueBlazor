@@ -20,11 +20,6 @@ public class ListController : ControllerBase
     {
         return await _mediator.Send(new ListQuery(), cancellationToken);
     }
-    [HttpPost]
-    public async Task<Unit> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
-    {
-        return await _mediator.Send(new MatchPlayerCommand(request.PlayerId), cancellationToken);
-    }
 }
 
 public record ListQuery : IRequest<OfferMatchingListResult> { }
@@ -51,9 +46,8 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
 
         var offerMatches = await _dbContext.Players
             .Include(p => p.Bids)
-            .Where(p => p.TeamId == currentUserTeamId
-                && p.State == PlayerState.OfferMatching)
-            .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider)
+            .Where(p => p.State == PlayerState.OfferMatching)
+            .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
 
         return new OfferMatchingListResult
@@ -66,34 +60,13 @@ public class ListMappingProfile : Profile
 {
     public ListMappingProfile()
     {
+        int currentUserTeamId = 0;
+
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
+            .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
-            .ForMember(d => d.Offer, mo => mo.MapFrom(s => s.GetHighestBidAmount()));
+            .ForMember(d => d.Offer, mo => mo.MapFrom(s => s.GetHighestBidAmount()))
+            .ForMember(d => d.CurrentUserIsOfferMatching, mo => mo.MapFrom(s => s.TeamId == currentUserTeamId))
+            .ForMember(d => d.RemainingTime, mo => mo.MapFrom(s => s.GetRemainingFreeAgencyTime()));
     }
-}
-public record MatchPlayerCommand(int PlayerId) : IRequest { }
-
-public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
-{
-    private readonly ApplicationDbContext _dbContext;
-
-    public MatchPlayerHandler(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task<Unit> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
-    {
-        var player = (await _dbContext.Players
-            .AsTracking()
-            .Include(p => p.Bids)
-            .SingleAsync(p => p.Id == request.PlayerId, cancellationToken));
-
-        player.MatchOffer();
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
-    }
-
 }

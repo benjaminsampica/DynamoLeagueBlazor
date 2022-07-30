@@ -1,7 +1,23 @@
-﻿namespace DynamoLeagueBlazor.Shared.Features.OfferMatching
+﻿namespace DynamoLeagueBlazor.Shared.Features.OfferMatching;
+
+public record MatchPlayerRequest(int PlayerId);
+
+public class MatchPlayerRequestValidator : AbstractValidator<MatchPlayerRequest>
 {
-    public class MatchPlayerRequest
+    public MatchPlayerRequestValidator(IMatchPlayerValidator offerMatchingValidator)
     {
-        public int PlayerId { get; set; }
+        RuleFor(x => x.PlayerId)
+            .GreaterThan(0)
+            .MustAsync(async (request, value, token) => await offerMatchingValidator.CanOfferMatchAsync(value, token));
     }
+}
+
+public static class MatchPlayerRouteFactory
+{
+    public const string Uri = "api/matchplayer";
+}
+
+public interface IMatchPlayerValidator
+{
+    Task<bool> CanOfferMatchAsync(int playerId, CancellationToken cancellationToken);
 }
