@@ -1,0 +1,42 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+@if(_newVersionAvailable)
+{
+    <MudAlert Severity=Severity.Warning Icon=@Icons.Outlined.SystemUpdate OnClick=OnUpdateClick ContentAlignment=HorizontalAlignment.Center>
+        <MudText Typo=Typo.h6>
+            A new version of the application is available! Click here to update!
+        </MudText>
+    </MudAlert>
+}
+
+
+@code {
+    private bool _newVersionAvailable = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RegisterForUpdateAvailableNotificationAsync();
+    }
+
+    [JSInvokable(nameof(OnUpdateAvailableAsync))]
+    public async Task OnUpdateAvailableAsync()
+    {
+        _newVersionAvailable = true;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RegisterForUpdateAvailableNotificationAsync()
+    {
+        await JSRuntime.InvokeAsync<object>(
+            identifier: "registerForUpdateAvailableNotification",
+            DotNetObjectReference.Create(this),
+            nameof(OnUpdateAvailableAsync));
+    }
+
+    private void OnUpdateClick()
+    {
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}
