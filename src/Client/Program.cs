@@ -21,7 +21,9 @@ try
     builder.RootComponents.Add<App>("#app");
     builder.RootComponents.Add<HeadOutlet>("head::after");
 
+    builder.Services.AddScoped<AccessTokenNotAvailableExceptionHandler>();
     builder.Services.AddHttpClient("DynamoLeagueBlazor.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+        .AddHttpMessageHandler<AccessTokenNotAvailableExceptionHandler>()
         .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
         .AddPolicyHandler(GetRetryPolicy());
 
@@ -76,4 +78,19 @@ static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
                                                                     retryAttempt)));
 }
 
+class AccessTokenNotAvailableExceptionHandler : DelegatingHandler
+{
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
 
+            return null;
+        }
+    }
+}
