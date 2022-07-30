@@ -9,6 +9,8 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Polly;
+using Polly.Extensions.Http;
 using Serilog;
 using Serilog.Core;
 
@@ -20,7 +22,8 @@ try
     builder.RootComponents.Add<HeadOutlet>("head::after");
 
     builder.Services.AddHttpClient("DynamoLeagueBlazor.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-        .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+        .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
+        .AddPolicyHandler(GetRetryPolicy());
 
     // Supply HttpClient instances that include access tokens when making requests to the server project
     builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DynamoLeagueBlazor.ServerAPI"));
@@ -63,4 +66,14 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
+                                                                    retryAttempt)));
+}
+
 

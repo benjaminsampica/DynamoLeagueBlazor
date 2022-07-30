@@ -23,23 +23,16 @@ public sealed partial class Delete : IDisposable
     {
         _processingForm = true;
 
-        try
-        {
-            var uri = DeleteUserRouteFactory.Create(_form);
-            var response = await HttpClient.DeleteAsync(uri, _cts.Token);
+        var uri = DeleteUserRouteFactory.Create(_form);
+        var response = await HttpClient.DeleteAsync(uri, _cts.Token);
 
-            if (response.IsSuccessStatusCode)
-            {
-                SnackBar.Add("Successfully deleted the user.", Severity.Success);
-            }
-            else
-            {
-                SnackBar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            SnackBar.Add("Successfully deleted the user.", Severity.Success);
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
         }
 
         _processingForm = false;

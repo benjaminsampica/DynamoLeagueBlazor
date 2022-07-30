@@ -12,14 +12,7 @@ public sealed partial class List : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _result = await HttpClient.GetFromJsonAsync<TeamListResult>(TeamListRouteFactory.Uri, _cts.Token);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _result = await HttpClient.GetFromJsonAsync<TeamListResult>(TeamListRouteFactory.Uri, _cts.Token);
     }
 
     public void Dispose()

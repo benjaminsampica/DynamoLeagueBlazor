@@ -37,15 +37,8 @@ public sealed partial class Detail : IDisposable
 
     private async Task LoadDataAsync()
     {
-        try
-        {
-            _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>(TeamDetailRouteFactory.Create(TeamId), _cts.Token);
-            _title = $"Team Detail - {_result!.Name}";
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        _result = await HttpClient.GetFromJsonAsync<TeamDetailResult>(TeamDetailRouteFactory.Create(TeamId), _cts.Token);
+        _title = $"Team Detail - {_result!.Name}";
     }
 
     private void ShowRosteredPlayers()
@@ -75,25 +68,18 @@ public sealed partial class Detail : IDisposable
     {
         if (await ConfirmDialogService.IsCancelledAsync()) return;
 
-        try
+        var response = await HttpClient.PostAsJsonAsync(DropPlayerRouteFactory.Uri, new DropPlayerRequest { PlayerId = playerId }, _cts.Token);
+
+        if (response.IsSuccessStatusCode)
         {
-            var response = await HttpClient.PostAsJsonAsync(DropPlayerRouteFactory.Uri, new DropPlayerRequest { PlayerId = playerId }, _cts.Token);
+            Snackbar.Add("Successfully unrostered player.", Severity.Success);
 
-            if (response.IsSuccessStatusCode)
-            {
-                Snackbar.Add("Successfully unrostered player.", Severity.Success);
-
-                await LoadDataAsync();
-                ShowRosteredPlayers();
-            }
-            else
-            {
-                Snackbar.Add("Something went wrong...", Severity.Error);
-            }
+            await LoadDataAsync();
+            ShowRosteredPlayers();
         }
-        catch (AccessTokenNotAvailableException exception)
+        else
         {
-            exception.Redirect();
+            Snackbar.Add("Something went wrong...", Severity.Error);
         }
     }
 

@@ -16,19 +16,9 @@ public sealed partial class List : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _loading = true;
-            await LoadDataAsync();
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-        finally
-        {
-            _loading = false;
-        }
+        _loading = true;
+        await LoadDataAsync();
+        _loading = false;
     }
     private async Task LoadDataAsync()
     {

@@ -21,22 +21,15 @@ public partial class Manage
     {
         _processingForm = true;
 
-        try
-        {
-            var response = await HttpClient.PostAsJsonAsync(ManageFineRouteFactory.Uri, _form);
+        var response = await HttpClient.PostAsJsonAsync(ManageFineRouteFactory.Uri, _form);
 
-            if (response.IsSuccessStatusCode)
-            {
-                SnackBar.Add("Successfully updated fine.", Severity.Success);
-            }
-            else
-            {
-                SnackBar.Add("Something went wrong...", Severity.Error);
-            }
-        }
-        catch (AccessTokenNotAvailableException exception)
+        if (response.IsSuccessStatusCode)
         {
-            exception.Redirect();
+            SnackBar.Add("Successfully updated fine.", Severity.Success);
+        }
+        else
+        {
+            SnackBar.Add("Something went wrong...", Severity.Error);
         }
 
         _processingForm = false;
