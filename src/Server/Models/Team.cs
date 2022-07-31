@@ -13,4 +13,6 @@ public record Team : BaseEntity
 
     public ICollection<Player> Players { get; private set; } = new HashSet<Player>();
     public ICollection<Fine> Fines { get; private set; } = new HashSet<Fine>();
+
+    public int CapSpace() => Players.Sum(p => p.ContractValue);
 }
