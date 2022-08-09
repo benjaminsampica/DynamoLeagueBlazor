@@ -5,6 +5,10 @@
 Dynamo League is a fantasy football league based off the Yahoo fantasy football league with heavily customized rule sets.
 It is comprised of two separate stand-alone applications - a client UI written using Blazor WebAssembly and an API server written using ASP.NET Core.
 
+The League operates around teams and players. Teams are added and removed every season depending on participation.
+
+A new season begins every May and continues until the end of December. At the end, points are tallied and rewards are distributed based on how that team's players performed in the real NFL.
+
 # Getting Started
 
 Running & contributing to Dynamo League Blazor requires the following:
