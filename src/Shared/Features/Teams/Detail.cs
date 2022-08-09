@@ -25,10 +25,21 @@ public class TeamDetailRouteFactory
 {
     public const string Uri = "api/teams/";
 
-    // TODO: change to request and add validator + tests
-    // see FineDetailRequest
     public static string Create(int teamId)
     {
         return Uri + teamId;
+    }
+}
+
+public class TeamDetailRequest
+{
+    public int TeamId { get; set; }
+}
+
+public class TeamDetailRequestValidator : AbstractValidator<TeamDetailRequest>
+{
+    public TeamDetailRequestValidator()
+    {
+        RuleFor(r => r.TeamId).GreaterThan(0);
     }
 }

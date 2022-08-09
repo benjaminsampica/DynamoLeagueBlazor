@@ -13,17 +13,6 @@ public class AddPlayerRequest
     public int ContractValue { get; set; }
 }
 
-public class TeamNameListResult
-{
-    public IEnumerable<TeamNameItem> Teams { get; init; } = Array.Empty<TeamNameItem>();
-
-    public class TeamNameItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-    }
-}
-
 public class AddPlayerRequestValidator : AsyncAbstractValidator<AddPlayerRequest>
 {
     public AddPlayerRequestValidator(IPlayerHeadshotService playerHeadshotService)
@@ -48,6 +37,17 @@ public class AddPlayerRequestValidator : AsyncAbstractValidator<AddPlayerRequest
             .WithMessage("Unknown position.");
         RuleFor(p => p.TeamId).GreaterThan(0).WithMessage("Please select a valid team.");
         RuleFor(p => p.ContractValue).GreaterThan(0);
+    }
+}
+
+public class TeamNameListResult
+{
+    public IEnumerable<TeamNameItem> Teams { get; init; } = Array.Empty<TeamNameItem>();
+
+    public class TeamNameItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
     }
 }
 
