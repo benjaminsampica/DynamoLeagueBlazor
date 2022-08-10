@@ -30,23 +30,23 @@ public class AddBidController : ControllerBase
     [HttpGet("hasnotended")]
     public async Task<bool> GetHasNotEndedAsync([FromQuery] int playerId, int amount, CancellationToken cancellationToken)
     {
-        var hasBiddingEnded = await _bidValidator.HasNotEndedAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
+        var hasNotEnded = await _bidValidator.HasNotEndedAsync(new AddBidRequest { Amount = amount, PlayerId = playerId }, cancellationToken);
 
-        return hasBiddingEnded;
+        return hasNotEnded;
     }
 
     [HttpPost]
-    public async Task<int> PostAsync([FromBody] AddBidRequest request, CancellationToken cancellationToken)
+    public async Task PostAsync([FromBody] AddBidRequest request, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<AddBidCommand>(request);
 
-        return await _mediator.Send(query, cancellationToken);
+        await _mediator.Send(query, cancellationToken);
     }
 }
 
-public record AddBidCommand(int PlayerId, int Amount) : IRequest<int> { }
+public record AddBidCommand(int PlayerId, int Amount) : IRequest { }
 
-public class AddBidHandler : IRequestHandler<AddBidCommand, int>
+public class AddBidHandler : IRequestHandler<AddBidCommand>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -57,18 +57,38 @@ public class AddBidHandler : IRequestHandler<AddBidCommand, int>
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<int> Handle(AddBidCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddBidCommand request, CancellationToken cancellationToken)
     {
         var player = await _dbContext.Players
+            .Include(p => p.Bids)
             .AsTracking()
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken);
 
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
-        var bid = player!.AddBid(request.Amount, currentUserTeamId);
+        var newBid = player!.AddBid(request.Amount, currentUserTeamId);
+
+        var overBid = player.Bids.FindHighestBid();
+        if (overBid!.TeamId != currentUserTeamId)
+        {
+            AddBidFromOverbiddingTeam();
+        }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return bid.Id;
+        return Unit.Value;
+
+        void AddBidFromOverbiddingTeam()
+        {
+            if (overBid!.Amount > request.Amount)
+            {
+                // TODO Solve this
+                player.AddBid(request.Amount + 1, overBid.TeamId);
+            }
+            else if (overBid!.Amount == request.Amount)
+            {
+                overBid.IsOverBid = false;
+            }
+        }
     }
 }
 
@@ -102,7 +122,8 @@ public class BidValidator : IBidValidator
     {
         var isHighestBid = await _dbContext.Players
             .Where(p => p.Id == request.PlayerId
-                && p.Bids.All(b => request.Amount > b.Amount))
+                && p.Bids.Where(b => b.IsOverBid == false)
+                        .All(b => request.Amount > b.Amount))
             .AnyAsync(cancellationToken);
 
         return isHighestBid;

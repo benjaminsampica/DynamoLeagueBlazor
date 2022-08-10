@@ -134,6 +134,34 @@ public class AddBidTests : IntegrationTestBase
         bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
         bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
     }
+
+    [Fact]
+    public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ButThereIsAnExistingOverBidWithAHigherAmount_ThenSavesTwoBidsWithTheOverBidAsTheHighestPlusOneDollar()
+    {
+        var application = CreateUserAuthenticatedApplication();
+        var client = application.CreateClient();
+
+        var mockTeam = CreateFakeTeam();
+        await application.AddAsync(mockTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
+        await application.AddAsync(mockPlayer);
+
+        var request = CreateFakeValidRequest();
+        request.PlayerId = mockPlayer.Id;
+
+        var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
+
+        result.Should().BeSuccessful();
+
+        var bid = await application.FirstOrDefaultAsync<Bid>();
+        bid.Should().NotBeNull();
+        bid!.Amount.Should().Be(request.Amount);
+        bid.PlayerId.Should().Be(request.PlayerId);
+        bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
+        bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+    }
 }
 
 public class AddBidRequestValidatorTests : IntegrationTestBase

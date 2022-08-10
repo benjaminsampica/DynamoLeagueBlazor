@@ -1,4 +1,5 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents;
@@ -27,20 +28,24 @@ public class DetailHandler : IRequestHandler<DetailQuery, FreeAgentDetailResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public DetailHandler(ApplicationDbContext dbContext, IMapper mapper)
+    public DetailHandler(ApplicationDbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<FreeAgentDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
+        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+
         var result = await _dbContext.Players
             .Include(p => p.Bids)
                 .ThenInclude(b => b.Team)
             .Where(p => p.Id == request.PlayerId)
-            .ProjectTo<FreeAgentDetailResult>(_mapper.ConfigurationProvider)
+            .ProjectTo<FreeAgentDetailResult>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .SingleAsync(cancellationToken);
 
         return result;
@@ -51,10 +56,13 @@ public class DetailMappingProfile : Profile
 {
     public DetailMappingProfile()
     {
+        int currentUserTeamId = 0;
+
         CreateMap<Player, FreeAgentDetailResult>()
             .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
-            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.OrderByDescending(b => b.CreatedOn)));
+            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.Where(b => b.IsOverBid == false).OrderByDescending(b => b.CreatedOn)))
+            .ForMember(d => d.OverBid, mo => mo.MapFrom(s => s.Bids.FirstOrDefault(b => b.IsOverBid && b.TeamId == currentUserTeamId)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
             .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))

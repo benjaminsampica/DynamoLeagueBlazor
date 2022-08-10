@@ -13,9 +13,10 @@ public class AddBidRequestValidator : AsyncAbstractValidator<AddBidRequest>
 {
     public AddBidRequestValidator(IBidValidator bidValidator)
     {
+        CascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.PlayerId).GreaterThan(0);
         RuleFor(x => x.Amount)
-            .Cascade(CascadeMode.Stop)
             .GreaterThan(0)
             .MustAsync((request, value, token) => bidValidator.IsHighestAsync(request, token))
             .WithMessage("Please enter a bid higher than the current amount.");

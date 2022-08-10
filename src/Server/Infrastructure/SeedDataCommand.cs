@@ -48,6 +48,14 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
         }
+
+        if (await _userManager.FindByEmailAsync("test2@gmail.com") is null)
+        {
+            var user = new ApplicationUser("test2@gmail.com", 2) { EmailConfirmed = true, Approved = true };
+            await _userManager.CreateAsync(user, "hunter3");
+
+            await _userManager.AddToRoleAsync(user, RoleName.Admin);
+        }
     }
 
     private async Task SeedApplicationDataAsync(CancellationToken cancellationToken)
@@ -75,17 +83,15 @@ public class Handler : IRequestHandler<SeedDataCommand>
         {
             for (int i = 1; i < 250; i++)
             {
+                var randomTeamId = new Random().Next(1, 10);
                 var player = new Player("Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
                 {
-                    TeamId = new Random().Next(1, 10)
+                    TeamId = randomTeamId
                 };
-
-
 
                 if (i % 2 == 0)
                 {
                     player.SignForCurrentTeam(DateTime.Today.AddYears(1).Year, i);
-
 
                     if (i % 4 == 0)
                     {
@@ -99,6 +105,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
                     if (i % 16 == 0)
                     {
+                        player.AddBid(new Random().Next(), randomTeamId);
                         player.ExpireMatch();
                     }
                 }

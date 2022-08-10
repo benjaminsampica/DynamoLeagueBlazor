@@ -46,6 +46,7 @@ else
                             <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
                                 <FluentValidationValidator Validator=_validator/>
                                 <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)"/>
+                                <MudText Typo="Typo.subtitle2">Enter an amount one dollar or greater than the maximum bid.</MudText>
                                 <LoadingButton @bind-IsLoading="_processingForm"/>
                             </EditForm>
                         </MudItem>
@@ -54,10 +55,25 @@ else
                             @if(_result.Bids.Any())
                             {
                                 <MudTimeline>
+                                    @if(_result.OverBid != null)
+                                    {
+                                        <MudTimelineItem Size=Size.Large Color=Color.Info>
+                                            <ItemOpposite>
+                                               <MudText Color="Color.Info" Typo="Typo.h4">
+                                                   @_result.OverBid.Amount
+                                               </MudText>
+                                            </ItemOpposite>
+                                            <ItemContent>
+                                                <MudText Color="Color.Info" Typo="Typo.h5">
+                                                    Bids will automatically be placed for you up to this amount.
+                                                </MudText>
+                                            </ItemContent>
+                                        </MudTimelineItem>
+                                    }
                                     @{
                                         var firstBid = _result.Bids.First();
                                     }
-                                    <MudTimelineItem Icon=@Icons.Outlined.Money Size=Size.Large Color=Color.Success>
+                                    <MudTimelineItem Size=Size.Large Color=Color.Success TimelineAlign="TimelineAlign.End">
                                         <ItemOpposite>
                                            <MudText Color="Color.Success" Typo="Typo.h4">
                                                @firstBid.Amount

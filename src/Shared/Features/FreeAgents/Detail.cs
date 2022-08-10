@@ -8,6 +8,8 @@ public class FreeAgentDetailResult
     public string Team { get; set; } = null!;
     public DateTime EndOfFreeAgency { get; set; }
 
+    public BidItem? OverBid { get; set; }
+
     public IEnumerable<BidItem> Bids { get; set; } = Enumerable.Empty<BidItem>();
 
     public class BidItem
