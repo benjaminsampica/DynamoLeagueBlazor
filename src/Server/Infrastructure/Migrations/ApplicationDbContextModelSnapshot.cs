@@ -286,6 +286,9 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset>("UpdatedOn")
+                        .HasColumnType("datetimeoffset");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PlayerId");

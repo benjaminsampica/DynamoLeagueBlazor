@@ -45,8 +45,8 @@ else
                             <MudText Typo=Typo.h6>Submit A New Bid</MudText>
                             <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
                                 <FluentValidationValidator Validator=_validator/>
-                                <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)"/>
-                                <MudText Typo="Typo.subtitle2">Enter an amount one dollar or greater than the maximum bid.</MudText>
+                                <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" 
+                                    HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)" HelperText="Enter an amount one dollar or greater than the current bid."/>
                                 <LoadingButton @bind-IsLoading="_processingForm"/>
                             </EditForm>
                         </MudItem>
@@ -65,7 +65,7 @@ else
                                             </ItemOpposite>
                                             <ItemContent>
                                                 <MudText Color="Color.Info" Typo="Typo.h5">
-                                                    Bids will automatically be placed for you up to this amount.
+                                                    You will counter bid automatically up to this amount.
                                                 </MudText>
                                             </ItemContent>
                                         </MudTimelineItem>

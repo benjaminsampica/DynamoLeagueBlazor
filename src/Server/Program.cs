@@ -15,6 +15,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
@@ -76,6 +77,7 @@ try
 
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
+    builder.Services.AddFeatureManagement();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
     builder.Services.AddMediatR(Assembly.GetExecutingAssembly());

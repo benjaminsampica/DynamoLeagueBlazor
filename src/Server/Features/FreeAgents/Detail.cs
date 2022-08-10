@@ -61,7 +61,7 @@ public class DetailMappingProfile : Profile
         CreateMap<Player, FreeAgentDetailResult>()
             .ForMember(d => d.EndOfFreeAgency, mo => mo.MapFrom(s => s.EndOfFreeAgency!.Value))
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
-            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.Where(b => b.IsOverBid == false).OrderByDescending(b => b.CreatedOn)))
+            .ForMember(d => d.Bids, mo => mo.MapFrom(s => s.Bids.Where(b => b.IsOverBid == false).OrderByDescending(b => b.UpdatedOn)))
             .ForMember(d => d.OverBid, mo => mo.MapFrom(s => s.Bids.FirstOrDefault(b => b.IsOverBid && b.TeamId == currentUserTeamId)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))

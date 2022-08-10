@@ -92,34 +92,64 @@ public record Player : BaseEntity
 
     public void BeginNewSeason(DateTime endOfFreeAgency) => _machine.Fire(_freeAgentTrigger, endOfFreeAgency);
 
-    public Bid AddBid(int amount, int teamIdOfBidder)
+    public void AddBid(int amount, int teamIdOfBidder, bool automaticCounterBiddingEnabled = false) // TODO: Remove when feature flag is gone.
     {
-        var currentHighestBid = Bids.FindHighestBid();
-
-        var isSameTeamBidding = false;
-        if (currentHighestBid != null)
+        if (automaticCounterBiddingEnabled)
         {
-            isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;
-            if (isSameTeamBidding && currentHighestBid.IsOverBid)
+            var currentHighestBid = Bids.FindHighestBid();
+
+            var isSameTeamBidding = false;
+            if (currentHighestBid != null)
             {
-                currentHighestBid!.Amount = amount;
+                isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;
+                if (isSameTeamBidding && currentHighestBid.IsOverBid)
+                {
+                    currentHighestBid!.Amount = amount;
+                    currentHighestBid.UpdatedOn = DateTimeOffset.Now;
+                }
+                else
+                {
+                    AddCounterBid(currentHighestBid);
+                }
+            }
+
+            var isNewBidHigherThanCurrentBidPlusOneDollar = amount > currentHighestBid?.Amount + 1;
+
+            var isOverBid = isSameTeamBidding || isNewBidHigherThanCurrentBidPlusOneDollar;
+
+            AddBidInner(isOverBid);
+        }
+        else
+        {
+            AddBidInner(false);
+        }
+
+        void AddBidInner(bool isOverBid)
+        {
+            var newBid = new Bid(amount, teamIdOfBidder, Id, isOverBid);
+
+            if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
+            {
+                GrantExtensionToFreeAgency();
+            }
+
+            Bids.Add(newBid);
+        }
+
+        void AddCounterBid(Bid currentHighestBid)
+        {
+            if (currentHighestBid!.Amount > amount)
+            {
+                var counterBid = new Bid(amount + 1, currentHighestBid.TeamId, Id, false);
+
+                Bids.Add(counterBid);
+            }
+            else if (currentHighestBid!.Amount == amount)
+            {
+                currentHighestBid.IsOverBid = false;
+                currentHighestBid.UpdatedOn = DateTimeOffset.Now;
             }
         }
-
-        var isNewBidHigherThanCurrentBidPlusOneDollar = amount > currentHighestBid?.Amount + 1;
-
-        var isOverBid = isSameTeamBidding || isNewBidHigherThanCurrentBidPlusOneDollar;
-
-        var bid = new Bid(amount, teamIdOfBidder, Id, isOverBid);
-
-        if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
-        {
-            GrantExtensionToFreeAgency();
-        }
-
-        Bids.Add(bid);
-
-        return bid;
 
         bool IsEligibleForFreeAgencyExtension(int teamId)
         {

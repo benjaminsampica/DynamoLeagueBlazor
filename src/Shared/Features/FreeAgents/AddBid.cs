@@ -49,3 +49,8 @@ public static class AddBidRouteFactory
         return uri;
     }
 }
+
+public static class AddBidFeatureFlags
+{
+    public const string AutomaticCounterBidding = nameof(AutomaticCounterBidding);
+}

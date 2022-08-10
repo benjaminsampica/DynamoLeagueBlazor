@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220810035902_AddOverBid")]
+    [Migration("20220810152425_AddOverBid")]
     partial class AddOverBid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -287,6 +287,9 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
 
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UpdatedOn")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 

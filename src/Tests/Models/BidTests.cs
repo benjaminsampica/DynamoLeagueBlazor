@@ -15,8 +15,8 @@ public class BidExtensionsTests
     {
         var bids = new List<Bid>()
         {
-            new(1, int.MaxValue, int.MaxValue),
-            new(2, int.MaxValue, int.MaxValue)
+            new(1, int.MaxValue, int.MaxValue, false),
+            new(2, int.MaxValue, int.MaxValue, false)
         };
 
         bids.FindHighestBid().Should().NotBeNull();
