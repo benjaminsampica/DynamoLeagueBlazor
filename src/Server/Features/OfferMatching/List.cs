@@ -46,10 +46,12 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
 
         var offerMatches = await _dbContext.Players
             .Include(p => p.Bids)
+            .ThenInclude(b => b.Team)
             .Where(p => p.State == PlayerState.OfferMatching)
             .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
 
+        
         return new OfferMatchingListResult
         {
             OfferMatches = offerMatches
@@ -64,7 +66,7 @@ public class ListMappingProfile : Profile
 
         CreateMap<Player, OfferMatchingListResult.OfferMatchingItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
-            .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Team != null ? s.Team.Name : string.Empty))
+            .ForMember(d => d.OfferingTeam, mo => mo.MapFrom(s => s.Bids.FindHighestBid()!.Team.Name != null ? s.Team.Name : string.Empty))
             .ForMember(d => d.Offer, mo => mo.MapFrom(s => s.GetHighestBidAmount()))
             .ForMember(d => d.CurrentUserIsOfferMatching, mo => mo.MapFrom(s => s.TeamId == currentUserTeamId))
             .ForMember(d => d.RemainingTime, mo => mo.MapFrom(s => s.GetRemainingFreeAgencyTime()));
