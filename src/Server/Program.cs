@@ -55,20 +55,21 @@ try
             options.Password.RequireNonAlphanumeric = false;
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedAccount = true;
-
-            // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
-            // TODO: Revisit in .NET 7
-            var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
-            if (!string.IsNullOrEmpty(issuerUri))
-            {
-                options.Tokens.AuthenticatorIssuer = issuerUri;
-            }
         })
         .AddRoles<ApplicationRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
-    builder.Services.AddIdentityServer()
+    builder.Services.AddIdentityServer(options =>
+    {
+        // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
+        // TODO: Revisit in .NET 7
+        var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
+        if (!string.IsNullOrEmpty(issuerUri))
+        {
+            options.IssuerUri = issuerUri;
+        }
+    })
         .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
