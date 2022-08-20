@@ -19,11 +19,15 @@ Running & contributing to Dynamo League Blazor requires the following:
 
 The latter two are installed automatically with either Visual Studio or Rider.
 
-By default, a test account is created with administrator permissions with the following login information:
+By default, two test accounts are created with administrator permissions with the following login information:
 
-Username `test@gmail.com`
+Username: `test@gmail.com`
+Password: `hunter2`
+Team - Space Force
 
-Password `hunter2`
+Username: `test2@gmail.com`
+Password: `hunter2`
+Team - The Donald
 
 # Contributing
 

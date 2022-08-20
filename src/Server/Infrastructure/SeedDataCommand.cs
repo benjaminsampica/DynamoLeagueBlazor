@@ -41,18 +41,16 @@ public class Handler : IRequestHandler<SeedDataCommand>
             await _roleManager.CreateAsync(userRole);
         }
 
-        if (await _userManager.FindByEmailAsync("test@gmail.com") is null)
+        await AddFakeUserAsync("test@gmail.com", 1);
+        await AddFakeUserAsync("test2@gmail.com", 1);
+    }
+
+    private async Task AddFakeUserAsync(string email, int teamId)
+    {
+        if (await _userManager.FindByEmailAsync(email) is null)
         {
-            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true, Approved = true };
+            var user = new ApplicationUser(email, teamId) { EmailConfirmed = true, Approved = true };
             await _userManager.CreateAsync(user, "hunter2");
-
-            await _userManager.AddToRoleAsync(user, RoleName.Admin);
-        }
-
-        if (await _userManager.FindByEmailAsync("test2@gmail.com") is null)
-        {
-            var user = new ApplicationUser("test2@gmail.com", 2) { EmailConfirmed = true, Approved = true };
-            await _userManager.CreateAsync(user, "hunter3");
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
         }
