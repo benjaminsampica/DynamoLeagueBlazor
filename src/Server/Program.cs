@@ -75,7 +75,9 @@ try
     {
         if (!string.IsNullOrEmpty(issuerUri))
         {
-            options.AddDefaultPolicy(builder => builder.WithOrigins(issuerUri));
+            options.AddDefaultPolicy(builder => builder.WithOrigins(issuerUri)
+                   .AllowAnyHeader()
+                   .AllowAnyMethod());
         }
     });
 
