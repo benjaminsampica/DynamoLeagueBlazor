@@ -14,6 +14,7 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
@@ -136,7 +137,9 @@ try
         });
     }
 
-    app.UseHttpsRedirection();
+    app.UseRewriter(new RewriteOptions()
+        .AddRedirectToWwwPermanent()
+        .AddRedirectToHttpsPermanent());
 
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
