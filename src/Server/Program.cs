@@ -60,17 +60,24 @@ try
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
+    // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
+    // TODO: Revisit in .NET 7
+    var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
     builder.Services.AddIdentityServer(options =>
     {
-        // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
-        // TODO: Revisit in .NET 7
-        var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
         if (!string.IsNullOrEmpty(issuerUri))
         {
             options.IssuerUri = issuerUri;
         }
-    })
-        .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+    }).AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+    builder.Services.AddCors(options =>
+    {
+        if (!string.IsNullOrEmpty(issuerUri))
+        {
+            options.AddDefaultPolicy(builder => builder.WithOrigins(issuerUri));
+        }
+    });
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
@@ -151,6 +158,7 @@ try
     app.UseStaticFiles();
 
     app.UseRouting();
+    app.UseCors();
 
     app.UseIdentityServer();
     app.UseAuthentication();
