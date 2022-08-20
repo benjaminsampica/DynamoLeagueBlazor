@@ -2,18 +2,21 @@
 
 namespace DynamoLeagueBlazor.Tests;
 
-public class RedirectTests : IntegrationTestBase
+public class RedirectTests
 {
     [Fact]
     public async Task GivenAnyRequest_WhenIsHttp_ThenIsRedirectedToHttps()
     {
-        var application = CreateUnauthenticatedApplication();
+        var webApplicationFactory = new WebApplicationFactory<Program>();
 
-        var client = application.CreateDefaultClient();
+        var client = webApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+            BaseAddress = new Uri("http://www.test.com")
+        });
 
         var response = await client.GetAsync(string.Empty);
 
-        response.Should().HaveStatusCode(HttpStatusCode.Moved);
         response.Headers.Location!.Scheme.Should().Be("https");
     }
 
@@ -25,12 +28,11 @@ public class RedirectTests : IntegrationTestBase
         var client = webApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
-            BaseAddress = new Uri("https://23n4nbsajdnbajskdbaskjdbasjkdbasd.com")
+            BaseAddress = new Uri("https://test.com")
         });
 
         var response = await client.GetAsync(string.Empty);
 
-        response.Should().HaveStatusCode(HttpStatusCode.PermanentRedirect);
         response.Headers.Location!.AbsoluteUri.Should().Contain("www");
     }
 }

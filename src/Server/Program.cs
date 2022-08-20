@@ -20,6 +20,7 @@ using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -138,14 +139,13 @@ try
     }
 
     app.UseRewriter(new RewriteOptions()
-        .AddRedirectToWwwPermanent()
-        .AddRedirectToHttpsPermanent());
+        .AddRedirectToWww()
+        .AddRedirectToHttps((int)HttpStatusCode.TemporaryRedirect));
 
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
 
     app.UseRouting();
-    app.UseCors();
 
     app.UseIdentityServer();
     app.UseAuthentication();
