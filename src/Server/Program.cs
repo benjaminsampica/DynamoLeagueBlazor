@@ -60,26 +60,8 @@ try
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
-    // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
-    // TODO: Revisit in .NET 7
-    var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
-    builder.Services.AddIdentityServer(options =>
-    {
-        if (!string.IsNullOrEmpty(issuerUri))
-        {
-            options.IssuerUri = issuerUri;
-        }
-    }).AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-    builder.Services.AddCors(options =>
-    {
-        if (!string.IsNullOrEmpty(issuerUri))
-        {
-            options.AddDefaultPolicy(builder => builder.WithOrigins(issuerUri)
-                   .AllowAnyHeader()
-                   .AllowAnyMethod());
-        }
-    });
+    builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
