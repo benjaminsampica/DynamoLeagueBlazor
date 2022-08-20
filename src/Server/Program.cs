@@ -14,11 +14,13 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -136,13 +138,14 @@ try
         });
     }
 
-    app.UseHttpsRedirection();
+    app.UseRewriter(new RewriteOptions()
+        .AddRedirectToWww()
+        .AddRedirectToHttps((int)HttpStatusCode.TemporaryRedirect));
 
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
 
     app.UseRouting();
-    app.UseCors();
 
     app.UseIdentityServer();
     app.UseAuthentication();
