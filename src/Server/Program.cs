@@ -14,12 +14,14 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -61,8 +63,8 @@ try
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
-    builder.Services.AddIdentityServer()
-        .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+    builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
@@ -138,7 +140,9 @@ try
         });
     }
 
-    app.UseHttpsRedirection();
+    app.UseRewriter(new RewriteOptions()
+        .AddRedirectToWww()
+        .AddRedirectToHttps((int)HttpStatusCode.TemporaryRedirect));
 
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
