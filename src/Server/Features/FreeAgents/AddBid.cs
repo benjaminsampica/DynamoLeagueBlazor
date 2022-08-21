@@ -107,6 +107,8 @@ public class BidValidator : IBidValidator
 
     public async Task<bool> IsHighestAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
+        // TODO: IsHighestAsync needs to understand _who_ is bidding and how to make the determination if it's the highest.
+        // We want to prevent the same team from lowering their overbid but also want to hide the overbid from other teams.
         var isHighestBid = await _dbContext.Players
             .Where(p => p.Id == request.PlayerId
                 && p.Bids.Where(b => b.IsOverBid == false)

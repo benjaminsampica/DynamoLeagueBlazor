@@ -99,6 +99,12 @@ public record Player : BaseEntity
             var currentHighestBid = Bids.FindHighestBid();
 
             var isSameTeamBidding = false;
+            // TODO: Need to clean this up. I think I should pull out the checks for team bidding and overbidding into their own service
+            //     because of the bug in the next TODO. 
+            // TODO: Edge case where the current high bidder, who has overbid, can actually _reduce_ their overbid.
+            //     Overbid - $7
+            //     Active Bid - $5
+            //     -- Can successfully bid $6 -- but curiously doesn't overwrite overbid.
             if (currentHighestBid != null)
             {
                 isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;

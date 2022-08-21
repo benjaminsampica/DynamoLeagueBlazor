@@ -31,8 +31,15 @@ public sealed partial class Detail : IDisposable
 
         if (response.IsSuccessStatusCode)
         {
+            var bidAmount = _form.Amount;
+
             await RefreshPageStateAsync();
             SnackBar.Add("Successfully added bid.", Severity.Success);
+
+            if (_result!.OverBid == null && bidAmount != _result!.Bids.Max(b => b.Amount))
+            {
+                SnackBar.Add("You've been outbid.", Severity.Error);
+            }
         }
         else
         {

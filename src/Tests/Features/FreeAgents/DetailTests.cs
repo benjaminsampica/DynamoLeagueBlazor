@@ -52,7 +52,7 @@ public class DetailServerTests : IntegrationTestBase
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
         bid.Team.Should().Be(mockTeam.Name);
-        bid.Amount.Should().Be(bidAmount.ToString("C0"));
+        bid.Amount.Should().Be(bidAmount);
         DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }

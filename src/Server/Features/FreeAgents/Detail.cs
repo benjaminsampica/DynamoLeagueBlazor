@@ -65,7 +65,7 @@ public class DetailMappingProfile : Profile
             .ForMember(d => d.OverBid, mo => mo.MapFrom(s => s.Bids.FirstOrDefault(b => b.IsOverBid && b.TeamId == currentUserTeamId)));
         CreateMap<Bid, FreeAgentDetailResult.BidItem>()
             .ForMember(d => d.Team, mo => mo.MapFrom(s => s.Team.Name))
-            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount.ToString("C0")))
+            .ForMember(d => d.Amount, mo => mo.MapFrom(s => s.Amount))
             .ForMember(d => d.CreatedOn, mo => mo.MapFrom(s => s.CreatedOn.ToString("g")));
     }
 }

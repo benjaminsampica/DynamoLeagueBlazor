@@ -60,7 +60,7 @@ else
                                         <MudTimelineItem Size=Size.Large Color=Color.Info>
                                             <ItemOpposite>
                                                <MudText Color="Color.Info" Typo="Typo.h4">
-                                                   @_result.OverBid.Amount
+                                                   @_result.OverBid.Amount.ToString("C0")
                                                </MudText>
                                             </ItemOpposite>
                                             <ItemContent>
@@ -76,7 +76,7 @@ else
                                     <MudTimelineItem Size=Size.Large Color=Color.Success TimelineAlign="TimelineAlign.End">
                                         <ItemOpposite>
                                            <MudText Color="Color.Success" Typo="Typo.h4">
-                                               @firstBid.Amount
+                                               @firstBid.Amount.ToString("C0")
                                            </MudText>
                                         </ItemOpposite>
                                         <ItemContent>
@@ -93,7 +93,7 @@ else
                                         <MudTimelineItem TimelineAlign="TimelineAlign.End">
                                             <ItemOpposite>
                                                <MudText Typo="Typo.h6">
-                                                   @bid.Amount
+                                                   @bid.Amount.ToString("C0")
                                                </MudText>
                                             </ItemOpposite>
                                             <ItemContent>

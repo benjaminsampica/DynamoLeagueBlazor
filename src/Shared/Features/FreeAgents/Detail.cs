@@ -15,7 +15,7 @@ public class FreeAgentDetailResult
     public class BidItem
     {
         public string Team { get; set; } = null!;
-        public string Amount { get; set; } = null!;
+        public int Amount { get; set; }
         public string CreatedOn { get; set; } = null!;
     }
 }
