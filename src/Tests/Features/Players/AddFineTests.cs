@@ -1,6 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
@@ -63,7 +62,7 @@ public class AddFineRequestValidatorTests : IntegrationTestBase
 
     public AddFineRequestValidatorTests()
     {
-        _validator = _application.Services.GetRequiredService<AddFineRequestValidator>();
+        _validator = GetRequiredService<AddFineRequestValidator>();
 
     }
 
@@ -88,7 +87,7 @@ public class FineDetailRequestValidatorTests : IntegrationTestBase
 
     public FineDetailRequestValidatorTests()
     {
-        _validator = _application.Services.GetRequiredService<FineDetailRequestValidator>();
+        _validator = GetRequiredService<FineDetailRequestValidator>();
     }
 
     [Theory]

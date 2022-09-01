@@ -24,9 +24,6 @@ public class IntegrationTestBase : IAsyncLifetime
     public Task DisposeAsync() => Task.CompletedTask;
 
     public async Task InitializeAsync() => await ResetStateAsync();
-
-    public T GetRequiredService<T>() where T : class =>
-        _application.Services.GetRequiredService<T>();
 }
 
 
@@ -35,7 +32,8 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 {
     private static Checkpoint _checkpoint = null!;
     private static IConfiguration _configuration = null!;
-    internal static WebApplicationFactory<Program> _application = null!;
+    private static WebApplicationFactory<Program> _application = null!;
+    private static IServiceScope _scope = null!;
 
     public async Task InitializeAsync()
     {
@@ -52,8 +50,8 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
         _application = CreateApplication();
 
-        using var scope = _application.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        _scope = _application.Services.CreateAsyncScope();
+        var dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.MigrateAsync();
@@ -129,9 +127,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
     public static async Task<TEntity?> FirstOrDefaultAsync<TEntity>()
         where TEntity : class
     {
-        using var scope = _application.Services.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         return await context.Set<TEntity>().FirstOrDefaultAsync();
     }
@@ -139,9 +135,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
     public static async Task AddAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
-        using var scope = _application.Services.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         context.Add(entity);
 
@@ -151,19 +145,15 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
     public static async Task UpdateAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
-        using var scope = _application.Services.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         context.Update(entity);
 
         await context.SaveChangesAsync();
     }
-}
 
-internal static class IntegrationTestExtensions
-{
-
+    public static T GetRequiredService<T>() where T : class =>
+        _application.Services.GetRequiredService<T>();
 }
 
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>

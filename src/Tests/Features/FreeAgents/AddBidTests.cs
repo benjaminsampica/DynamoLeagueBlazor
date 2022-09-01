@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
 
@@ -142,7 +141,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
     public AddBidRequestValidatorTests()
     {
-        _validator = _application.Services.GetRequiredService<AddBidRequestValidator>();
+        _validator = GetRequiredService<AddBidRequestValidator>();
     }
 
     [Theory]
