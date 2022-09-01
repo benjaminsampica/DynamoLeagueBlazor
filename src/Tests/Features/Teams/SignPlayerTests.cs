@@ -16,7 +16,7 @@ public class SignPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -29,11 +29,11 @@ public class SignPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenSignsPlayer()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
         var player = CreateFakePlayer();
         player.Position = Position.QuarterBack.Name;
         player.YearContractExpires = DateTime.Now.Year;
-        await application.AddAsync(player);
+        await AddAsync(player);
         var request = CreateFakeValidRequest();
         request.YearContractExpires = (int)player.YearContractExpires;
         request.PlayerId = player.Id;
@@ -41,7 +41,7 @@ public class SignPlayerServerTests : IntegrationTestBase
 
         await client.PostAsJsonAsync(SignPlayerRouteFactory.Uri, request);
 
-        var result = await application.FirstOrDefaultAsync<Player>();
+        var result = await FirstOrDefaultAsync<Player>();
 
         result.Should().NotBeNull();
         result!.YearContractExpires.Should().Be(request.YearContractExpires);

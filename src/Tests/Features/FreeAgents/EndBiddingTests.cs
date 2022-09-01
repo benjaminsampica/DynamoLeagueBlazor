@@ -7,35 +7,35 @@ public class EndBiddingTests : IntegrationTestBase
     [Fact]
     public async Task GivenAPlayerWhoIsntAFreeAgent_ThenNothingHappens()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.Unrostered;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var sut = GetRequiredService<EndBiddingService>();
 
         await sut.Invoke();
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
         player!.State.Should().Be(mockPlayer.State);
     }
 
     [Fact]
     public async Task GivenAPlayerWhoIsAFreeAgentAndEndFreeAgencyIsNowOrBeforeNow_ThenChangesToOfferMatching()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.FreeAgent;
         mockPlayer.EndOfFreeAgency = DateTime.Now;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var sut = GetRequiredService<EndBiddingService>();
 
         await sut.Invoke();
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
         player!.State.Should().Be(PlayerState.OfferMatching);
     }
 }

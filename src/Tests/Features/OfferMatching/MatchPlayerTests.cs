@@ -7,20 +7,20 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsignedForTheMatchingTeam()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var matchingTeam = CreateFakeTeam();
-        await application.AddAsync(matchingTeam);
+        await AddAsync(matchingTeam);
 
         var biddingTeam = CreateFakeTeam();
-        await application.AddAsync(biddingTeam);
+        await AddAsync(biddingTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = matchingTeam.Id;
         mockPlayer.State = PlayerState.OfferMatching;
         mockPlayer.AddBid(int.MaxValue, biddingTeam.Id);
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
         var client = application.CreateClient();
@@ -29,7 +29,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
 
         response.Should().BeSuccessful();
 
-        var unsignedPlayer = await application.FirstOrDefaultAsync<Player>();
+        var unsignedPlayer = await FirstOrDefaultAsync<Player>();
         unsignedPlayer!.YearContractExpires.Should().Be(null);
         unsignedPlayer.EndOfFreeAgency.Should().Be(null);
         unsignedPlayer.YearAcquired.Should().Be(DateTime.Today.Year);
@@ -41,34 +41,34 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBidsOnOfferMatch_ThenContractValueIsTheMinimumBid()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
         mockPlayer.State = PlayerState.OfferMatching;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
         var client = application.CreateClient();
 
         await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);
 
-        var result = await application.FirstOrDefaultAsync<Player>();
+        var result = await FirstOrDefaultAsync<Player>();
         result!.ContractValue.Should().Be(Bid.MinimumAmount);
     }
 
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenTheyTryToOfferMatchOnAPlayerThatIsntTheirs_ThenReturnsAClientError()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.OfferMatching;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
         var client = application.CreateClient();
@@ -76,7 +76,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         var response = await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);
         response.Should().HaveClientError();
 
-        var result = await application.FirstOrDefaultAsync<Player>();
+        var result = await FirstOrDefaultAsync<Player>();
         result!.TeamId.Should().NotBe(mockTeam.Id);
     }
 }

@@ -9,9 +9,9 @@ public class DetailTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
         var client = application.CreateClient();
         var endpoint = TeamDetailRouteFactory.Create(stubTeam.Id);
 
@@ -23,27 +23,27 @@ public class DetailTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenGivenValidTeamId_ThenReturnsExpectedResult()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockRosteredPlayer = CreateFakePlayer();
         mockRosteredPlayer.TeamId = stubTeam.Id;
         mockRosteredPlayer.SignForCurrentTeam(DateTime.MaxValue.Year, 1);
         mockRosteredPlayer.State = PlayerState.Rostered;
-        await application.AddAsync(mockRosteredPlayer);
+        await AddAsync(mockRosteredPlayer);
 
         var mockUnrosteredPlayer = CreateFakePlayer();
         mockUnrosteredPlayer.TeamId = stubTeam.Id;
         mockUnrosteredPlayer.SetToUnrostered();
         mockUnrosteredPlayer.State = PlayerState.Unrostered;
-        await application.AddAsync(mockUnrosteredPlayer);
+        await AddAsync(mockUnrosteredPlayer);
 
         var mockUnsignedPlayer = CreateFakePlayer();
         mockUnsignedPlayer.TeamId = stubTeam.Id;
         mockUnsignedPlayer.State = PlayerState.Unsigned;
-        await application.AddAsync(mockUnsignedPlayer);
+        await AddAsync(mockUnsignedPlayer);
 
         var client = application.CreateClient();
         var endpoint = TeamDetailRouteFactory.Create(stubTeam.Id);

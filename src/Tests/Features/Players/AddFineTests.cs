@@ -1,6 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Utilities;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
@@ -17,7 +16,7 @@ public class AddFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -30,14 +29,14 @@ public class AddFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var stubRequest = CreateFakeValidRequest();
         stubRequest.PlayerId = mockPlayer.Id;
@@ -48,7 +47,7 @@ public class AddFineTests : IntegrationTestBase
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var fine = await application.FirstOrDefaultAsync<Fine>();
+        var fine = await FirstOrDefaultAsync<Fine>();
         fine.Should().NotBeNull();
         fine!.PlayerId.Should().Be(stubRequest.PlayerId);
         fine.Status.Should().BeFalse();
@@ -63,7 +62,7 @@ public class AddFineRequestValidatorTests : IntegrationTestBase
 
     public AddFineRequestValidatorTests()
     {
-        _validator = _setupApplication.Services.GetRequiredService<AddFineRequestValidator>();
+        _validator = GetRequiredService<AddFineRequestValidator>();
 
     }
 
@@ -88,7 +87,7 @@ public class FineDetailRequestValidatorTests : IntegrationTestBase
 
     public FineDetailRequestValidatorTests()
     {
-        _validator = _setupApplication.Services.GetRequiredService<FineDetailRequestValidator>();
+        _validator = GetRequiredService<FineDetailRequestValidator>();
     }
 
     [Theory]
