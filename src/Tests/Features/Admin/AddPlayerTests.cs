@@ -13,7 +13,7 @@ public class AddPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -25,7 +25,7 @@ public class AddPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -37,10 +37,10 @@ public class AddPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_ThenAddsAPlayer()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var team = CreateFakeTeam();
-        await application.AddAsync(team);
+        await AddAsync(team);
 
         var request = new AddPlayerRequest
         {
@@ -56,7 +56,7 @@ public class AddPlayerServerTests : IntegrationTestBase
 
         response.Should().BeSuccessful();
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
         player.Should().NotBeNull();
         player!.Name.Should().Be(request.Name);
         player.Position.Should().Be(request.Position);

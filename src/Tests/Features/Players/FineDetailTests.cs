@@ -8,7 +8,7 @@ public class FineDetailTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -22,12 +22,12 @@ public class FineDetailTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsFound_ThenReturnsExpectedResult()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
         var player = CreateFakePlayer();
-        await application.AddAsync(player);
+        await AddAsync(player);
 
         var endpoint = FineDetailRouteFactory.Create(player.Id);
 

@@ -7,7 +7,7 @@ public class RedirectTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyRequest_WhenIsHttp_ThenIsRedirectedToHttps()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient(new WebApplicationFactoryClientOptions
         {
@@ -23,7 +23,7 @@ public class RedirectTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyRequest_WhenIsNotWww_ThenIsRedirectedToWww()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient(new WebApplicationFactoryClientOptions
         {

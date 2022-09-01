@@ -7,7 +7,7 @@ public class RefreshPlayerHeadshotsTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -19,7 +19,7 @@ public class RefreshPlayerHeadshotsTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -31,17 +31,17 @@ public class RefreshPlayerHeadshotsTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_ThenUpdatesAPlayerHeadshot()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
         var player = CreateFakePlayer();
         var oldHeadshot = player.HeadShotUrl;
-        await application.AddAsync(player);
+        await AddAsync(player);
 
         var client = application.CreateClient();
 
         var response = await client.PostAsync(RefreshPlayerHeadshotsRouteFactory.Uri, null);
 
         response.Should().BeSuccessful();
-        var expectedPlayerWithNewHeadshot = await application.FirstOrDefaultAsync<Player>();
+        var expectedPlayerWithNewHeadshot = await FirstOrDefaultAsync<Player>();
         expectedPlayerWithNewHeadshot!.HeadShotUrl.Should().NotBe(oldHeadshot);
     }
 }

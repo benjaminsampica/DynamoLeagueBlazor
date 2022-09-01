@@ -26,7 +26,7 @@ public class IntegrationTestBase : IAsyncLifetime
     public async Task InitializeAsync() => await ResetStateAsync();
 
     public T GetRequiredService<T>() where T : class =>
-        _setupApplication.Services.GetRequiredService<T>();
+        _application.Services.GetRequiredService<T>();
 }
 
 
@@ -35,7 +35,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 {
     private static Checkpoint _checkpoint = null!;
     private static IConfiguration _configuration = null!;
-    internal static WebApplicationFactory<Program> _setupApplication = null!;
+    internal static WebApplicationFactory<Program> _application = null!;
 
     public async Task InitializeAsync()
     {
@@ -50,9 +50,9 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         };
 
-        _setupApplication = new TestWebApplicationFactory(_configuration);
+        _application = CreateApplication();
 
-        using var scope = _setupApplication.Services.CreateAsyncScope();
+        using var scope = _application.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         await dbContext.Database.EnsureDeletedAsync();
@@ -61,7 +61,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
     public async Task DisposeAsync()
     {
-        await _setupApplication.DisposeAsync();
+        await _application.DisposeAsync();
     }
 
     public static async Task ResetStateAsync()
@@ -69,8 +69,8 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    internal static WebApplicationFactory<Program> CreateUserAuthenticatedApplication()
-        => CreateApplication()
+    internal static WebApplicationFactory<Program> GetUserAuthenticatedApplication()
+        => _application
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -80,8 +80,8 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
                 });
             });
 
-    internal static WebApplicationFactory<Program> CreateAdminAuthenticatedApplication()
-        => CreateApplication()
+    internal static WebApplicationFactory<Program> GetAdminAuthenticatedApplication()
+        => _application
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -91,69 +91,55 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
                 });
             });
 
-    internal static WebApplicationFactory<Program> CreateUnauthenticatedApplication()
-        => CreateApplication();
+    internal static WebApplicationFactory<Program> GetUnauthenticatedApplication()
+        => _application;
 
     private static WebApplicationFactory<Program> CreateApplication()
     {
-        var application = new TestWebApplicationFactory(_configuration);
+        var application = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseEnvironment("Test");
+
+                builder.ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    config.AddConfiguration(_configuration);
+                });
+
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthorization(options =>
+                    {
+                        options.AddApplicationAuthorizationPolicies();
+                    });
+
+                    // Stub out calls to Player Profiler.
+                    var descriptor = services.Single(d => d.ServiceType == typeof(IPlayerHeadshotService));
+                    services.Remove(descriptor);
+                    var stubPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
+                    stubPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(RandomString);
+                    services.AddSingleton(stubPlayerHeadshotService.Object);
+                });
+            });
 
         return application;
     }
-}
 
-internal class TestWebApplicationFactory : WebApplicationFactory<Program>
-{
-    private readonly IConfiguration _configuration;
-
-    public TestWebApplicationFactory(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.UseEnvironment("Test");
-
-        builder.ConfigureAppConfiguration((builderContext, config) =>
-        {
-            config.AddConfiguration(_configuration);
-        });
-
-        builder.ConfigureTestServices(services =>
-        {
-            services.AddAuthorization(options =>
-            {
-                options.AddApplicationAuthorizationPolicies();
-            });
-
-            // Stub out calls to Player Profiler.
-            var descriptor = services.Single(d => d.ServiceType == typeof(IPlayerHeadshotService));
-            services.Remove(descriptor);
-            var stubPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
-            stubPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(RandomString);
-            services.AddSingleton(stubPlayerHeadshotService.Object);
-        });
-    }
-}
-
-internal static class IntegrationTestExtensions
-{
-    public static async Task<TEntity?> FirstOrDefaultAsync<TEntity>(this WebApplicationFactory<Program> application)
+    public static async Task<TEntity?> FirstOrDefaultAsync<TEntity>()
         where TEntity : class
     {
-        using var scope = application.Services.CreateScope();
+        using var scope = _application.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         return await context.Set<TEntity>().FirstOrDefaultAsync();
     }
 
-    public static async Task AddAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+    public static async Task AddAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
-        using var scope = application.Services.CreateScope();
+        using var scope = _application.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
@@ -162,10 +148,10 @@ internal static class IntegrationTestExtensions
         await context.SaveChangesAsync();
     }
 
-    public static async Task UpdateAsync<TEntity>(this WebApplicationFactory<Program> application, TEntity entity)
+    public static async Task UpdateAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
-        using var scope = application.Services.CreateScope();
+        using var scope = _application.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
@@ -173,6 +159,11 @@ internal static class IntegrationTestExtensions
 
         await context.SaveChangesAsync();
     }
+}
+
+internal static class IntegrationTestExtensions
+{
+
 }
 
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
