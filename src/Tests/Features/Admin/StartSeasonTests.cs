@@ -7,7 +7,7 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -19,7 +19,7 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -32,11 +32,11 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAPlayerIsAFreeAgent_ThenReturnsTrue()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.Rostered;
         mockPlayer.BeginNewSeason(DateTime.MaxValue);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -48,7 +48,7 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenNotPlayerIsAFreeAgent_ThenReturnsFalse()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -60,17 +60,17 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAFineExistsBeforeJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var stubPlayer = CreateFakePlayer();
         stubPlayer.State = PlayerState.Rostered;
         stubPlayer.TeamId = stubTeam.Id;
         var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = DateTime.MinValue;
-        await application.AddAsync(stubPlayer);
+        await AddAsync(stubPlayer);
 
         var client = application.CreateClient();
 
@@ -78,24 +78,24 @@ public class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var fine = await application.FirstOrDefaultAsync<Fine>();
+        var fine = await FirstOrDefaultAsync<Fine>();
         fine.Should().BeNull();
     }
 
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAFineExistsOnOrAfterJanuary1stOfTheCurrentYear_ThenTheFineIsRemoved()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var stubPlayer = CreateFakePlayer();
         stubPlayer.State = PlayerState.Rostered;
         stubPlayer.TeamId = stubTeam.Id;
         var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
-        await application.AddAsync(stubPlayer);
+        await AddAsync(stubPlayer);
 
         var client = application.CreateClient();
 
@@ -103,17 +103,17 @@ public class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var fine = await application.FirstOrDefaultAsync<Fine>();
+        var fine = await FirstOrDefaultAsync<Fine>();
         fine.Should().NotBeNull();
     }
 
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAPlayerIsEligibleForFreeAgency_ThenSetsPlayerToFreeAgent()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.YearContractExpires = null;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -121,7 +121,7 @@ public class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
         player.Should().NotBeNull();
         player!.EndOfFreeAgency.Should().NotBeNull();
     }
@@ -129,11 +129,11 @@ public class StartSeasonTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenAPlayerIsNotEligibleForFreeAgency_ThenSkipsThatPlayer()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.YearContractExpires = int.MaxValue;
         mockPlayer.EndOfFreeAgency = null;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -141,7 +141,7 @@ public class StartSeasonTests : IntegrationTestBase
 
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
         player.Should().NotBeNull();
         player!.EndOfFreeAgency.Should().BeNull();
     }

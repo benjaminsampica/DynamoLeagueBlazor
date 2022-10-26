@@ -9,11 +9,11 @@ public class DetailServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
         var client = application.CreateClient();
 
         var stubPlayer = CreateFakePlayer();
-        await application.AddAsync(stubPlayer);
+        await AddAsync(stubPlayer);
         var endpoint = FreeAgentDetailFactory.Create(stubPlayer.Id);
 
         var response = await client.GetAsync(endpoint);
@@ -24,18 +24,18 @@ public class DetailServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenGivenValidPlayerId_ThenReturnsExpectedResult()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockFreeAgent = CreateFakePlayer();
         mockFreeAgent.TeamId = mockTeam.Id;
-        await application.AddAsync(mockFreeAgent);
+        await AddAsync(mockFreeAgent);
 
         var bidAmount = int.MaxValue;
         mockFreeAgent.AddBid(bidAmount, mockTeam.Id);
-        await application.UpdateAsync(mockFreeAgent);
+        await UpdateAsync(mockFreeAgent);
 
         var client = application.CreateClient();
         var endpoint = FreeAgentDetailFactory.Create(mockFreeAgent.Id);

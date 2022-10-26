@@ -15,7 +15,7 @@ public class ManageFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -28,7 +28,7 @@ public class ManageFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -41,15 +41,15 @@ public class ManageFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenFineIsApproved_ThenUpdatesIt()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = true;
@@ -61,7 +61,7 @@ public class ManageFineTests : IntegrationTestBase
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var fine = await application.FirstOrDefaultAsync<Fine>();
+        var fine = await FirstOrDefaultAsync<Fine>();
         fine.Should().NotBeNull();
         fine!.Status.Should().BeTrue();
     }
@@ -69,15 +69,15 @@ public class ManageFineTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenFineIsNotApproved_ThenDeletesIt()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = false;
@@ -89,7 +89,7 @@ public class ManageFineTests : IntegrationTestBase
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var fine = await application.FirstOrDefaultAsync<Fine>();
+        var fine = await FirstOrDefaultAsync<Fine>();
         fine.Should().BeNull();
     }
 }
