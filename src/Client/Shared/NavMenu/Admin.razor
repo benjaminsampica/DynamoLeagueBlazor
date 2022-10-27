@@ -1,4 +1,4 @@
-﻿<AuthorizeView Roles="Admin">
+﻿<AuthorizeView Policy=@PolicyRequirements.Admin>
     <Authorized>
         <MudDivider />
         <MudNavLink Href="/admin/startseason">Start New Season</MudNavLink>

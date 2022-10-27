@@ -99,7 +99,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
                     if (i % 16 == 0)
                     {
-                        player.ExpireMatch();
+                        player.MatchOffer();
                     }
                 }
 

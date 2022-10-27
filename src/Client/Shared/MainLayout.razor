@@ -1,43 +1,59 @@
 ﻿@inherits LayoutComponentBase
 @using DynamoLeagueBlazor.Client.Shared.NavMenu
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor.Services
 
 <MudLayout>
-    <ErrorBoundary @ref=_errorBoundary>
-        <ChildContent>
-            <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
-            <MudAppBar Color=Color.Transparent Elevation=0>
-                <a href="/" class="d-flex">
-                    <img src="logo.PNG" height="50"/>
-                </a>
-                <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) Size=Size.Large />
-            </MudAppBar>
-            <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged/>
-            <MudMainContent>
-                <MudContainer MaxWidth=MaxWidth.Large Style="padding-bottom: 95px;">
-                    <UpdateAvailableDetector/>
-                    @Body
-                </MudContainer>
-            </MudMainContent>
-            <MudHidden Breakpoint=Breakpoint.LgAndUp>
-                <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center justify-center">
-                    <MudToolBar>
-                        <MudIconButton Icon=@Icons.Outlined.SupervisedUserCircle Link="/teams" Size=Size.Large Color=Color.Primary/>
-                        <MudIconButton Icon=@Icons.Outlined.People Link="/players" Size=Size.Large Color=Color.Primary />
-                        <MudIconButton Icon=@Icons.Outlined.MoneyOff Link="/fines" Size=Size.Large Color=Color.Primary />
-                        <MudIconButton Icon=@Icons.Outlined.FreeCancellation Link="/freeagents" Size=Size.Large Color=Color.Primary />
-                    </MudToolBar>
-                </MudAppBar>
-            </MudHidden>
-        </ChildContent>
-        <ErrorContent>
-            <MudAlert Severity=Severity.Error>
-                An Error Occured...
-            </MudAlert>
-        </ErrorContent>
-    </ErrorBoundary>
-    
+    <MudIcon Icon=@Icons.Outlined.SportsFootball Style="position:absolute; z-index:-1; height: 100vh; width: 100%; opacity: 5%;" Color=Color.Primary></MudIcon>
+    <MudAppBar Color=Color.Transparent Elevation=0>
+        <a href="/" class="d-flex">
+            <img src="logo.PNG" height="50" />
+        </a>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick=@(e => OnOpenChanged()) Size=Size.Large />
+    </MudAppBar>
+    <NavMenu Open=_showNavMenu OnOpenChanged=OnOpenChanged />
+    <MudMainContent>
+        <MudContainer MaxWidth=MaxWidth.Large Style="padding-bottom: 95px;">
+            <UpdateAvailableDetector />
+            <ErrorBoundary @ref=_errorBoundary>
+                <ChildContent>
+                    <AuthorizeView Policy=@PolicyRequirements.IsAdminApproved>
+                        <Authorized>
+                            @Body
+                        </Authorized>
+                        <NotAuthorized>
+                            @if(context.User.Identity?.IsAuthenticated != true)
+                            {
+                                <RedirectToLogin />
+                            }
+                            else 
+                            {
+                                 <MudAlert Severity=Severity.Info>
+                                    Your account is waiting on approval by an administrator before Dynamo League will be available for you. Please check back another time.
+                                </MudAlert>
+                            }
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </ChildContent>
+                <ErrorContent>
+                    <MudAlert Severity=Severity.Error>
+                        An error has occured...
+                    </MudAlert>
+                </ErrorContent>
+            </ErrorBoundary>
+        </MudContainer>
+    </MudMainContent>
+    <MudHidden Breakpoint=Breakpoint.LgAndUp>
+        <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center justify-center">
+            <MudToolBar>
+                <MudIconButton Icon=@Icons.Outlined.SupervisedUserCircle Link="/teams" Size=Size.Large Color=Color.Primary />
+                <MudIconButton Icon=@Icons.Outlined.People Link="/players" Size=Size.Large Color=Color.Primary />
+                <MudIconButton Icon=@Icons.Outlined.MoneyOff Link="/fines" Size=Size.Large Color=Color.Primary />
+                <MudIconButton Icon=@Icons.Outlined.FreeCancellation Link="/freeagents" Size=Size.Large Color=Color.Primary />
+            </MudToolBar>
+        </MudAppBar>
+    </MudHidden>    
 </MudLayout>
 <MudDialogProvider CloseButton=true/>
 
