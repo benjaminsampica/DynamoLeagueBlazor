@@ -9,7 +9,7 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -21,7 +21,7 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -33,15 +33,15 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenThereIsOneUser_ThenReturnsOneUser()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         // Make sure the user has a team associated with it.
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockUser = CreateFakeUser(mockTeam.Id);
         mockUser.EmailConfirmed = true;
-        await application.AddAsync(mockUser);
+        await AddAsync(mockUser);
 
         var client = application.CreateClient();
 

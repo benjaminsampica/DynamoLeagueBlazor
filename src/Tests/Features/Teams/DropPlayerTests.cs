@@ -13,7 +13,7 @@ public class DropPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -26,10 +26,10 @@ public class DropPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_WhenAPlayerIsRostered_ThenUnrostersPlayer()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.Rostered;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
@@ -37,7 +37,7 @@ public class DropPlayerServerTests : IntegrationTestBase
 
         await client.PostAsJsonAsync(DropPlayerRouteFactory.Uri, request);
 
-        var player = await application.FirstOrDefaultAsync<Player>();
+        var player = await FirstOrDefaultAsync<Player>();
 
         player!.State.Should().Be(PlayerState.Unrostered);
     }

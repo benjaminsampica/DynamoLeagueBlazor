@@ -14,11 +14,13 @@ using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -60,17 +62,8 @@ try
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddClaimsPrincipalFactory<CurrentUserClaimsFactory>();
 
-    builder.Services.AddIdentityServer(options =>
-    {
-        // Needed for .NET 6 Identity/ASP.NET Core bug - https://github.com/dotnet/core/blob/main/release-notes/6.0/known-issues.md#spa-template-issues-with-individual-authentication-when-running-in-production
-        // TODO: Revisit in .NET 7
-        var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
-        if (!string.IsNullOrEmpty(issuerUri))
-        {
-            options.IssuerUri = issuerUri;
-        }
-    })
-        .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+    builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
@@ -145,7 +138,9 @@ try
         });
     }
 
-    app.UseHttpsRedirection();
+    app.UseRewriter(new RewriteOptions()
+        .AddRedirectToWww()
+        .AddRedirectToHttps((int)HttpStatusCode.TemporaryRedirect));
 
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
