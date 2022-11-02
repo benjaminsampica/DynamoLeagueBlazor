@@ -46,10 +46,16 @@ public class UITestBase : TestContextWrapper, IDisposable
 
     public MockHttpHandler GetHttpHandler => _mockHttpHandler;
 
-    public void AuthorizeAsUser(int teamId)
+    public void AuthorizeAsUser(int teamId, bool adminApproved = true)
     {
         var authorizedState = _testAuthorizationContext.SetAuthorized(RandomString);
         authorizedState.SetClaims(new Claim(nameof(IUser.TeamId), teamId.ToString()));
+        authorizedState.SetClaims(new Claim(nameof(IUser.Approved), adminApproved.ToString()));
+
+        if (adminApproved)
+        {
+            authorizedState.SetPolicies(PolicyRequirements.IsAdminApproved);
+        }
     }
 }
 
