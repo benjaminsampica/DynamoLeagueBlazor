@@ -165,7 +165,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
         var result = _validator.TestValidate(request);
 
-        result.IsValid.Should().Be(expectedResult);
+        result.ShouldNotHaveValidationErrorFor(r => r.Amount);
     }
 
     [Fact]
