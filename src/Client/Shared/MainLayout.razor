@@ -18,23 +18,7 @@
             <UpdateAvailableDetector />
             <ErrorBoundary @ref=_errorBoundary>
                 <ChildContent>
-                    <AuthorizeView Policy="@PolicyRequirements.IsAdminApproved">
-                        <Authorized>
-                            @Body
-                        </Authorized>
-                        <NotAuthorized>
-                            @if (context.User.Identity?.IsAuthenticated != true)
-                            {
-                                <RedirectToLogin />
-                            }
-                            else
-                            {
-                                <MudAlert Severity=Severity.Info>
-                                    Your account is waiting on approval by an administrator before Dynamo League will be available for you. Please check back another time.
-                                </MudAlert>
-                            }
-                        </NotAuthorized>
-                    </AuthorizeView>
+                    @Body
                 </ChildContent>
                 <ErrorContent>
                     <MudAlert Severity=Severity.Error>
