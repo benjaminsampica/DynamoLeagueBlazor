@@ -43,7 +43,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
         if (await _userManager.FindByEmailAsync("test@gmail.com") is null)
         {
-            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true, Approved = true };
+            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true, Approved = false };
             await _userManager.CreateAsync(user, "hunter2");
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
