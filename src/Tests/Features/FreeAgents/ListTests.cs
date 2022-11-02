@@ -7,7 +7,7 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -19,7 +19,7 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsNoPlayersWhoAreFreeAgents_ThenReturnsNothing()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -32,21 +32,21 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWhoIsAFreeAgent_ThenReturnsOneFreeAgent()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
         mockPlayer.SignForCurrentTeam(DateTime.MinValue.Year, int.MaxValue);
         var biddingEnds = DateTime.MaxValue;
         mockPlayer.BeginNewSeason(biddingEnds);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var bidAmount = int.MaxValue;
         mockPlayer.AddBid(bidAmount, mockTeam.Id);
-        await application.UpdateAsync(mockPlayer);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -69,24 +69,24 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenAFreeAgentHasABidByAnotherTeam_ThenThatTeamShowsAsTheWinningTeam()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
         mockPlayer.SignForCurrentTeam(DateTime.MinValue.Year, int.MaxValue);
         var biddingEnds = DateTime.MaxValue;
         mockPlayer.BeginNewSeason(biddingEnds);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var winningTeam = CreateFakeTeam();
-        await application.AddAsync(winningTeam);
+        await AddAsync(winningTeam);
 
         var bidAmount = int.MaxValue;
         mockPlayer.AddBid(bidAmount, winningTeam.Id);
-        await application.UpdateAsync(mockPlayer);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 

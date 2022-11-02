@@ -7,7 +7,7 @@ public class TopTeamFinesTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -19,16 +19,16 @@ public class TopTeamFinesTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeamWithAFine_ThenReturnsOneTeamWithAFine()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var stubPlayer = CreateFakePlayer();
         stubPlayer.TeamId = mockTeam.Id;
         var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.Status = true;
-        await application.AddAsync(stubPlayer);
+        await AddAsync(stubPlayer);
 
         var client = application.CreateClient();
 
@@ -46,22 +46,22 @@ public class TopTeamFinesTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsMultipleTeamsWithApprovedFines_ThenReturnsTheHighestFineCountFirst()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer1 = CreateFakePlayer();
         mockPlayer1.TeamId = stubTeam.Id;
         var fine = mockPlayer1.AddFine(int.MaxValue, RandomString);
         fine.Status = true;
-        await application.AddAsync(mockPlayer1);
+        await AddAsync(mockPlayer1);
 
         var mockPlayer2 = CreateFakePlayer();
         mockPlayer2.TeamId = stubTeam.Id;
         var lowestFine = mockPlayer2.AddFine(int.MinValue, RandomString);
         lowestFine.Status = true;
-        await application.AddAsync(mockPlayer2);
+        await AddAsync(mockPlayer2);
 
         var client = application.CreateClient();
 

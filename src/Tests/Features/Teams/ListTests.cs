@@ -7,7 +7,7 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
         var client = application.CreateClient();
 
         var response = await client.GetAsync(TeamListRouteFactory.Uri);
@@ -18,24 +18,24 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeam_ThenReturnsOneTeamWithPlayerCounts()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var rosteredPlayer = CreateFakePlayer();
         rosteredPlayer.TeamId = mockTeam.Id;
         rosteredPlayer.State = PlayerState.Rostered;
-        await application.AddAsync(rosteredPlayer);
+        await AddAsync(rosteredPlayer);
 
         var unrosteredPlayer = CreateFakePlayer().SetToUnrostered();
         unrosteredPlayer.TeamId = mockTeam.Id;
         unrosteredPlayer.State = PlayerState.Unrostered;
-        await application.AddAsync(unrosteredPlayer);
+        await AddAsync(unrosteredPlayer);
 
         var unsignedPlayer = CreateFakePlayer();
         unsignedPlayer.TeamId = mockTeam.Id;
         unsignedPlayer.State = PlayerState.Unsigned;
-        await application.AddAsync(unsignedPlayer);
+        await AddAsync(unsignedPlayer);
 
         var client = application.CreateClient();
 

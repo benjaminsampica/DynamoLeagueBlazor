@@ -17,7 +17,7 @@ public class DeleteTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -30,7 +30,7 @@ public class DeleteTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -43,12 +43,12 @@ public class DeleteTests : IntegrationTestBase
     [Fact]
     public async Task GivenAuthenticatedAdmin_WhenThereIsOneUser_ThenDeletesTheUser()
     {
-        var application = CreateAdminAuthenticatedApplication();
+        var application = GetAdminAuthenticatedApplication();
 
         var userManager = application.Services.GetRequiredService<UserManager<ApplicationUser>>();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
         var mockUser = CreateFakeUser(stubTeam.Id);
         await userManager.CreateAsync(mockUser);
         var request = new DeleteUserRequest { UserId = mockUser.Id };
