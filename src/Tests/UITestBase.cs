@@ -49,8 +49,9 @@ public class UITestBase : TestContextWrapper, IDisposable
     public void AuthorizeAsUser(int teamId, bool adminApproved = true)
     {
         var authorizedState = _testAuthorizationContext.SetAuthorized(RandomString);
-        authorizedState.SetClaims(new Claim(nameof(IUser.TeamId), teamId.ToString()));
-        authorizedState.SetClaims(new Claim(nameof(IUser.Approved), adminApproved.ToString()));
+        authorizedState.SetClaims(
+            new Claim(nameof(IUser.Approved), adminApproved.ToString()),
+            new Claim(nameof(IUser.TeamId), teamId.ToString()));
 
         if (adminApproved)
         {
