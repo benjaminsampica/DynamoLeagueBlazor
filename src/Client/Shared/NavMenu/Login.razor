@@ -5,7 +5,7 @@
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
-<AuthorizeView Context=context Roles=@AllowedRoles>
+<AuthorizeView Roles=@AllowedRoles>
     <Authorized>
         <MudNavLink Href="authentication/profile">Manage Account</MudNavLink>
         <MudNavLink OnClick="BeginSignOut">Log Out</MudNavLink>
