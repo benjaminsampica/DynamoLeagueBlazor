@@ -33,16 +33,15 @@ public record Player : BaseEntity
             .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned);
     }
 
-    public Player(string name, string position, string headShotUrl) : this()
+    public Player(string name, string position) : this()
     {
         Name = name;
         Position = position;
-        HeadShotUrl = headShotUrl;
     }
 
     public string Name { get; set; } = null!;
     public string Position { get; set; } = null!;
-    public string HeadShotUrl { get; set; } = null!;
+    public string? HeadShotUrl { get; set; }
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
