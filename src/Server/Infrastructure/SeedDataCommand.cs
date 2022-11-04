@@ -75,12 +75,10 @@ public class Handler : IRequestHandler<SeedDataCommand>
         {
             for (int i = 1; i < 250; i++)
             {
-                var player = new Player("Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
+                var player = new Player("Atlanta", "DEF")
                 {
                     TeamId = new Random().Next(1, 10)
                 };
-
-
 
                 if (i % 2 == 0)
                 {

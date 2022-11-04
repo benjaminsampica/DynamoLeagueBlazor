@@ -1,17 +1,13 @@
-﻿@if(string.IsNullOrEmpty(Image))
-{
-    <div class="mud-theme-dark pa-2 rounded-circle">
-        <MudIcon Icon=@Icons.Filled.Person Size=Size @attributes=AllOtherAttributes></MudIcon>
-    </div>
-}
-else
-{
-    <MudAvatar Image=@Image Size=Size @attributes=AllOtherAttributes></MudAvatar>
-}
+﻿<MudAvatar Image=@Image Size=Size @attributes=AllOtherAttributes>
+    @Initials
+</MudAvatar>
 
 
 @code {
+    [Parameter] public string? Name { get; set; }
     [Parameter] public string? Image { get; set; }
     [Parameter] public Size Size { get; set; } = Size.Medium;
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AllOtherAttributes { get; set; }
+
+    private string Initials => !string.IsNullOrEmpty(Name) ? string.Concat(Name.Split(" ").Select(x => x.Substring(0, 1).ToUpperInvariant())) : "UK";
 }

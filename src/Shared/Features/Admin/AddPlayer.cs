@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Enums;
-using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Helpers;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -15,23 +14,9 @@ public class AddPlayerRequest
 
 public class AddPlayerRequestValidator : AsyncAbstractValidator<AddPlayerRequest>
 {
-    public AddPlayerRequestValidator(IPlayerHeadshotService playerHeadshotService)
+    public AddPlayerRequestValidator()
     {
-        RuleFor(p => p.Name)
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty()
-            .MustAsync(async (request, value, cancellationToken) =>
-            {
-                if (request.Position != null)
-                {
-                    var headshotUrl = await playerHeadshotService.FindPlayerHeadshotUrlAsync(request.Name, request.Position, cancellationToken);
-
-                    return !string.IsNullOrEmpty(headshotUrl);
-                }
-
-                return true;
-            })
-            .WithMessage("Player must have a valid headshot.");
+        RuleFor(p => p.Name).NotEmpty();
         RuleFor(p => p.Position).NotEmpty()
             .Must((position) => Position.TryFromName(position, out _))
             .WithMessage("Unknown position.");
