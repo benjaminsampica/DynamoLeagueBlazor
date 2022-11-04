@@ -101,6 +101,16 @@ public sealed partial class Detail : IDisposable
         }
     }
 
+    private void OpenAddFineDialog(int playerId)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(AddFine.TeamId), playerId }
+        };
+
+        DialogService.Show<AddFine>("Add A New Fine", parameters);
+    }
+
     public void Dispose()
     {
         _cts.Cancel();

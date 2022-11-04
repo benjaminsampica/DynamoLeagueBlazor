@@ -15,7 +15,7 @@ public sealed partial class AddPlayer : IDisposable
     private TeamNameListResult _teamList = new();
     private AddPlayerRequest _addPlayerForm = new();
     private AddPlayerRequestValidator _validator = null!;
-    private PlayerPreviewRequest _playerPreviewForm = new();
+    private readonly PlayerPreviewRequest _playerPreviewForm = new();
     private string _previewHeadshotUrl = string.Empty;
     private bool _isPreviewButtonDisabled;
     private bool _isProcessingForm;

@@ -5,9 +5,9 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 public class AddFineTests : IntegrationTestBase
 {
-    private static AddFineRequest CreateFakeValidRequest()
+    private static AddPlayerFineRequest CreateFakeValidRequest()
     {
-        var faker = new AutoFaker<AddFineRequest>()
+        var faker = new AutoFaker<AddPlayerFineRequest>()
             .RuleFor(f => f.PlayerId, 1);
 
         return faker.Generate();
@@ -21,7 +21,7 @@ public class AddFineTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -43,7 +43,7 @@ public class AddFineTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -58,7 +58,7 @@ public class AddFineTests : IntegrationTestBase
 
 public class AddFineRequestValidatorTests : IntegrationTestBase
 {
-    private AddFineRequestValidator _validator = null!;
+    private readonly AddFineRequestValidator _validator = null!;
 
     public AddFineRequestValidatorTests()
     {
@@ -73,7 +73,7 @@ public class AddFineRequestValidatorTests : IntegrationTestBase
     [InlineData(1, "Test", true)]
     public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, string reason, bool expectedResult)
     {
-        var request = new AddFineRequest { PlayerId = playerId, FineReason = reason };
+        var request = new AddPlayerFineRequest { PlayerId = playerId, FineReason = reason };
 
         var result = _validator.Validate(request);
 
@@ -83,7 +83,7 @@ public class AddFineRequestValidatorTests : IntegrationTestBase
 
 public class FineDetailRequestValidatorTests : IntegrationTestBase
 {
-    private FineDetailRequestValidator _validator = null!;
+    private readonly FineDetailRequestValidator _validator = null!;
 
     public FineDetailRequestValidatorTests()
     {

@@ -34,8 +34,10 @@ try
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+        .Enrich.WithEnvironmentName()
         .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+    builder.Logging.ClearProviders();
 
     Log.Logger = loggerConfiguration.CreateLogger();
 
@@ -46,6 +48,7 @@ try
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        options.EnableSensitiveDataLogging();
     });
     builder.Services.AddDbContextFactory<ApplicationDbContext>(lifetime: ServiceLifetime.Scoped);
 

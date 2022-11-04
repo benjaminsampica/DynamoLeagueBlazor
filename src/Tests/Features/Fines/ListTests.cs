@@ -26,8 +26,10 @@ public class ListTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = mockTeam.Id;
-        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
