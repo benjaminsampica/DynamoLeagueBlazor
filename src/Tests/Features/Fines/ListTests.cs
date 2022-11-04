@@ -17,7 +17,7 @@ public class ListTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenThereIsOneFine_ThenReturnsOneFine()
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerFine_ThenReturnsOnePlayerFine()
     {
         var application = GetUserAuthenticatedApplication();
 
@@ -47,5 +47,28 @@ public class ListTests : IntegrationTestBase
         fine.Reason.Should().Be(mockFine.Reason);
         fine.TeamName.Should().Be(mockTeam.Name);
         fine.TeamLogoUrl.Should().Be(mockTeam.LogoUrl);
+    }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenThereIsOneTeamFine_ThenReturnsOneTeamFine()
+    {
+        var application = GetUserAuthenticatedApplication();
+
+        var mockTeam = CreateFakeTeam();
+        await AddAsync(mockTeam);
+
+        mockTeam.AddFine(int.MaxValue, RandomString);
+        await UpdateAsync(mockTeam);
+
+        var client = application.CreateClient();
+
+        var result = await client.GetFromJsonAsync<FineListResult>(FineListRouteFactory.Uri);
+
+        result.Should().NotBeNull();
+        result!.Fines.Should().HaveCount(1);
+
+        var fine = result!.Fines.First();
+        fine.PlayerHeadShotUrl.Should().Be(null);
+        fine.PlayerName.Should().Be(null);
     }
 }

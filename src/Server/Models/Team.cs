@@ -16,5 +16,12 @@ public record Team : BaseEntity
 
     public int CapSpace() => Players.Sum(p => p.ContractValue);
 
-    public void AddFine(decimal amount, string reason) => Fines.Add(new Fine(amount, reason, Id));
+    public Fine AddFine(decimal amount, string reason)
+    {
+        var fine = new Fine(amount, reason, Id);
+
+        Fines.Add(fine);
+
+        return fine;
+    }
 }
