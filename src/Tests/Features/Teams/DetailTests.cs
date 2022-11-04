@@ -138,4 +138,21 @@ public class DetailClientTests : UITestBase
 
         cut.Markup.Should().NotContain("Actions");
     }
+
+    [Fact]
+    public void GivenAnAdmin_ThenCanAddAFine()
+    {
+        var teamId = int.MaxValue;
+        AuthorizeAsAdmin(teamId);
+
+        GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(teamId))
+            .RespondsWithJson(AutoFaker.Generate<TeamDetailResult>());
+
+        var cut = RenderComponent<Detail>(parameters =>
+        {
+            parameters.Add(p => p.TeamId, teamId);
+        });
+
+        cut.Markup.Should().Contain("Fine This Team");
+    }
 }

@@ -58,6 +58,13 @@ public class UITestBase : TestContextWrapper, IDisposable
             authorizedState.SetPolicies(PolicyRequirements.IsAdminApproved);
         }
     }
+
+    public void AuthorizeAsAdmin(int teamId, bool adminApproved = true)
+    {
+        AuthorizeAsUser(teamId, adminApproved);
+
+        _testAuthorizationContext.Roles.Append(RoleName.Admin);
+    }
 }
 
 public static class UITestExtensions
