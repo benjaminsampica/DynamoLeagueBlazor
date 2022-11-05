@@ -7,7 +7,7 @@ public class TopOffendersTests : IntegrationTestBase
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
     {
-        var application = CreateUnauthenticatedApplication();
+        var application = GetUnauthenticatedApplication();
 
         var client = application.CreateClient();
 
@@ -19,14 +19,14 @@ public class TopOffendersTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithoutAFine_ThenReturnsZeroPlayers()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -39,16 +39,16 @@ public class TopOffendersTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWithAFine_ThenReturnsOnePlayerWithAFine()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.Status = true;
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -66,10 +66,10 @@ public class TopOffendersTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsElevenPlayersWithApprovedFines_ThenReturnsOnlyTopTenByFineAmount()
     {
-        var application = CreateUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
-        await application.AddAsync(stubTeam);
+        await AddAsync(stubTeam);
 
         foreach (var count in Enumerable.Range(0, 10))
         {
@@ -77,14 +77,14 @@ public class TopOffendersTests : IntegrationTestBase
             mockPlayer.TeamId = stubTeam.Id;
             var fine = mockPlayer.AddFine(int.MaxValue, RandomString);
             fine.Status = true;
-            await application.AddAsync(mockPlayer);
+            await AddAsync(mockPlayer);
         }
 
         var eleventhPlayerWithFine = CreateFakePlayer();
         eleventhPlayerWithFine.TeamId = stubTeam.Id;
         var lowestFine = eleventhPlayerWithFine.AddFine(int.MinValue, RandomString);
         lowestFine.Status = true;
-        await application.AddAsync(eleventhPlayerWithFine);
+        await AddAsync(eleventhPlayerWithFine);
 
         var client = application.CreateClient();
 

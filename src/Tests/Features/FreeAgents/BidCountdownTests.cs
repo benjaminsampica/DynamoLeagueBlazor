@@ -13,7 +13,7 @@ public class BidCountdownTests : UITestBase
         });
 
         cut.WaitForState(() => cut.Markup.Contains("1 second"), TimeSpan.FromSeconds(5));
-        cut.WaitForState(() => cut.Markup.Contains("0 seconds"));
+        cut.WaitForState(() => cut.Markup.Contains("0 seconds"), TimeSpan.FromSeconds(3));
 
         cut.Render();
         cut.Markup.Should().Contain("0 seconds");
