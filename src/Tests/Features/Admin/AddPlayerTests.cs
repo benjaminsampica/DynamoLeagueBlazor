@@ -82,11 +82,14 @@ public class AddPlayerUITests : UITestBase
         }
     };
 
+    public AddPlayerUITests()
+    {
+        TestContext!.Services.AddSingleton(Mock.Of<IPlayerHeadshotService>());
+    }
+
     [Fact]
     public void WhenPageLoads_ThenPopulatesListOfTeams()
     {
-        TestContext!.Services.AddSingleton(Mock.Of<IPlayerHeadshotService>());
-
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
@@ -101,11 +104,6 @@ public class AddPlayerUITests : UITestBase
     [Fact]
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
-        var mockPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
-        mockPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(RandomString);
-        TestContext!.Services.AddSingleton(mockPlayerHeadshotService.Object);
-
         GetHttpHandler.When(HttpMethod.Get, AddPlayerRouteFactory.GetTeamListUri)
             .RespondsWithJson(_teamNameListResult);
 
@@ -142,7 +140,7 @@ public class AddPlayerRequestValidatorTests
 
     public AddPlayerRequestValidatorTests()
     {
-        _validator = new AddPlayerRequestValidator(Mock.Of<IPlayerHeadshotService>());
+        _validator = new AddPlayerRequestValidator();
     }
 
     [Theory]
