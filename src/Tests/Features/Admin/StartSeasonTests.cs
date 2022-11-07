@@ -65,12 +65,14 @@ public class StartSeasonTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
 
-        var stubPlayer = CreateFakePlayer();
-        stubPlayer.State = PlayerState.Rostered;
-        stubPlayer.TeamId = stubTeam.Id;
-        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.State = PlayerState.Rostered;
+        mockPlayer.TeamId = stubTeam.Id;
+        await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = DateTime.MinValue;
-        await AddAsync(stubPlayer);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -90,12 +92,14 @@ public class StartSeasonTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
 
-        var stubPlayer = CreateFakePlayer();
-        stubPlayer.State = PlayerState.Rostered;
-        stubPlayer.TeamId = stubTeam.Id;
-        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.State = PlayerState.Rostered;
+        mockPlayer.TeamId = stubTeam.Id;
+        await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
-        await AddAsync(stubPlayer);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 

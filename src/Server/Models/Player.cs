@@ -117,7 +117,7 @@ public record Player : BaseEntity
         if (TeamId is null)
             throw new InvalidOperationException("A player must first be assigned to a team to add a fine.");
 
-        var fine = new Fine(amount, reason, Id, TeamId!.Value);
+        var fine = new Fine(amount, reason, TeamId!.Value, Id);
 
         Fines.Add(fine);
 

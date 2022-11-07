@@ -1,29 +1,21 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Players;
+﻿using DynamoLeagueBlazor.Shared.Features.Teams;
 
-namespace DynamoLeagueBlazor.Client.Features.Players;
+namespace DynamoLeagueBlazor.Client.Features.Teams;
 
 public sealed partial class AddFine : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int PlayerId { get; set; }
+    [Parameter, EditorRequired] public int TeamId { get; set; }
 
     private AddFineRequest _form = null!;
-    private FineDetailResult? _fineDetail;
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _form = new AddFineRequest { PlayerId = PlayerId };
-
-        await GetPlayerFineDetailsAsync();
-    }
-
-    private async Task GetPlayerFineDetailsAsync()
-    {
-        _fineDetail = await HttpClient.GetFromJsonAsync<FineDetailResult>(FineDetailRouteFactory.Create(PlayerId), _cts.Token);
+        _form = new AddFineRequest { TeamId = TeamId };
     }
 
     private async Task OnValidSubmitAsync()
@@ -34,7 +26,7 @@ public sealed partial class AddFine : IDisposable
 
         if (response.IsSuccessStatusCode)
         {
-            SnackBar.Add("Successfully added a fine. An administrator will either approve or deny the fine.", Severity.Success);
+            SnackBar.Add("Successfully added a fine.", Severity.Success);
         }
         else
         {

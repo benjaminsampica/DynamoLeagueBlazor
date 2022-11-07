@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
+using MudBlazor.Extensions;
 using Position = DynamoLeagueBlazor.Shared.Enums.Position;
 
 namespace DynamoLeagueBlazor.Tests;
@@ -44,6 +45,7 @@ public class FakeFactory
     public static FakePosition CreateFakePosition() => new();
 
     public static string RandomString => AutoFaker.Generate<string>();
+    public static int RandomPositiveNumber => AutoFaker.Generate<int>().EnsureRange(1, int.MaxValue);
 }
 
 public class FakePosition : Position

@@ -60,9 +60,9 @@ public class SignPlayerUITests : UITestBase
         // Delay the response.
         GetHttpHandler.When(HttpMethod.Get)
             .TimesOutAfter(5000);
-        var component = RenderComponent<SignPlayer>();
+        var cut = RenderComponent<SignPlayer>();
 
-        component.HasComponent<MudDialog>().Should().BeTrue();
+        cut.HasComponent<MudDialog>().Should().BeTrue();
     }
 
     [Fact]
@@ -73,10 +73,10 @@ public class SignPlayerUITests : UITestBase
             .RespondsWithJson(contractOptions)
             .Verifiable();
 
-        var component = RenderComponent<SignPlayer>();
+        var cut = RenderComponent<SignPlayer>();
 
         GetHttpHandler.Verify();
-        component.Markup.Contains("form");
+        cut.Markup.Contains("form");
     }
 }
 

@@ -1,8 +1,8 @@
 ﻿@if(_fineDetail is null)
 {
-     <MudDialog>
+    <MudDialog IsVisible=true>
         <DialogContent>
-            <MudSkeleton SkeletonType=SkeletonType.Text Width=300px Height=60px/>
+            <MudSkeleton SkeletonType=SkeletonType.Text Width=100% Height=60px/>
             <MudSkeleton SkeletonType=SkeletonType.Rectangle Width=100% Height=100px />
         </DialogContent>
         <DialogActions>
@@ -17,7 +17,7 @@ else
         <MudDialog>
             <DialogContent>
                 This player's contract is worth <b class="mud-success-text">@_fineDetail.ContractValue</b> and when penalized their fine amount is <b class="mud-error-text">@_fineDetail.FineAmount</b>.
-                <MudTextField Label="Fine Reason" HelperText="Enter a fine reason..." @bind-Value="_form.FineReason" For="@(() => _form.FineReason)" Lines=5/>
+                <MudTextField Label="Fine Reason" HelperText="Enter a fine reason..." @bind-Value="_form.FineReason" For="@(() => _form.FineReason)" Lines=5 id="@nameof(_form.FineReason)"/>
             </DialogContent>
             <DialogActions>
                 <LoadingButton @bind-IsLoading="_processingForm"/>

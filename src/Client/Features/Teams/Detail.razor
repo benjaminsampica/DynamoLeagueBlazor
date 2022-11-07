@@ -31,6 +31,13 @@ else
                     <MudText Typo="Typo.h4" Align=Align.Center>@_result.Name</MudText>
                     <MudText Typo=Typo.h6>Remaining Cap Space</MudText>
                     <MudText Typo=Typo.h6 Color=Color.Success>@_result.CapSpace</MudText>
+                    <AuthorizeView Policy="@PolicyRequirements.Admin">
+                        <Authorized>
+                            <MudButton Color="Color.Error" StartIcon="@Icons.Material.Filled.MoneyOff" OnClick="(e) => OpenAddFineDialog(TeamId)" FullWidth=true>
+                                Fine This Team
+                            </MudButton>
+                        </Authorized>
+                    </AuthorizeView>
                     <MudDivider Class="mt-2" Style="max-width:250px; width: 100%"/>
                     <MudBadge Origin=Origin.CenterRight Content=_result.RosteredPlayers.Count() Color=Color.Tertiary>
                         <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Outlined.PersonAdd OnClick=ShowRosteredPlayers>
