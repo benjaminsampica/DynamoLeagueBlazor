@@ -5,11 +5,14 @@ namespace DynamoLeagueBlazor.Tests.Shared.Components;
 public class AvatarTests : UITestBase
 {
     [Fact]
-    public void GivenNoImageUrl_ThenIsAnIcon()
+    public void GivenAName_ThenShowsTheInitials()
     {
-        var component = RenderComponent<Avatar>();
+        var component = RenderComponent<Avatar>(parameters =>
+        {
+            parameters.Add(p => p.Name, "Test Guy");
+        });
 
-        component.Markup.Should().Contain("icon");
+        component.Markup.Should().Contain("TG");
     }
 
     [Fact]

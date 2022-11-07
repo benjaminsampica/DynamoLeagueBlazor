@@ -10,12 +10,10 @@ public sealed partial class AddPlayer : IDisposable
 {
     [Inject] private HttpClient HttpClient { get; set; } = null!;
     [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject] private IPlayerHeadshotService PlayerHeadshotService { get; set; } = null!;
 
     private TeamNameListResult _teamList = new();
     private AddPlayerRequest _addPlayerForm = new();
-    private AddPlayerRequestValidator _validator = null!;
-    private PlayerPreviewRequest _playerPreviewForm = new();
+    private readonly PlayerPreviewRequest _playerPreviewForm = new();
     private string _previewHeadshotUrl = string.Empty;
     private bool _isPreviewButtonDisabled;
     private bool _isProcessingForm;
@@ -24,8 +22,6 @@ public sealed partial class AddPlayer : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        _validator = new(PlayerHeadshotService);
-
         _teamList = await HttpClient.GetFromJsonAsync<TeamNameListResult>(AddPlayerRouteFactory.GetTeamListUri, _cts.Token) ?? new TeamNameListResult();
     }
 

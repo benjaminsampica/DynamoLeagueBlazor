@@ -3,8 +3,8 @@ using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
-[Route(AddFineRouteFactory.Uri)]
 [ApiController]
+[Route(AddFineRouteFactory.Uri)]
 public class AddFineController : ControllerBase
 {
     private readonly IMediator _mediator;

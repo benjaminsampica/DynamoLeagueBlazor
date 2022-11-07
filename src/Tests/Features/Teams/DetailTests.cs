@@ -4,7 +4,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
-public class DetailTests : IntegrationTestBase
+public class DetailServerTests : IntegrationTestBase
 {
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -84,7 +84,7 @@ public class DetailTests : IntegrationTestBase
     }
 }
 
-public class DetailClientTests : UITestBase
+public class DetailUITests : UITestBase
 {
     [Fact]
     public void WhenPageIsLoading_ThenShowsLoading()
@@ -137,5 +137,22 @@ public class DetailClientTests : UITestBase
         });
 
         cut.Markup.Should().NotContain("Actions");
+    }
+
+    [Fact]
+    public void GivenAnAdmin_ThenCanAddAFine()
+    {
+        var teamId = int.MaxValue;
+        AuthorizeAsAdmin(teamId);
+
+        GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(teamId))
+            .RespondsWithJson(AutoFaker.Generate<TeamDetailResult>());
+
+        var cut = RenderComponent<Detail>(parameters =>
+        {
+            parameters.Add(p => p.TeamId, teamId);
+        });
+
+        cut.Markup.Should().Contain("Fine This Team");
     }
 }
