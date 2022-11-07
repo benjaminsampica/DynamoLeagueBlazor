@@ -2,22 +2,11 @@
 
 namespace DynamoLeagueBlazor.Shared.Infastructure.Identity;
 
-public class AdminApprovedAuthorizationRequirement : IAuthorizationHandler, IAuthorizationRequirement
-{
-    public Task HandleAsync(AuthorizationHandlerContext context)
-    {
-        var adminApproved = context.User.HasClaim("Approved", bool.TrueString);
-
-        if (adminApproved) context.Succeed(this);
-
-        return Task.CompletedTask;
-    }
-}
-
 public static class PolicyRequirements
 {
-    public const string Admin = "Admin";
-    public const string User = "User";
+    public const string Admin = nameof(Admin);
+    public const string User = nameof(User);
+    public const string IsAdminApproved = nameof(IsAdminApproved);
 
     public static AuthorizationOptions AddApplicationAuthorizationPolicies(this AuthorizationOptions options)
     {
@@ -27,7 +16,6 @@ public static class PolicyRequirements
         {
             builder
                 .RequireAuthenticatedUser()
-                .AddRequirements(new AdminApprovedAuthorizationRequirement())
                 .RequireRole(RoleName.Admin);
         });
 
@@ -35,6 +23,9 @@ public static class PolicyRequirements
         {
             builder.Combine(GetUserAuthorizationPolicy());
         });
+
+        options.AddPolicy(IsAdminApproved,
+            policy => policy.RequireClaim(nameof(IUser.Approved), bool.TrueString));
 
         options.DefaultPolicy = GetUserAuthorizationPolicy();
 
@@ -45,7 +36,6 @@ public static class PolicyRequirements
     {
         return new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddRequirements(new AdminApprovedAuthorizationRequirement())
                 .Build();
     }
 }

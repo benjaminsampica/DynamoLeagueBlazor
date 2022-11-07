@@ -183,6 +183,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
         await AddAsync(mockPlayer);
         mockPlayer.AddBid(1, stubTeam.Id);
         await UpdateAsync(mockPlayer);
@@ -200,6 +201,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = stubTeam.Id;
         await AddAsync(mockPlayer);
         mockPlayer.AddBid(1, stubTeam.Id);
         await UpdateAsync(mockPlayer);

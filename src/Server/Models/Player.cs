@@ -33,16 +33,15 @@ public record Player : BaseEntity
             .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned);
     }
 
-    public Player(string name, string position, string headShotUrl) : this()
+    public Player(string name, string position) : this()
     {
         Name = name;
         Position = position;
-        HeadShotUrl = headShotUrl;
     }
 
     public string Name { get; set; } = null!;
     public string Position { get; set; } = null!;
-    public string HeadShotUrl { get; set; } = null!;
+    public string? HeadShotUrl { get; set; }
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
@@ -184,7 +183,7 @@ public record Player : BaseEntity
         if (TeamId is null)
             throw new InvalidOperationException("A player must first be assigned to a team to add a fine.");
 
-        var fine = new Fine(amount, reason, Id, TeamId!.Value);
+        var fine = new Fine(amount, reason, TeamId!.Value, Id);
 
         Fines.Add(fine);
 

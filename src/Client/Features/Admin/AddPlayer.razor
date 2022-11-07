@@ -13,7 +13,7 @@
     <MudGrid>
         <MudItem lg="8" md="12">
             <EditForm Model=_addPlayerForm OnValidSubmit=OnValidSubmitAsync>
-                <FluentValidationValidator Validator=_validator />
+                <FluentValidationValidator />
                 <MudGrid>
                     <MudItem xs="12">
                         <MudTextField @bind-Value="_addPlayerForm.Name" Label="Player Name" Variant="Variant.Text" For="@(() => _addPlayerForm.Name)" id="@nameof(_addPlayerForm.Name)" OnBlur=MapToHeadshotForm/>
@@ -47,7 +47,7 @@
         <MudItem lg="4" xs="12" Class="d-flex justify-center align-center">
             <MudGrid>
                 <MudItem xs="12" Class="d-flex justify-center">
-                    <Avatar Image="@_previewHeadshotUrl" Size="Size.Large"/>
+                    <Avatar Image="@_previewHeadshotUrl" Name=@_addPlayerForm.Name Size="Size.Large"/>
                 </MudItem>
                 <MudItem xs="12">
                     <EditForm Model=_playerPreviewForm OnValidSubmit=PreviewHeadshotAsync>

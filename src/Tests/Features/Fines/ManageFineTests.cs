@@ -48,8 +48,10 @@ public class ManageFineTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
-        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
+        await UpdateAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = true;
@@ -76,8 +78,10 @@ public class ManageFineTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
-        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
+        await UpdateAsync(mockPlayer);
 
         var mockRequest = CreateFakeValidRequest();
         mockRequest.Approved = false;

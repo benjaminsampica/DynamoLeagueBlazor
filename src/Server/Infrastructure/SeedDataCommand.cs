@@ -58,20 +58,23 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
     private async Task SeedApplicationDataAsync(CancellationToken cancellationToken)
     {
+        var baseImage = "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg";
+
         if (!await _dbContext.Teams.AnyAsync(cancellationToken))
         {
+
             var teams = new List<Team>
             {
-                new Team("Space Force", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("The Donald", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Big Chief no Fart", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Altoona Tunafish", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Can't Fine This", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Finkle Einhorn", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("J.J. Mafia", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Natty Lite", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Starts With a W", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg"),
-                new Team("Magic SKOL Bus", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/57182575954_a32e35.jpg")
+                new Team("Space Force", baseImage),
+                new Team("The Donald", baseImage),
+                new Team("Big Chief no Fart", baseImage),
+                new Team("Altoona Tunafish", baseImage),
+                new Team("Can't Fine This", baseImage),
+                new Team("Finkle Einhorn", baseImage),
+                new Team("J.J. Mafia", baseImage),
+                new Team("Natty Lite", baseImage),
+                new Team("Starts With a W", baseImage),
+                new Team("Magic SKOL Bus", baseImage)
             };
             _dbContext.Teams.AddRange(teams);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -79,12 +82,14 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
         if (!await _dbContext.Players.AnyAsync(cancellationToken))
         {
+            var random = new Random();
             for (int i = 1; i < 250; i++)
             {
-                var randomTeamId = new Random().Next(1, 10);
-                var player = new Player("Atlanta", "DEF", "https://s.yimg.com/lq/i/us/sp/v/nfl/teams/1/50x50w/chi.gif")
+                var randomTeamId = random.Next(1, 10);
+                var player = new Player("Atlanta", "DEF")
                 {
-                    TeamId = randomTeamId
+                    TeamId = randomTeamId,
+                    HeadShotUrl = baseImage
                 };
 
                 if (i % 2 == 0)
@@ -104,7 +109,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
                     if (i % 16 == 0)
                     {
                         player.AddBid(new Random().Next(), randomTeamId);
-                        player.ExpireMatch();
+                        player.MatchOffer();
                     }
                 }
 

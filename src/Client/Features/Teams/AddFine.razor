@@ -1,0 +1,12 @@
+﻿<EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
+    <FluentValidationValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudTextField Label="Fine Reason" HelperText="Enter a fine reason..." @bind-Value="_form.FineReason" For="@(() => _form.FineReason)" Lines=5 id="@nameof(_form.FineReason)"/>
+            <MudTextField Label="Fine Amount" HelperText="Enter a fine amount..." @bind-Value="_form.Amount" For="@(() => _form.Amount)" InputType=InputType.Number id="@nameof(_form.Amount)" />
+        </DialogContent>
+        <DialogActions>
+            <LoadingButton @bind-IsLoading="_processingForm"/>
+        </DialogActions>
+    </MudDialog>
+</EditForm> 

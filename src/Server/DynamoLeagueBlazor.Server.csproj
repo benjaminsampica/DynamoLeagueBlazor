@@ -33,6 +33,7 @@
 	<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
 	<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 	<PackageReference Include="Serilog.AspNetCore.Ingestion" Version="1.0.0-dev-00021" />
+	<PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
 	<PackageReference Include="Serilog.Sinks.Trace" Version="3.0.0" />
   	<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   	<PackageReference Include="stateless" Version="5.11.0" />
