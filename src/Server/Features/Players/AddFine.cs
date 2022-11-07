@@ -4,39 +4,39 @@ using DynamoLeagueBlazor.Shared.Utilities;
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
 [ApiController]
-[Route(AddPlayerFineRouteFactory.Uri)]
-public class AddPlayerFineController : ControllerBase
+[Route(AddFineRouteFactory.Uri)]
+public class AddFineController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
-    public AddPlayerFineController(IMediator mediator, IMapper mapper)
+    public AddFineController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
         _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<int> PostAsync([FromBody] AddPlayerFineRequest request, CancellationToken cancellationToken)
+    public async Task<int> PostAsync([FromBody] AddFineRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<AddPlayerFineCommand>(request);
+        var query = _mapper.Map<AddFineCommand>(request);
 
         return await _mediator.Send(query, cancellationToken);
     }
 }
 
-public record AddPlayerFineCommand(int PlayerId, string FineReason) : IRequest<int> { }
+public record AddFineCommand(int PlayerId, string FineReason) : IRequest<int> { }
 
-public class AddPlayerFineHandler : IRequestHandler<AddPlayerFineCommand, int>
+public class AddFineHandler : IRequestHandler<AddFineCommand, int>
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public AddPlayerFineHandler(ApplicationDbContext dbContext)
+    public AddFineHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(AddPlayerFineCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddFineCommand request, CancellationToken cancellationToken)
     {
         var player = (await _dbContext.Players
             .AsTracking()
@@ -52,10 +52,10 @@ public class AddPlayerFineHandler : IRequestHandler<AddPlayerFineCommand, int>
     }
 }
 
-public class AddPlayerFineMappingProfile : Profile
+public class AddFineMappingProfile : Profile
 {
-    public AddPlayerFineMappingProfile()
+    public AddFineMappingProfile()
     {
-        CreateMap<AddPlayerFineRequest, AddPlayerFineCommand>();
+        CreateMap<AddFineRequest, AddFineCommand>();
     }
 }

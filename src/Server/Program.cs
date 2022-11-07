@@ -86,7 +86,7 @@ try
     builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
     builder.Services.AddFluentValidation(fv =>
     {
-        fv.RegisterValidatorsFromAssemblyContaining<AddPlayerFineRequestValidator>();
+        fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     });
     builder.Services.AddTransient<IBidValidator, BidValidator>();
     builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();

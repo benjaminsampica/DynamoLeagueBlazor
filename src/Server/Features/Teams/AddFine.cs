@@ -5,39 +5,39 @@ namespace DynamoLeagueBlazor.Server.Features.Teams;
 
 [Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
-[Route(AddTeamFineRouteFactory.Uri)]
-public class AddTeamFineController : ControllerBase
+[Route(AddFineRouteFactory.Uri)]
+public class AddFineController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
-    public AddTeamFineController(IMediator mediator, IMapper mapper)
+    public AddFineController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
         _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task PostAsync([FromBody] AddTeamFineRequest request, CancellationToken cancellationToken)
+    public async Task PostAsync([FromBody] AddFineRequest request, CancellationToken cancellationToken)
     {
-        var query = _mapper.Map<AddTeamFineCommand>(request);
+        var query = _mapper.Map<AddFineCommand>(request);
 
         await _mediator.Send(query, cancellationToken);
     }
 }
 
-public record AddTeamFineCommand(int TeamId, string FineReason, decimal Amount) : IRequest { }
+public record AddFineCommand(int TeamId, string FineReason, decimal Amount) : IRequest { }
 
-public class AddTeamFineHandler : IRequestHandler<AddTeamFineCommand>
+public class AddFineHandler : IRequestHandler<AddFineCommand>
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public AddTeamFineHandler(ApplicationDbContext dbContext)
+    public AddFineHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(AddTeamFineCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddFineCommand request, CancellationToken cancellationToken)
     {
         var team = (await _dbContext.Teams
             .AsTracking()
@@ -51,10 +51,10 @@ public class AddTeamFineHandler : IRequestHandler<AddTeamFineCommand>
     }
 }
 
-public class AddTeamFineMappingProfile : Profile
+public class AddFineMappingProfile : Profile
 {
-    public AddTeamFineMappingProfile()
+    public AddFineMappingProfile()
     {
-        CreateMap<AddTeamFineRequest, AddTeamFineCommand>();
+        CreateMap<AddFineRequest, AddFineCommand>();
     }
 }

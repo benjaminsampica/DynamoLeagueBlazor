@@ -1,15 +1,15 @@
 ﻿namespace DynamoLeagueBlazor.Shared.Features.Teams;
 
-public class AddTeamFineRequest
+public class AddFineRequest
 {
     public int TeamId { get; set; }
     public string FineReason { get; set; } = null!;
     public int Amount { get; set; }
 }
 
-public class AddTeamFineRequestValidator : AbstractValidator<AddTeamFineRequest>
+public class AddFineRequestValidator : AbstractValidator<AddFineRequest>
 {
-    public AddTeamFineRequestValidator()
+    public AddFineRequestValidator()
     {
         RuleFor(r => r.TeamId).GreaterThan(0);
         RuleFor(r => r.FineReason).NotEmpty();
@@ -17,7 +17,7 @@ public class AddTeamFineRequestValidator : AbstractValidator<AddTeamFineRequest>
     }
 }
 
-public class AddTeamFineRouteFactory
+public class AddFineRouteFactory
 {
     public const string Uri = "api/teams/addfine";
 }

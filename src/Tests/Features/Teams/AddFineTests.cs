@@ -5,9 +5,9 @@ namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
 public class AddFineServerTests : IntegrationTestBase
 {
-    private static AddTeamFineRequest CreateFakeValidRequest()
+    private static AddFineRequest CreateFakeValidRequest()
     {
-        var faker = new AutoFaker<AddTeamFineRequest>()
+        var faker = new AutoFaker<AddFineRequest>()
             .RuleFor(f => f.TeamId, 1)
             .RuleFor(f => f.Amount, int.MaxValue);
 
@@ -22,7 +22,7 @@ public class AddFineServerTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(AddTeamFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -35,7 +35,7 @@ public class AddFineServerTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(AddTeamFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -53,7 +53,7 @@ public class AddFineServerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync(AddTeamFineRouteFactory.Uri, mockRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, mockRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -71,7 +71,7 @@ public class AddFineUITests : UITestBase
     [Fact]
     public async Task GivenAnInvalidForm_ThenDoesNotSubmit()
     {
-        GetHttpHandler.When(HttpMethod.Post, AddTeamFineRouteFactory.Uri)
+        GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
             .Verifiable();
 
         var cut = await RenderMudDialogAsync<AddFine>();
@@ -85,7 +85,7 @@ public class AddFineUITests : UITestBase
     [Fact]
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
-        GetHttpHandler.When(HttpMethod.Post, AddTeamFineRouteFactory.Uri)
+        GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
             .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
             .Verifiable();
 
@@ -95,10 +95,10 @@ public class AddFineUITests : UITestBase
         });
 
         // Fill the form and click submit.
-        var amount = cut.Find($"#{nameof(AddTeamFineRequest.Amount)}");
+        var amount = cut.Find($"#{nameof(AddFineRequest.Amount)}");
         amount.Change(RandomPositiveNumber);
 
-        var fineReason = cut.Find($"#{nameof(AddTeamFineRequest.FineReason)}");
+        var fineReason = cut.Find($"#{nameof(AddFineRequest.FineReason)}");
         fineReason.Change(RandomString);
 
         var submitButton = cut.Find("button");
@@ -112,40 +112,40 @@ public class AddFineUITests : UITestBase
 #pragma warning disable xUnit1012 // Null should not be used for value type parameters
 public class AddFineRequestValidatorTests : IntegrationTestBase
 {
-    private readonly AddTeamFineRequestValidator _validator = null!;
+    private readonly AddFineRequestValidator _validator = null!;
 
     public AddFineRequestValidatorTests()
     {
-        _validator = GetRequiredService<AddTeamFineRequestValidator>();
+        _validator = GetRequiredService<AddFineRequestValidator>();
 
     }
 
     [Theory]
     [InlineData(null), InlineData(-1), InlineData(0)]
     public void GivenInvalidTeamIds_ThenAreNotValid(int teamId)
-        => _validator.TestValidate(new AddTeamFineRequest { TeamId = teamId }).ShouldHaveValidationErrorFor(v => v.TeamId);
+        => _validator.TestValidate(new AddFineRequest { TeamId = teamId }).ShouldHaveValidationErrorFor(v => v.TeamId);
 
     [Fact]
     public void GivenAValidTeamId_ThenIsValid()
-        => _validator.TestValidate(new AddTeamFineRequest { TeamId = 1 }).ShouldNotHaveValidationErrorFor(v => v.TeamId);
+        => _validator.TestValidate(new AddFineRequest { TeamId = 1 }).ShouldNotHaveValidationErrorFor(v => v.TeamId);
 
     [Theory]
     [InlineData(null), InlineData("")]
     public void GivenInvalidFineReasons_ThenIsNotValid(string fineReason)
-        => _validator.TestValidate(new AddTeamFineRequest { FineReason = fineReason }).ShouldHaveValidationErrorFor(v => v.FineReason);
+        => _validator.TestValidate(new AddFineRequest { FineReason = fineReason }).ShouldHaveValidationErrorFor(v => v.FineReason);
 
     [Fact]
     public void GivenAValidFineReason_ThenIsValid()
-        => _validator.TestValidate(new AddTeamFineRequest { FineReason = RandomString }).ShouldNotHaveValidationErrorFor(v => v.FineReason);
+        => _validator.TestValidate(new AddFineRequest { FineReason = RandomString }).ShouldNotHaveValidationErrorFor(v => v.FineReason);
 
     [Theory]
 
     [InlineData(null), InlineData(-1), InlineData(0)]
     public void GivenInvalidAmounts_ThenAreNotValid(int amount)
-        => _validator.TestValidate(new AddTeamFineRequest { Amount = amount }).ShouldHaveValidationErrorFor(v => v.Amount);
+        => _validator.TestValidate(new AddFineRequest { Amount = amount }).ShouldHaveValidationErrorFor(v => v.Amount);
 
     [Fact]
     public void GivenAValidAmount_ThenIsValid()
-        => _validator.TestValidate(new AddTeamFineRequest { Amount = 1 }).ShouldNotHaveValidationErrorFor(v => v.Amount);
+        => _validator.TestValidate(new AddFineRequest { Amount = 1 }).ShouldNotHaveValidationErrorFor(v => v.Amount);
 }
 #pragma warning restore xUnit1012 // Null should not be used for value type parameters

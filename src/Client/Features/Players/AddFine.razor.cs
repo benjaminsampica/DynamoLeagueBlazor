@@ -9,14 +9,14 @@ public sealed partial class AddFine : IDisposable
     [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
     [Parameter, EditorRequired] public int PlayerId { get; set; }
 
-    private AddPlayerFineRequest _form = null!;
+    private AddFineRequest _form = null!;
     private FineDetailResult? _fineDetail;
     private bool _processingForm;
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _form = new AddPlayerFineRequest { PlayerId = PlayerId };
+        _form = new AddFineRequest { PlayerId = PlayerId };
 
         await GetPlayerFineDetailsAsync();
     }
@@ -30,7 +30,7 @@ public sealed partial class AddFine : IDisposable
     {
         _processingForm = true;
 
-        var response = await HttpClient.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, _form, _cts.Token);
+        var response = await HttpClient.PostAsJsonAsync(AddFineRouteFactory.Uri, _form, _cts.Token);
 
         if (response.IsSuccessStatusCode)
         {

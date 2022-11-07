@@ -2,22 +2,22 @@
 
 namespace DynamoLeagueBlazor.Shared.Features.Players;
 
-public class AddPlayerFineRequest
+public class AddFineRequest
 {
     public int PlayerId { get; set; }
     public string FineReason { get; set; } = null!;
 }
 
-public class AddPlayerFineRequestValidator : AbstractValidator<AddPlayerFineRequest>
+public class AddFineRequestValidator : AbstractValidator<AddFineRequest>
 {
-    public AddPlayerFineRequestValidator()
+    public AddFineRequestValidator()
     {
         RuleFor(r => r.PlayerId).GreaterThan(0);
         RuleFor(r => r.FineReason).NotEmpty();
     }
 }
 
-public class AddPlayerFineRouteFactory
+public class AddFineRouteFactory
 {
     public const string Uri = "api/players/addfine";
 }

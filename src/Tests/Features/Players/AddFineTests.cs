@@ -6,9 +6,9 @@ namespace DynamoLeagueBlazor.Tests.Features.Fines;
 
 public class AddFineServerTests : IntegrationTestBase
 {
-    private static AddPlayerFineRequest CreateFakeValidRequest()
+    private static AddFineRequest CreateFakeValidRequest()
     {
-        var faker = new AutoFaker<AddPlayerFineRequest>()
+        var faker = new AutoFaker<AddFineRequest>()
             .RuleFor(f => f.PlayerId, 1);
 
         return faker.Generate();
@@ -22,7 +22,7 @@ public class AddFineServerTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var stubRequest = CreateFakeValidRequest();
-        var response = await client.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -44,7 +44,7 @@ public class AddFineServerTests : IntegrationTestBase
 
         var client = application.CreateClient();
 
-        var response = await client.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, stubRequest);
+        var response = await client.PostAsJsonAsync(AddFineRouteFactory.Uri, stubRequest);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -67,7 +67,7 @@ public class AddFineUITests : UITestBase
             .RespondsWithJson(result)
             .Verifiable();
 
-        GetHttpHandler.When(HttpMethod.Post, AddPlayerFineRouteFactory.Uri)
+        GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
             .Verifiable();
 
         var cut = await RenderMudDialogAsync<AddFine>();
@@ -87,7 +87,7 @@ public class AddFineUITests : UITestBase
             .RespondsWithJson(result)
             .Verifiable();
 
-        GetHttpHandler.When(HttpMethod.Post, AddPlayerFineRouteFactory.Uri)
+        GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
             .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
             .Verifiable();
 
@@ -97,7 +97,7 @@ public class AddFineUITests : UITestBase
         });
 
         // Fill the form and click submit.
-        var fineReason = cut.Find($"#{nameof(AddPlayerFineRequest.FineReason)}");
+        var fineReason = cut.Find($"#{nameof(AddFineRequest.FineReason)}");
         fineReason.Change(RandomString);
 
         var submitButton = cut.Find("button");
@@ -110,11 +110,11 @@ public class AddFineUITests : UITestBase
 
 public class AddFineRequestValidatorTests : IntegrationTestBase
 {
-    private readonly AddPlayerFineRequestValidator _validator = null!;
+    private readonly AddFineRequestValidator _validator = null!;
 
     public AddFineRequestValidatorTests()
     {
-        _validator = GetRequiredService<AddPlayerFineRequestValidator>();
+        _validator = GetRequiredService<AddFineRequestValidator>();
 
     }
 
@@ -125,7 +125,7 @@ public class AddFineRequestValidatorTests : IntegrationTestBase
     [InlineData(1, "Test", true)]
     public void GivenDifferentRequests_ThenReturnsExpectedResult(int playerId, string reason, bool expectedResult)
     {
-        var request = new AddPlayerFineRequest { PlayerId = playerId, FineReason = reason };
+        var request = new AddFineRequest { PlayerId = playerId, FineReason = reason };
 
         var result = _validator.Validate(request);
 
