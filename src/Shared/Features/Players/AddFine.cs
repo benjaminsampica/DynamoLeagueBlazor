@@ -8,9 +8,9 @@ public class AddPlayerFineRequest
     public string FineReason { get; set; } = null!;
 }
 
-public class AddFineRequestValidator : AbstractValidator<AddPlayerFineRequest>
+public class AddPlayerFineRequestValidator : AbstractValidator<AddPlayerFineRequest>
 {
-    public AddFineRequestValidator()
+    public AddPlayerFineRequestValidator()
     {
         RuleFor(r => r.PlayerId).GreaterThan(0);
         RuleFor(r => r.FineReason).NotEmpty();

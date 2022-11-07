@@ -4,7 +4,7 @@ using DynamoLeagueBlazor.Shared.Utilities;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
-public class DetailTests : IntegrationTestBase
+public class DetailServerTests : IntegrationTestBase
 {
     [Fact]
     public async Task GivenUnauthenticatedUser_ThenDoesNotAllowAccess()
@@ -84,7 +84,7 @@ public class DetailTests : IntegrationTestBase
     }
 }
 
-public class DetailClientTests : UITestBase
+public class DetailUITests : UITestBase
 {
     [Fact]
     public void WhenPageIsLoading_ThenShowsLoading()

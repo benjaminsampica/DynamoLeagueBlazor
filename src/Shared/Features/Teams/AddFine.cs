@@ -7,9 +7,9 @@ public class AddTeamFineRequest
     public int Amount { get; set; }
 }
 
-public class AddFineRequestValidator : AbstractValidator<AddTeamFineRequest>
+public class AddTeamFineRequestValidator : AbstractValidator<AddTeamFineRequest>
 {
-    public AddFineRequestValidator()
+    public AddTeamFineRequestValidator()
     {
         RuleFor(r => r.TeamId).GreaterThan(0);
         RuleFor(r => r.FineReason).NotEmpty();

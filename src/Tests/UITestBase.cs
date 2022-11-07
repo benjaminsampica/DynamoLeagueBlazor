@@ -1,6 +1,7 @@
 ﻿using Bunit.TestDoubles;
 using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MockHttp.Json;
 using MockHttp.Json.Newtonsoft;
@@ -13,38 +14,49 @@ namespace DynamoLeagueBlazor.Tests;
 
 public class UITestBase : TestContextWrapper, IDisposable
 {
-    private readonly MockHttpHandler _mockHttpHandler = null!;
-
+    private readonly MockHttpHandler _mockHttpHandler = new();
     private readonly TestAuthorizationContext _testAuthorizationContext = null!;
-    protected Mock<ISnackbar> MockSnackbar = null!;
+
+    protected Mock<ISnackbar> MockSnackbar = new();
 
     public UITestBase()
     {
         var testContext = new TestContext();
-        var mockSnackBar = new Mock<ISnackbar>();
-
         testContext.Services.AddMudServices();
-        testContext.Services.AddSingleton(mockSnackBar.Object);
         testContext.Services.AddSingleton(Mock.Of<IConfirmDialogService>());
         testContext.JSInterop.SetupVoid();
+        TestContext = testContext;
 
-        var mockHttpHandler = new MockHttpHandler();
-        var httpClient = new HttpClient(mockHttpHandler)
+        _testAuthorizationContext = testContext.AddTestAuthorization();
+
+        testContext.Services.AddSingleton(MockSnackbar.Object);
+
+        var httpClient = new HttpClient(_mockHttpHandler)
         {
             BaseAddress = new Uri("http://localhost")
         };
-
         testContext.Services.AddSingleton(httpClient);
-        _mockHttpHandler = mockHttpHandler;
-
-        _testAuthorizationContext = testContext.AddTestAuthorization();
-        TestContext = testContext;
-        MockSnackbar = mockSnackBar;
     }
 
-    public void Dispose() => TestContext?.Dispose();
-
     public MockHttpHandler GetHttpHandler => _mockHttpHandler;
+
+    public async Task<IRenderedComponent<MudDialogProvider>> RenderMudDialogAsync<TComponent>(DialogParameters? dialogParameters = null)
+        where TComponent : ComponentBase
+    {
+        var mudDialogProvider = RenderComponent<MudDialogProvider>();
+        var dialogService = TestContext!.Services.GetRequiredService<IDialogService>();
+
+        if (dialogParameters is null)
+        {
+            await mudDialogProvider.InvokeAsync(() => dialogService.Show<TComponent>());
+        }
+        else
+        {
+            await mudDialogProvider.InvokeAsync(() => dialogService.Show<TComponent>(string.Empty, dialogParameters));
+        }
+
+        return mudDialogProvider;
+    }
 
     public void AuthorizeAsUser(int teamId, bool adminApproved = true)
     {
@@ -59,12 +71,17 @@ public class UITestBase : TestContextWrapper, IDisposable
         }
     }
 
-    public void AuthorizeAsAdmin(int teamId, bool adminApproved = true)
+    public void AuthorizeAsAdmin(int teamId)
     {
-        AuthorizeAsUser(teamId, adminApproved);
+        var authorizedState = _testAuthorizationContext.SetAuthorized(RandomString);
+        authorizedState.SetClaims(
+            new Claim(nameof(IUser.Approved), bool.TrueString),
+            new Claim(nameof(IUser.TeamId), teamId.ToString()));
 
-        _testAuthorizationContext.Roles.Append(RoleName.Admin);
+        _testAuthorizationContext.SetPolicies(PolicyRequirements.Admin, PolicyRequirements.IsAdminApproved);
     }
+
+    public void Dispose() => TestContext?.Dispose();
 }
 
 public static class UITestExtensions

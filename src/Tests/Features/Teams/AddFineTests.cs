@@ -1,8 +1,9 @@
-﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+﻿using DynamoLeagueBlazor.Client.Features.Teams;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 
 namespace DynamoLeagueBlazor.Tests.Features.Teams;
 
-public class AddFineTests : IntegrationTestBase
+public class AddFineServerTests : IntegrationTestBase
 {
     private static AddTeamFineRequest CreateFakeValidRequest()
     {
@@ -27,9 +28,22 @@ public class AddFineTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
+    public async Task GivenAnAuthenticatedUser_ThenDoesNotAllowAccess()
     {
         var application = GetUserAuthenticatedApplication();
+
+        var client = application.CreateClient();
+
+        var stubRequest = CreateFakeValidRequest();
+        var response = await client.PostAsJsonAsync(AddTeamFineRouteFactory.Uri, stubRequest);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task GivenAnyAuthenticatedUser_WhenAValidFine_ThenSavesIt()
+    {
+        var application = GetAdminAuthenticatedApplication();
 
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
@@ -51,14 +65,58 @@ public class AddFineTests : IntegrationTestBase
         fine.Amount.Should().Be(mockRequest.Amount);
     }
 }
+
+public class AddFineUITests : UITestBase
+{
+    [Fact]
+    public async Task GivenAnInvalidForm_ThenDoesNotSubmit()
+    {
+        GetHttpHandler.When(HttpMethod.Post, AddTeamFineRouteFactory.Uri)
+            .Verifiable();
+
+        var cut = await RenderMudDialogAsync<AddFine>();
+
+        var submitButton = cut.Find("button");
+        submitButton.Click();
+
+        GetHttpHandler.VerifyNoOtherRequests();
+    }
+
+    [Fact]
+    public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
+    {
+        GetHttpHandler.When(HttpMethod.Post, AddTeamFineRouteFactory.Uri)
+            .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
+            .Verifiable();
+
+        var cut = await RenderMudDialogAsync<AddFine>(new DialogParameters
+        {
+            { nameof(AddFine.TeamId), int.MaxValue }
+        });
+
+        // Fill the form and click submit.
+        var amount = cut.Find($"#{nameof(AddTeamFineRequest.Amount)}");
+        amount.Change(RandomPositiveNumber);
+
+        var fineReason = cut.Find($"#{nameof(AddTeamFineRequest.FineReason)}");
+        fineReason.Change(RandomString);
+
+        var submitButton = cut.Find("button");
+        submitButton.Click();
+
+        MockSnackbar.Verify(s => s.Add(It.IsAny<string>(), Severity.Success, It.IsAny<Action<SnackbarOptions>>()));
+        GetHttpHandler.Verify();
+    }
+}
+
 #pragma warning disable xUnit1012 // Null should not be used for value type parameters
 public class AddFineRequestValidatorTests : IntegrationTestBase
 {
-    private readonly AddFineRequestValidator _validator = null!;
+    private readonly AddTeamFineRequestValidator _validator = null!;
 
     public AddFineRequestValidatorTests()
     {
-        _validator = GetRequiredService<AddFineRequestValidator>();
+        _validator = GetRequiredService<AddTeamFineRequestValidator>();
 
     }
 

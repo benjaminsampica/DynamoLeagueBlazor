@@ -30,7 +30,7 @@ public sealed partial class AddFine : IDisposable
     {
         _processingForm = true;
 
-        var response = await HttpClient.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, _form);
+        var response = await HttpClient.PostAsJsonAsync(AddPlayerFineRouteFactory.Uri, _form, _cts.Token);
 
         if (response.IsSuccessStatusCode)
         {

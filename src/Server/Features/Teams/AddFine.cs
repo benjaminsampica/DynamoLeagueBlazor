@@ -1,9 +1,11 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Teams;
+using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 
 namespace DynamoLeagueBlazor.Server.Features.Teams;
 
-[Route(AddTeamFineRouteFactory.Uri)]
+[Authorize(Policy = PolicyRequirements.Admin)]
 [ApiController]
+[Route(AddTeamFineRouteFactory.Uri)]
 public class AddTeamFineController : ControllerBase
 {
     private readonly IMediator _mediator;
