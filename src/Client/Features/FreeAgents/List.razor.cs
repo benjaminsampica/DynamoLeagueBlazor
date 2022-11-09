@@ -4,7 +4,7 @@ namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
 
 public sealed partial class List : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
 
     private FreeAgentListResult _result = new();
     private bool _loading;

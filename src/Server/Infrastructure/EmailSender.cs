@@ -50,10 +50,10 @@ public class EmailSettings
 {
     public const string Email = "Email";
 
-    public string MailServer { get; set; } = null!;
+    public required string MailServer { get; set; }
     public int MailPort { get; set; }
-    public string SenderName { get; set; } = null!;
-    public string Sender { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public string AdminEmail { get; set; } = null!;
+    public required string SenderName { get; set; }
+    public required string Sender { get; set; }
+    public required string Password { get; set; }
+    public required string AdminEmail { get; set; }
 }

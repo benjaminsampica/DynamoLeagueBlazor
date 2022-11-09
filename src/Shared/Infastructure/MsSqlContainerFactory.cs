@@ -27,7 +27,7 @@ public class MsSqlContainerFactory : IAsyncDisposable
 
         await _msSqlTestContainer.StartAsync();
 
-        var connectionString = _msSqlTestContainer.ConnectionString + ";TrustServerCertificate=true"; // Local development can ignore ssl certificates.
+        var connectionString = _msSqlTestContainer.ConnectionString + "TrustServerCertificate=true"; // Local development can ignore ssl certificates.
 
         return connectionString;
     }

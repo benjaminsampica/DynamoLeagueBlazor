@@ -4,7 +4,7 @@ namespace DynamoLeagueBlazor.Client.Features.Dashboard;
 
 public sealed partial class TopOffenders : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
 
     private TopOffendersResult? _result;
     private readonly CancellationTokenSource _cts = new();

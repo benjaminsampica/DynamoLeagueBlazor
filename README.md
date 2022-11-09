@@ -13,7 +13,7 @@ A new season begins every May and continues until the end of December. At the en
 
 Running & contributing to Dynamo League Blazor requires the following:
 
-- .NET 6 SDK
+- .NET 7 SDK
 - IIS Express
 - Docker (Linux)
 - WASM tools (can be installed via `dotnet workload install wasm-tools`)

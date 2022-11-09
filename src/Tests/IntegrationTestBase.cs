@@ -36,12 +36,12 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
     public async Task InitializeAsync()
     {
+        _connectionString = await MsSqlContainerFactory.CreateAsync();
+
         _checkpoint = new Checkpoint
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         };
-
-        _connectionString = await MsSqlContainerFactory.CreateAsync();
 
         _application = CreateApplication();
 

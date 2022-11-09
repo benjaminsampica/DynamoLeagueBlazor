@@ -2,7 +2,7 @@
 
 public partial class ConfirmDialog
 {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+    [CascadingParameter] public required MudDialogInstance MudDialog { get; set; }
 
     private void Confirm() => MudDialog.Close(DialogResult.Ok(true));
 }

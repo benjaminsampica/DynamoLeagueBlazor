@@ -4,7 +4,7 @@ namespace DynamoLeagueBlazor.Client.Features.Teams;
 
 public sealed partial class List : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
 
     private TeamListResult? _result;
     private const string _title = "Teams";
