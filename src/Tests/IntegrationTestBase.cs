@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -26,7 +25,6 @@ public class IntegrationTestBase : IAsyncLifetime
 
     public async Task InitializeAsync() => await ResetStateAsync();
 }
-
 
 [CollectionDefinition(nameof(Server))]
 public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsyncLifetime
@@ -96,13 +94,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
             {
                 builder.UseEnvironment("Test");
 
-                builder.ConfigureAppConfiguration((builderContext, config) =>
-                {
-                    config.AddInMemoryCollection(new List<KeyValuePair<string, string>>
-                    {
-                        new("ConnectionStrings:DefaultConnection", _connectionString)
-                    });
-                });
+                builder.UseSetting("ConnectionStrings:DefaultConnection", _connectionString);
 
                 builder.ConfigureTestServices(services =>
                 {
