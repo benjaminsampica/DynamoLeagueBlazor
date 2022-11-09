@@ -1,6 +1,7 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -31,28 +32,24 @@ public class IntegrationTestBase : IAsyncLifetime
 public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsyncLifetime
 {
     private static Checkpoint _checkpoint = null!;
-    private static IConfiguration _configuration = null!;
     private static WebApplicationFactory<Program> _application = null!;
     private static IServiceScope _scope = null!;
+    private static string _connectionString = null!;
 
     public async Task InitializeAsync()
     {
-        _configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .AddEnvironmentVariables()
-                .Build();
-
         _checkpoint = new Checkpoint
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         };
 
+        _connectionString = await MsSqlContainerFactory.CreateAsync();
+
         _application = CreateApplication();
 
         _scope = _application.Services.CreateAsyncScope();
-        var dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+        var dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.MigrateAsync();
     }
@@ -64,7 +61,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
     public static async Task ResetStateAsync()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        await _checkpoint.Reset(_connectionString);
     }
 
     internal static WebApplicationFactory<Program> GetUserAuthenticatedApplication()
@@ -101,7 +98,10 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
                 builder.ConfigureAppConfiguration((builderContext, config) =>
                 {
-                    config.AddConfiguration(_configuration);
+                    config.AddInMemoryCollection(new List<KeyValuePair<string, string>>
+                    {
+                        new("ConnectionStrings:DefaultConnection", _connectionString)
+                    });
                 });
 
                 builder.ConfigureTestServices(services =>
