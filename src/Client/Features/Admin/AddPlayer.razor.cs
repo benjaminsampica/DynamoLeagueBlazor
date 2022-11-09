@@ -8,8 +8,8 @@ namespace DynamoLeagueBlazor.Client.Features.Admin;
 [Authorize(Policy = PolicyRequirements.Admin)]
 public sealed partial class AddPlayer : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
 
     private TeamNameListResult _teamList = new();
     private AddPlayerRequest _addPlayerForm = new();

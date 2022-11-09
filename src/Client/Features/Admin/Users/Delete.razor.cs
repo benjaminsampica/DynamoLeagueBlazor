@@ -5,10 +5,10 @@ namespace DynamoLeagueBlazor.Client.Features.Admin.Users;
 
 public sealed partial class Delete : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public string UserId { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [CascadingParameter] public required MudDialogInstance MudDialogInstance { get; set; }
+    [Parameter, EditorRequired] public required string UserId { get; set; }
 
     private DeleteUserRequest _form = null!;
     private bool _processingForm;

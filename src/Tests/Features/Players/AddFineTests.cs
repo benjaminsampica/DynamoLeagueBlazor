@@ -103,7 +103,7 @@ public class AddFineUITests : UITestBase
         var submitButton = cut.Find("button");
         submitButton.Click();
 
-        MockSnackbar.Verify(s => s.Add(It.IsAny<string>(), Severity.Success, It.IsAny<Action<SnackbarOptions>>()));
+        MockSnackbar.Verify(s => s.Add(It.IsAny<string>(), Severity.Success, It.IsAny<Action<SnackbarOptions>>(), It.IsAny<string>()));
         GetHttpHandler.Verify();
     }
 }

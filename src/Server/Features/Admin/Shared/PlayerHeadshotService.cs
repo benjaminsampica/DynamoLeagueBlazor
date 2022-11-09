@@ -46,7 +46,7 @@ internal class PlayerHeadshotRouteFactory
 
 internal class PlayerDataResult
 {
-    public PlayerListResult Data { get; set; } = null!;
+    public required PlayerListResult Data { get; set; }
 
     public class PlayerListResult
     {
@@ -55,33 +55,33 @@ internal class PlayerDataResult
         public class PlayerResult
         {
             [JsonPropertyName("Player_ID")]
-            public string PlayerId { get; set; } = null!;
+            public required string PlayerId { get; set; }
             [JsonPropertyName("Full Name")]
-            public string FullName { get; set; } = null!;
-            public string Team { get; set; } = null!;
-            public string Position { get; set; } = null!;
+            public required string FullName { get; set; }
+            public required string Team { get; set; }
+            public required string Position { get; set; }
         }
     }
 }
 
 internal class PlayerMetricDataResult
 {
-    public PlayerMetricData Data { get; set; } = null!;
+    public required PlayerMetricData Data { get; set; }
 
     public class PlayerMetricData
     {
-        public PlayerData Player { get; set; } = null!;
+        public required PlayerData Player { get; set; }
 
         public class PlayerData
         {
             [JsonPropertyName("Player_ID")]
-            public string PlayerId { get; set; } = null!;
+            public required string PlayerId { get; set; }
 
-            public Player Core { get; set; } = null!;
+            public required Player Core { get; set; }
 
             public class Player
             {
-                public string Avatar { get; set; } = null!;
+                public required string Avatar { get; set; }
             }
         }
     }

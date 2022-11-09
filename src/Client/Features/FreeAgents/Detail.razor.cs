@@ -4,10 +4,10 @@ namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
 
 public sealed partial class Detail : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject] private IBidValidator BidValidator { get; set; } = null!;
-    [Parameter] public int PlayerId { get; set; }
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [Inject] public required IBidValidator BidValidator { get; set; }
+    [Parameter, EditorRequired] public required int PlayerId { get; set; }
 
     private FreeAgentDetailResult? _result;
     private AddBidRequest _form = new();

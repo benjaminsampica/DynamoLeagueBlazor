@@ -4,10 +4,11 @@ namespace DynamoLeagueBlazor.Client.Features.Teams;
 
 public sealed partial class SignPlayer : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    [CascadingParameter] public MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int PlayerId { get; set; }
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar Snackbar { get; set; }
+    [CascadingParameter] public required MudDialogInstance MudDialogInstance { get; set; }
+    [Parameter, EditorRequired] public required int PlayerId { get; set; }
+
     private SignPlayerRequest _form = null!;
     private SignPlayerDetailResult? _signPlayerDetailResult;
     private bool _processingForm;
