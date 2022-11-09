@@ -24,7 +24,7 @@ public class EndBiddingTests : IntegrationTestBase
     [Fact]
     public async Task GivenAPlayerWhoIsAFreeAgentAndEndFreeAgencyIsNowOrBeforeNow_ThenChangesToOfferMatching()
     {
-        var application = GetUserAuthenticatedApplication();
+        GetUserAuthenticatedApplication();
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.FreeAgent;
@@ -34,6 +34,7 @@ public class EndBiddingTests : IntegrationTestBase
         var sut = GetRequiredService<EndBiddingService>();
 
         await sut.Invoke();
+        await Task.Delay(500); // Give time for the invocation
 
         var player = await FirstOrDefaultAsync<Player>();
         player!.State.Should().Be(PlayerState.OfferMatching);
