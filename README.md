@@ -16,6 +16,7 @@ Running & contributing to Dynamo League Blazor requires the following:
 - .NET 6 SDK
 - IIS Express
 - Docker (Linux)
+- WASM tools (can be installed via `dotnet workload install wasm-tools`)
 
 By default, a test account is created with administrator permissions with the following login information:
 
