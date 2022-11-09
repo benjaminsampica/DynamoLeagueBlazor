@@ -6,13 +6,13 @@ public class TeamListResult
 
     public class TeamItem
     {
-        public int Id { get; set; }
-        public string LogoUrl { get; set; } = null!;
-        public string Name { get; set; } = null!;
-        public string RosteredPlayerCount { get; set; } = null!;
-        public string UnrosteredPlayerCount { get; set; } = null!;
-        public string UnsignedPlayerCount { get; set; } = null!;
-        public string CapSpace { get; set; } = null!;
+        public required int Id { get; set; }
+        public required string LogoUrl { get; set; }
+        public required string Name { get; set; }
+        public required string RosteredPlayerCount { get; set; }
+        public required string UnrosteredPlayerCount { get; set; }
+        public required string UnsignedPlayerCount { get; set; }
+        public required string CapSpace { get; set; }
     }
 }
 

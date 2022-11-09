@@ -7,11 +7,11 @@ public class FineListResult
     public class FineItem
     {
         public int Id { get; set; }
-        public string PlayerHeadShotUrl { get; set; } = null!;
+        public required string PlayerHeadShotUrl { get; set; } = null!;
         public string? PlayerName { get; set; }
-        public string TeamName { get; set; } = null!;
-        public string TeamLogoUrl { get; set; } = null!;
-        public string Reason { get; set; } = null!;
+        public required string TeamName { get; set; }
+        public required string TeamLogoUrl { get; set; }
+        public required string Reason { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; } = null!;
     }

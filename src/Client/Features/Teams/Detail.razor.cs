@@ -7,12 +7,12 @@ namespace DynamoLeagueBlazor.Client.Features.Teams;
 
 public sealed partial class Detail : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private IDialogService DialogService { get; set; } = null!;
-    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
-    [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    [CascadingParameter] public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-    [Parameter, EditorRequired] public int TeamId { get; set; }
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required IDialogService DialogService { get; set; }
+    [Inject] public required IConfirmDialogService ConfirmDialogService { get; set; }
+    [Inject] public required ISnackbar Snackbar { get; set; }
+    [CascadingParameter] public required Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    [Parameter, EditorRequired] public required int TeamId { get; set; }
 
     private TeamDetailResult? _result;
     private bool _isUsersTeam = false;

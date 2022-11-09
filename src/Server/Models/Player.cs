@@ -33,14 +33,8 @@ public record Player : BaseEntity
             .Permit(PlayerStateTrigger.MatchExpired, PlayerState.Unsigned);
     }
 
-    public Player(string name, string position) : this()
-    {
-        Name = name;
-        Position = position;
-    }
-
-    public string Name { get; set; } = null!;
-    public string Position { get; set; } = null!;
+    public required string Name { get; set; }
+    public required string Position { get; set; }
     public string? HeadShotUrl { get; set; }
     public int? YearContractExpires { get; set; }
     public int ContractValue { get; set; }
@@ -93,7 +87,7 @@ public record Player : BaseEntity
 
     public Bid AddBid(int amount, int teamIdOfBidder)
     {
-        var bid = new Bid(amount, teamIdOfBidder, Id);
+        var bid = new Bid { Amount = amount, TeamId = teamIdOfBidder, PlayerId = Id };
 
         if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
         {
