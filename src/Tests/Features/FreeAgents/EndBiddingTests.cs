@@ -28,13 +28,12 @@ public class EndBiddingTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.FreeAgent;
-        mockPlayer.EndOfFreeAgency = DateTime.Now;
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(-2);
         await AddAsync(mockPlayer);
 
         var sut = GetRequiredService<EndBiddingService>();
 
         await sut.Invoke();
-        await Task.Delay(500); // Give time for the invocation
 
         var player = await FirstOrDefaultAsync<Player>();
         player!.State.Should().Be(PlayerState.OfferMatching);
