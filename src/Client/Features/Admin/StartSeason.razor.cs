@@ -8,9 +8,9 @@ namespace DynamoLeagueBlazor.Client.Features.Admin;
 [Authorize(Policy = PolicyRequirements.Admin)]
 public sealed partial class StartSeason : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [Inject] public required IConfirmDialogService ConfirmDialogService { get; set; }
 
 
     private bool _isDisabled = true;

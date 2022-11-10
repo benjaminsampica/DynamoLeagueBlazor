@@ -4,10 +4,10 @@ namespace DynamoLeagueBlazor.Client.Features.Players;
 
 public sealed partial class AddFine : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int PlayerId { get; set; }
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [CascadingParameter] public required MudDialogInstance MudDialogInstance { get; set; }
+    [Parameter, EditorRequired] public required int PlayerId { get; set; }
 
     private AddFineRequest _form = null!;
     private FineDetailResult? _fineDetail;

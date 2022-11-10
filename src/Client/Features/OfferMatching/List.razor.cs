@@ -5,9 +5,9 @@ namespace DynamoLeagueBlazor.Client.Features.OfferMatching;
 
 public sealed partial class List : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [Inject] private IConfirmDialogService ConfirmDialogService { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [Inject] public required IConfirmDialogService ConfirmDialogService { get; set; }
 
     private const string _title = "Offer Matching";
     private bool _loading;

@@ -59,8 +59,10 @@ public class AddPlayerHandler : IRequestHandler<AddPlayerCommand, int>
     {
         var headshotUrl = await _playerHeadshotService.FindPlayerHeadshotUrlAsync(request.Name, request.Position, cancellationToken);
 
-        var player = new Player(request.Name, request.Position)
+        var player = new Player
         {
+            Name = request.Name,
+            Position = request.Position,
             ContractValue = request.ContractValue,
             TeamId = request.TeamId,
             HeadShotUrl = headshotUrl

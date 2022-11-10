@@ -4,8 +4,8 @@ namespace DynamoLeagueBlazor.Client.Features.Fines;
 
 public sealed partial class List : IDisposable
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required IDialogService DialogService { get; set; }
 
     private FineListResult _result = new();
     private bool _loading;

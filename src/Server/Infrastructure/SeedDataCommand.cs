@@ -78,8 +78,10 @@ public class Handler : IRequestHandler<SeedDataCommand>
         {
             for (int i = 1; i < 250; i++)
             {
-                var player = new Player("Atlanta", "DEF")
+                var player = new Player
                 {
+                    Name = "Atlanta",
+                    Position = "DEF",
                     TeamId = new Random().Next(1, 10),
                     HeadShotUrl = baseImage
                 };
@@ -87,7 +89,6 @@ public class Handler : IRequestHandler<SeedDataCommand>
                 if (i % 2 == 0)
                 {
                     player.SignForCurrentTeam(DateTime.Today.AddYears(1).Year, i);
-
 
                     if (i % 4 == 0)
                     {
