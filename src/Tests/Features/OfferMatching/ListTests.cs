@@ -43,9 +43,12 @@ public class ListServerTests : IntegrationTestBase
         mockPlayer.TeamId = mockTeam.Id;
         mockPlayer.State = PlayerState.OfferMatching;
         await AddAsync(mockPlayer);
+        
+        var biddingTeam = CreateFakeTeam();
+        await AddAsync(biddingTeam);
 
         var bidAmount = int.MaxValue;
-        mockPlayer.AddBid(bidAmount, mockTeam.Id);
+        mockPlayer.AddBid(bidAmount, biddingTeam.Id);
         await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -59,7 +62,7 @@ public class ListServerTests : IntegrationTestBase
         freeAgent.Id.Should().Be(mockPlayer.Id);
         freeAgent.Name.Should().Be(mockPlayer.Name);
         freeAgent.Position.Should().Be(mockPlayer.Position);
-        freeAgent.Team.Should().Be(mockTeam.Name);
+        freeAgent.Team.Should().Be(biddingTeam.Name);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
         freeAgent.OfferingTeam.Should().Be(mockTeam.Name);
         freeAgent.Offer.Should().Be(bidAmount);
