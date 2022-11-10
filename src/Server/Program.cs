@@ -10,6 +10,7 @@ using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -34,18 +35,27 @@ try
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+        .Enrich.WithEnvironmentName()
         .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+    builder.Logging.ClearProviders();
 
     Log.Logger = loggerConfiguration.CreateLogger();
 
     builder.Host.UseSerilog();
 
     // Add services to the container.
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (builder.Environment.IsDevelopment())
+    {
+        connectionString = await MsSqlContainerFactory.CreateAsync();
+    }
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.UseSqlServer(connectionString);
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        options.EnableSensitiveDataLogging();
     });
     builder.Services.AddDbContextFactory<ApplicationDbContext>(lifetime: ServiceLifetime.Scoped);
 

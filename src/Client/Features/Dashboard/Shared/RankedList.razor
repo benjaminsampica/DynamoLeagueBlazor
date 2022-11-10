@@ -26,5 +26,5 @@ else
 
 @code {
     [Parameter] public IEnumerable<IRankedItem> RankedItems { get; set; } = Array.Empty<IRankedItem>();
-    [Parameter, EditorRequired] public RenderFragment NotEnoughItemsContent { get; set; } = null!;
+    [Parameter, EditorRequired] public required RenderFragment NotEnoughItemsContent { get; set; }
 }

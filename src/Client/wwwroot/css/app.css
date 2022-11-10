@@ -1,7 +1,4 @@
-﻿/* TODO: Add local version for offline */
-@import url('https://fonts.googleapis.com/css?family=Graduate|Open+Sans:300&display=swap');
-
-.grow {
+﻿.grow {
     transition: all .2s ease-in-out;
 }
 
@@ -37,23 +34,12 @@ html, body {
     max-width: 400px;
 }
 
-.loader {
-    border: 16px solid rgba(0, 0, 0, 0.00);
-    border-top: 16px solid #594ae2;
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+.loading-progress-text:after {
+    content: var(--blazor-load-percentage-text);
+    color: rgba(89,74,226,0.55);
+    font-weight: bold;
+    font-size: 60px;
+    font-family: "Graduate", sans-serif;
 }
 
 /* MudBlazor overrides */

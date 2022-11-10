@@ -20,14 +20,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         _operationalStoreOptions = operationalStoreOptions;
     }
 
-    public DbSet<Bid> Bids { get; set; } = null!;
-    public DbSet<Fine> Fines { get; set; } = null!;
-    public DbSet<Player> Players { get; set; } = null!;
-    public DbSet<Team> Teams { get; set; } = null!;
+    public required DbSet<Bid> Bids { get; set; }
+    public required DbSet<Fine> Fines { get; set; }
+    public required DbSet<Player> Players { get; set; }
+    public required DbSet<Team> Teams { get; set; }
 
-    public DbSet<PersistedGrant> PersistedGrants { get; set; } = null!;
-    public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; } = null!;
-    public DbSet<Key> Keys { get; set; } = null!;
+    public required DbSet<PersistedGrant> PersistedGrants { get; set; }
+    public required DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+    public required DbSet<Key> Keys { get; set; }
 
     Task<int> IPersistedGrantDbContext.SaveChangesAsync() => base.SaveChangesAsync();
 

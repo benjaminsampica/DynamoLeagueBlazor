@@ -46,9 +46,11 @@ public class TopOffendersTests : IntegrationTestBase
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = stubTeam.Id;
+        await AddAsync(mockPlayer);
+
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.Status = true;
-        await AddAsync(mockPlayer);
+        await UpdateAsync(mockFine);
 
         var client = application.CreateClient();
 
@@ -75,16 +77,20 @@ public class TopOffendersTests : IntegrationTestBase
         {
             var mockPlayer = CreateFakePlayer();
             mockPlayer.TeamId = stubTeam.Id;
+            await AddAsync(mockPlayer);
+
             var fine = mockPlayer.AddFine(int.MaxValue, RandomString);
             fine.Status = true;
-            await AddAsync(mockPlayer);
+            await UpdateAsync(mockPlayer);
         }
 
         var eleventhPlayerWithFine = CreateFakePlayer();
         eleventhPlayerWithFine.TeamId = stubTeam.Id;
+        await AddAsync(eleventhPlayerWithFine);
+
         var lowestFine = eleventhPlayerWithFine.AddFine(int.MinValue, RandomString);
         lowestFine.Status = true;
-        await AddAsync(eleventhPlayerWithFine);
+        await UpdateAsync(eleventhPlayerWithFine);
 
         var client = application.CreateClient();
 

@@ -24,11 +24,13 @@ public class TopTeamFinesTests : IntegrationTestBase
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
-        var stubPlayer = CreateFakePlayer();
-        stubPlayer.TeamId = mockTeam.Id;
-        var mockFine = stubPlayer.AddFine(int.MaxValue, RandomString);
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.TeamId = mockTeam.Id;
+        await AddAsync(mockPlayer);
+
+        var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
         mockFine.Status = true;
-        await AddAsync(stubPlayer);
+        await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
 
@@ -53,15 +55,19 @@ public class TopTeamFinesTests : IntegrationTestBase
 
         var mockPlayer1 = CreateFakePlayer();
         mockPlayer1.TeamId = stubTeam.Id;
+        await AddAsync(mockPlayer1);
+
         var fine = mockPlayer1.AddFine(int.MaxValue, RandomString);
         fine.Status = true;
-        await AddAsync(mockPlayer1);
+        await UpdateAsync(mockPlayer1);
 
         var mockPlayer2 = CreateFakePlayer();
         mockPlayer2.TeamId = stubTeam.Id;
+        await AddAsync(mockPlayer2);
+
         var lowestFine = mockPlayer2.AddFine(int.MinValue, RandomString);
         lowestFine.Status = true;
-        await AddAsync(mockPlayer2);
+        await UpdateAsync(mockPlayer2);
 
         var client = application.CreateClient();
 
