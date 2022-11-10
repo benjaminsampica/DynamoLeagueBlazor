@@ -1,7 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using FluentValidation;
-using Microsoft.FeatureManagement;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 
@@ -51,13 +50,11 @@ public class AddBidHandler : IRequestHandler<AddBidCommand>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IFeatureManager _featureManager;
 
-    public AddBidHandler(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IFeatureManager featureManager)
+    public AddBidHandler(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-        _featureManager = featureManager;
     }
 
     public async Task<Unit> Handle(AddBidCommand request, CancellationToken cancellationToken)
@@ -68,8 +65,7 @@ public class AddBidHandler : IRequestHandler<AddBidCommand>
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken);
 
         var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
-        var isAutomaticCounterBiddingEnabled = await _featureManager.IsEnabledAsync(AddBidFeatureFlags.AutomaticCounterBidding);
-        player!.AddBid(request.Amount, currentUserTeamId, isAutomaticCounterBiddingEnabled);
+        player!.AddBid(request.Amount, currentUserTeamId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

@@ -10,13 +10,13 @@ using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Infastructure;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
-using Microsoft.FeatureManagement;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
@@ -45,9 +45,15 @@ try
     builder.Host.UseSerilog();
 
     // Add services to the container.
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (builder.Environment.IsDevelopment())
+    {
+        connectionString = await MsSqlContainerFactory.CreateAsync();
+    }
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.UseSqlServer(connectionString);
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         options.EnableSensitiveDataLogging();
     });
@@ -82,7 +88,6 @@ try
 
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
-    builder.Services.AddFeatureManagement();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
     builder.Services.AddMediatR(Assembly.GetExecutingAssembly());

@@ -86,8 +86,10 @@ public class Handler : IRequestHandler<SeedDataCommand>
             for (int i = 1; i < 250; i++)
             {
                 var randomTeamId = random.Next(1, 10);
-                var player = new Player("Atlanta", "DEF")
+                var player = new Player
                 {
+                    Name = "Atlanta",
+                    Position = "DEF",
                     TeamId = randomTeamId,
                     HeadShotUrl = baseImage
                 };

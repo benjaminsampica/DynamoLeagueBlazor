@@ -2,10 +2,10 @@
 
 public class FreeAgentDetailResult
 {
-    public string Name { get; set; } = null!;
-    public string Position { get; set; } = null!;
-    public string HeadShotUrl { get; set; } = null!;
-    public string Team { get; set; } = null!;
+    public required string Name { get; set; }
+    public required string Position { get; set; }
+    public required string HeadShotUrl { get; set; }
+    public required string Team { get; set; }
     public DateTime EndOfFreeAgency { get; set; }
 
     public BidItem? OverBid { get; set; }
@@ -14,9 +14,9 @@ public class FreeAgentDetailResult
 
     public class BidItem
     {
-        public string Team { get; set; } = null!;
-        public int Amount { get; set; }
-        public string CreatedOn { get; set; } = null!;
+        public required string Team { get; set; }
+        public required int Amount { get; set; }
+        public required string CreatedOn { get; set; }
     }
 }
 
@@ -24,8 +24,5 @@ public class FreeAgentDetailFactory
 {
     public const string Uri = "api/freeagents/";
 
-    public static string Create(int playerId)
-    {
-        return Uri + playerId;
-    }
+    public static string Create(int playerId) => Uri + playerId;
 }

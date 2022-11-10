@@ -4,10 +4,10 @@ namespace DynamoLeagueBlazor.Client.Features.Fines;
 
 public partial class Manage
 {
-    [Inject] private HttpClient HttpClient { get; set; } = null!;
-    [Inject] private ISnackbar SnackBar { get; set; } = null!;
-    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = null!;
-    [Parameter, EditorRequired] public int FineId { get; set; }
+    [Inject] public required HttpClient HttpClient { get; set; }
+    [Inject] public required ISnackbar SnackBar { get; set; }
+    [CascadingParameter] public required MudDialogInstance MudDialogInstance { get; set; }
+    [Parameter, EditorRequired] public required int FineId { get; set; }
 
     private ManageFineRequest _form = null!;
     private bool _processingForm;

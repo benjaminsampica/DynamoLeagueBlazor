@@ -109,9 +109,6 @@ public class AddBidTests : IntegrationTestBase
     [Fact]
     public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenSavesTheBid()
     {
-        var application = GetUserAuthenticatedApplication();
-        var client = application.CreateClient();
-
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -121,6 +118,9 @@ public class AddBidTests : IntegrationTestBase
 
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
+
+        var application = GetUserAuthenticatedApplication();
+        var client = application.CreateClient();
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
 
@@ -137,24 +137,24 @@ public class AddBidTests : IntegrationTestBase
     [Fact]
     public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ButThereIsAnExistingOverBidWithAHigherAmount_ThenSavesTwoBidsWithTheOverBidAsTheHighestPlusOneDollar()
     {
-        var application = CreateUserAuthenticatedApplication();
-        var client = application.CreateClient();
-
         var mockTeam = CreateFakeTeam();
-        await application.AddAsync(mockTeam);
+        await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
-        await application.AddAsync(mockPlayer);
+        await AddAsync(mockPlayer);
 
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
+
+        var application = GetUserAuthenticatedApplication();
+        var client = application.CreateClient();
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
 
         result.Should().BeSuccessful();
 
-        var bid = await application.FirstOrDefaultAsync<Bid>();
+        var bid = await FirstOrDefaultAsync<Bid>();
         bid.Should().NotBeNull();
         bid!.Amount.Should().Be(request.Amount);
         bid.PlayerId.Should().Be(request.PlayerId);
