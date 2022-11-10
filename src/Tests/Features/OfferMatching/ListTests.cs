@@ -62,9 +62,9 @@ public class ListServerTests : IntegrationTestBase
         freeAgent.Id.Should().Be(mockPlayer.Id);
         freeAgent.Name.Should().Be(mockPlayer.Name);
         freeAgent.Position.Should().Be(mockPlayer.Position);
-        freeAgent.Team.Should().Be(biddingTeam.Name);
+        freeAgent.Team.Should().Be(mockTeam.Name);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
-        freeAgent.OfferingTeam.Should().Be(mockTeam.Name);
+        freeAgent.OfferingTeam.Should().Be(biddingTeam.Name);
         freeAgent.Offer.Should().Be(bidAmount);
         freeAgent.RemainingTime.Should().BeCloseTo(mockPlayer.GetRemainingFreeAgencyTime(), TimeSpan.FromSeconds(1));
         freeAgent.CurrentUserIsOfferMatching.Should().BeTrue();
