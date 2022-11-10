@@ -17,6 +17,12 @@ public class PlayerTests
 
         player.GetHighestBidAmount().Should().Be(int.MaxValue);
     }
+
+    [Fact]
+    public void GivenAPlayerWithNoBids_WhenFindingTheHighestBiddingTeam_ThenEmptyString()
+       => CreateFakePlayer()
+           .GetOfferingTeam()
+           .Should().Be(string.Empty);
 }
 
 public class PlayerStateTests
