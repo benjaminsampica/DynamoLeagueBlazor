@@ -17,6 +17,24 @@ public class PlayerTests
 
         player.GetHighestBidAmount().Should().Be(int.MaxValue);
     }
+
+    [Fact]
+    public void GivenAPlayerWithNoBids_WhenFindingTheHighestBiddingTeam_ThenEmptyString()
+       => CreateFakePlayer()
+           .GetOfferingTeam()
+           .Should().Be(string.Empty);
+
+    [Fact]
+    public async Task GivenAPlayerWithABid_ThenReturnsOfferingTeamAsync()
+    {
+
+        var stubTeam = CreateFakeTeam();
+        await AddAsync(stubTeam);
+        var player = CreateFakePlayer();
+        player.AddBid(int.MaxValue, stubTeam.Id);
+
+        player.GetOfferingTeam().Should().Be(player.Bids.ElementAt(0).Team.Name);
+    }
 }
 
 public class PlayerStateTests
