@@ -99,7 +99,7 @@ public record Player : BaseEntity
         if (currentHighestBid != null)
         {
             isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;
-            if (isSameTeamBidding && currentHighestBid.IsOverBid)
+            if (isSameTeamBidding && currentHighestBid.IsOverBid && amount > currentHighestBid.Amount)
             {
                 currentHighestBid!.Amount = amount;
                 currentHighestBid.UpdatedOn = DateTimeOffset.Now;
