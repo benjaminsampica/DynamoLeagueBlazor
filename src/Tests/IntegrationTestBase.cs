@@ -104,12 +104,19 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
                     });
 
                     // Stub out calls to Player Profiler.
-                    var descriptor = services.Single(d => d.ServiceType == typeof(IPlayerHeadshotService));
-                    services.Remove(descriptor);
+                    var playerHeadshotService = services.Single(d => d.ServiceType == typeof(IPlayerHeadshotService));
+                    services.Remove(playerHeadshotService);
                     var stubPlayerHeadshotService = new Mock<IPlayerHeadshotService>();
                     stubPlayerHeadshotService.Setup(phs => phs.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                         .ReturnsAsync(RandomString);
                     services.AddSingleton(stubPlayerHeadshotService.Object);
+
+                    var currentUserService = services.Single(d => d.ServiceType == typeof(ICurrentUserService));
+                    services.Remove(currentUserService);
+                    var stubCurrentUserService = new Mock<ICurrentUserService>();
+                    stubCurrentUserService.Setup(cus => cus.GetTeamId())
+                        .Returns(1);
+                    services.AddSingleton(stubCurrentUserService.Object);
                 });
             });
 
@@ -150,8 +157,8 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
 internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AuthenticationName = RoleName.User;
     private readonly ApplicationDbContext _applicationDbContext;
+    public const string AuthenticationName = RoleName.User;
     public static int TeamId = 1;
 
     public UserAuthenticationHandler(
@@ -175,8 +182,8 @@ internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
 internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AuthenticationName = RoleName.Admin;
     private readonly ApplicationDbContext _applicationDbContext;
+    public const string AuthenticationName = RoleName.Admin;
     public static int TeamId = 1;
 
     public AdminAuthenticationHandler(

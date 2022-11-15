@@ -86,12 +86,12 @@ public class AddBidMappingProfile : Profile
 public class BidValidator : IBidValidator
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
-    public BidValidator(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public BidValidator(ApplicationDbContext dbContext, ICurrentUserService currentUserService)
     {
         _dbContext = dbContext;
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
     }
 
     public async Task<bool> HasNotEndedAsync(AddBidRequest request, CancellationToken cancellationToken)
@@ -105,10 +105,10 @@ public class BidValidator : IBidValidator
 
     public async Task<bool> IsHighestAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
 
         var playerWithBids = await _dbContext.Players.Where(b => b.Id == request.PlayerId)
-            .Include(p => p.Bids.Where(pb => pb.Amount > request.Amount))
+            .Include(p => p.Bids.Where(pb => pb.Amount >= request.Amount))
             .FirstAsync(cancellationToken);
 
         var currentHighestBid = playerWithBids.Bids.FindHighestBid();

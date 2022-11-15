@@ -77,6 +77,7 @@ try
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+    builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
     builder.Services.AddAuthentication()
         .AddIdentityServerJwt();

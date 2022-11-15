@@ -175,7 +175,14 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
     [Theory]
     [InlineData(-1), InlineData(0)]
     public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
-        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId }).ShouldHaveValidationErrorFor(p => p.PlayerId);
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId })
+        .ShouldHaveValidationErrorFor(p => p.PlayerId);
+
+    [Theory]
+    [InlineData(-1), InlineData(0)]
+    public void GivenInvalidAmounts_ThenAreNotValid(int amount) =>
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { Amount = amount, PlayerId = int.MaxValue })
+        .ShouldHaveValidationErrorFor(p => p.Amount);
 
     [Fact]
     public async Task GivenABidOfOne_WhenAPlayerAlreadyHasBidOfOneDollar_ThenIsNotValid()
