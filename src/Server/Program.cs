@@ -51,13 +51,12 @@ try
         connectionString = await MsSqlContainerFactory.CreateAsync();
     }
 
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    builder.Services.AddDbContextFactory<ApplicationDbContext>(options => 
     {
         options.UseSqlServer(connectionString);
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         options.EnableSensitiveDataLogging();
-    });
-    builder.Services.AddDbContextFactory<ApplicationDbContext>(lifetime: ServiceLifetime.Scoped);
+    }, ServiceLifetime.Scoped);
 
     builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         {
