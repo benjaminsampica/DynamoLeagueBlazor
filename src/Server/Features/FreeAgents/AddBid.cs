@@ -86,10 +86,12 @@ public class AddBidMappingProfile : Profile
 public class BidValidator : IBidValidator
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public BidValidator(ApplicationDbContext dbContext)
+    public BidValidator(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<bool> HasNotEndedAsync(AddBidRequest request, CancellationToken cancellationToken)
@@ -103,14 +105,27 @@ public class BidValidator : IBidValidator
 
     public async Task<bool> IsHighestAsync(AddBidRequest request, CancellationToken cancellationToken)
     {
-        // TODO: IsHighestAsync needs to understand _who_ is bidding and how to make the determination if it's the highest.
-        // We want to prevent the same team from lowering their overbid but also want to hide the overbid from other teams.
-        var isHighestBid = await _dbContext.Players
-            .Where(p => p.Id == request.PlayerId
-                && p.Bids.Where(b => b.IsOverBid == false)
-                        .All(b => request.Amount > b.Amount))
-            .AnyAsync(cancellationToken);
+        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
 
-        return isHighestBid;
+        var playerWithBids = await _dbContext.Players.Where(b => b.Id == request.PlayerId)
+            .Include(p => p.Bids.Where(pb => pb.Amount > request.Amount))
+            .FirstAsync(cancellationToken);
+
+        var currentHighestBid = playerWithBids.Bids.FindHighestBid();
+        if (currentHighestBid != null)
+        {
+            if (currentHighestBid.TeamId == currentUserTeamId)
+            {
+                return request.Amount > currentHighestBid.Amount;
+            }
+            else
+            {
+                var highestNonOverBid = playerWithBids.GetHighestBidAmount();
+
+                return request.Amount > highestNonOverBid;
+            }
+        }
+
+        return true;
     }
 }

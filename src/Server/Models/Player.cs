@@ -90,23 +90,23 @@ public record Player : BaseEntity
         var currentHighestBid = Bids.FindHighestBid();
 
         var isSameTeamBidding = false;
-        // TODO: Need to clean this up. I think I should pull out the checks for team bidding and overbidding into their own service
-        //     because of the bug in the next TODO. 
-        // TODO: Edge case where the current high bidder, who has overbid, can actually _reduce_ their overbid.
-        //     Overbid - $7
-        //     Active Bid - $5
-        //     -- Can successfully bid $6 -- but curiously doesn't overwrite overbid.
+        var isCurrentBidHigher = currentHighestBid?.Amount > amount;
         if (currentHighestBid != null)
         {
             isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;
-            if (isSameTeamBidding && currentHighestBid.IsOverBid && amount > currentHighestBid.Amount)
+            var shouldUpdateBid = isSameTeamBidding && currentHighestBid.IsOverBid && !isCurrentBidHigher;
+            if (shouldUpdateBid)
             {
                 currentHighestBid!.Amount = amount;
                 currentHighestBid.UpdatedOn = DateTimeOffset.Now;
             }
-            else
+            else if (!isSameTeamBidding)
             {
                 AddCounterBid(currentHighestBid);
+            }
+            else if (isCurrentBidHigher)
+            {
+                return;
             }
         }
 
@@ -114,23 +114,18 @@ public record Player : BaseEntity
 
         var isOverBid = isSameTeamBidding || isNewBidHigherThanCurrentBidPlusOneDollar;
 
-        AddBidInner(isOverBid);
+        var bid = new Bid { Amount = amount, TeamId = teamIdOfBidder, PlayerId = Id, IsOverBid = isOverBid };
 
-        void AddBidInner(bool isOverBid)
+        if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
         {
-            var bid = new Bid { Amount = amount, TeamId = teamIdOfBidder, PlayerId = Id, IsOverBid = isOverBid };
-
-            if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
-            {
-                GrantExtensionToFreeAgency();
-            }
-
-            Bids.Add(bid);
+            GrantExtensionToFreeAgency();
         }
+
+        Bids.Add(bid);
 
         void AddCounterBid(Bid currentHighestBid)
         {
-            if (currentHighestBid!.Amount > amount)
+            if (isCurrentBidHigher)
             {
                 var counterBid = new Bid { Amount = amount + 1, TeamId = currentHighestBid.TeamId, PlayerId = Id, IsOverBid = false };
 
