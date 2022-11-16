@@ -115,7 +115,7 @@ public class PlayerTests
 
         var teamTwoBid = player.Bids.First(b => b.TeamId == 2);
 
-        var counterBid = player.Bids.OrderByDescending(b => b.Amount).Skip(1).First();
+        var counterBid = player.Bids.First(b => b.Amount == 2 && b.TeamId == 1);
         counterBid!.Amount.Should().Be(2);
         counterBid.IsOverBid.Should().BeFalse();
         counterBid.TeamId.Should().Be(1);

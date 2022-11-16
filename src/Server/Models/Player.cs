@@ -92,25 +92,12 @@ public record Player : BaseEntity
 
         var isBidByTheSameTeam = false;
         var isCurrentBidHigher = false;
+        var shouldUpdateOverBid = false;
         if (currentHighestBid != null)
         {
             isBidByTheSameTeam = currentHighestBid.TeamId == teamIdOfBidder;
             isCurrentBidHigher = currentHighestBid.Amount > amount;
-
-            var shouldUpdateHasOverBid = isBidByTheSameTeam && currentHighestBid.IsOverBid && !isCurrentBidHigher;
-            if (shouldUpdateHasOverBid)
-            {
-                currentHighestBid!.Amount = amount;
-                currentHighestBid.UpdatedOn = DateTimeOffset.Now;
-            }
-            else if (!isBidByTheSameTeam)
-            {
-                AddCounterBid(currentHighestBid);
-            }
-            else if (isCurrentBidHigher)
-            {
-                return;
-            }
+            shouldUpdateOverBid = isBidByTheSameTeam && currentHighestBid.IsOverBid && !isCurrentBidHigher;
         }
 
         var isInitialOverBid = currentHighestBid == null && amount > Bid.MinimumAmount;
@@ -125,6 +112,20 @@ public record Player : BaseEntity
         var bid = new Bid { Amount = amount, TeamId = teamIdOfBidder, PlayerId = Id, IsOverBid = isOverBid };
 
         Bids.Add(bid);
+
+        if (shouldUpdateOverBid)
+        {
+            currentHighestBid!.Amount = amount;
+            currentHighestBid.UpdatedOn = DateTimeOffset.Now;
+        }
+        else if (!isBidByTheSameTeam && currentHighestBid != null)
+        {
+            AddCounterBid(currentHighestBid);
+        }
+        else if (isCurrentBidHigher)
+        {
+            return;
+        }
 
         if (IsEligibleForFreeAgencyExtension())
         {
