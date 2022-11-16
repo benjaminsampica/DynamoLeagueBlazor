@@ -1,8 +1,7 @@
-﻿using DynamoLeagueBlazor.Client.Features.FreeAgents;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Tests.Features.FreeAgents.Detail;
 
 public class DetailServerTests : IntegrationTestBase
 {
@@ -66,7 +65,7 @@ public class DetailClientTests : UITestBase
         GetHttpHandler.When(HttpMethod.Get)
             .TimesOutAfter(5000);
 
-        var cut = RenderComponent<Detail>();
+        var cut = RenderComponent<Client.Features.FreeAgents.Detail.Detail>();
 
         cut.HasComponent<MudSkeleton>().Should().BeTrue();
     }
@@ -79,7 +78,7 @@ public class DetailClientTests : UITestBase
         GetHttpHandler.When(HttpMethod.Get)
             .RespondsWithJson(AutoFaker.Generate<FreeAgentDetailResult>());
 
-        var cut = RenderComponent<Detail>();
+        var cut = RenderComponent<Client.Features.FreeAgents.Detail.Detail>();
 
         cut.HasComponent<MudTimeline>().Should().BeTrue();
         cut.HasComponent<MudNumericField<int>>().Should().BeTrue();

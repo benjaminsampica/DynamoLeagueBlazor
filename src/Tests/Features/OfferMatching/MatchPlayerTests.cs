@@ -7,8 +7,6 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsignedForTheMatchingTeam()
     {
-        var application = GetUserAuthenticatedApplication();
-
         var matchingTeam = CreateFakeTeam();
         await AddAsync(matchingTeam);
 
@@ -23,6 +21,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
+        var application = GetUserAuthenticatedApplication(matchingTeam.Id);
         var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);
@@ -41,7 +40,6 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBidsOnOfferMatch_ThenContractValueIsTheMinimumBid()
     {
-        var application = GetUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -51,6 +49,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);

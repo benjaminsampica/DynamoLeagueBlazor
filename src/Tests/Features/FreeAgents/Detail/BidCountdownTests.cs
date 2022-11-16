@@ -1,6 +1,6 @@
-﻿using DynamoLeagueBlazor.Client.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 
-namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Tests.Features.FreeAgents.Detail;
 
 public class BidCountdownTests : UITestBase
 {

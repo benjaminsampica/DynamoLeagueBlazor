@@ -1,7 +1,7 @@
 ﻿using DynamoLeagueBlazor.Shared.Helpers;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace DynamoLeagueBlazor.Shared.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
 public class AddBidRequest
 {

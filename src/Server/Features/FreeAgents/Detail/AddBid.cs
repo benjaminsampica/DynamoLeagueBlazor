@@ -1,8 +1,8 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using FluentValidation;
 
-namespace DynamoLeagueBlazor.Server.Features.Fines;
+namespace DynamoLeagueBlazor.Server.Features.FreeAgents.Detail;
 
 [Route(AddBidRouteFactory.Uri)]
 [ApiController]

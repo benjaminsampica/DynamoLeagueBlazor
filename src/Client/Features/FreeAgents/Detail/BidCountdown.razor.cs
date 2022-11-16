@@ -3,7 +3,7 @@ using Humanizer.Localisation;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 
 public partial class BidCountdown
 {

@@ -32,8 +32,6 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWhoIsAFreeAgent_ThenReturnsOneFreeAgent()
     {
-        var application = GetUserAuthenticatedApplication();
-
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -47,6 +45,7 @@ public class ListTests : IntegrationTestBase
         mockPlayer.AddBid(Bid.MinimumAmount, mockTeam.Id);
         await UpdateAsync(mockPlayer);
 
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);

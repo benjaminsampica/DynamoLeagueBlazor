@@ -1,6 +1,6 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
-namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 
 public sealed partial class Detail : IDisposable
 {

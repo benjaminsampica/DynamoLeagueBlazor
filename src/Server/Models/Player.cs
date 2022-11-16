@@ -85,22 +85,25 @@ public record Player : BaseEntity
 
     public void BeginNewSeason(DateTime endOfFreeAgency) => _machine.Fire(_freeAgentTrigger, endOfFreeAgency);
 
+    // TODO: Refactor this into an event so its easier to understand each individual piece.
     public void AddBid(int amount, int teamIdOfBidder)
     {
         var currentHighestBid = Bids.FindHighestBid();
 
-        var isSameTeamBidding = false;
-        var isCurrentBidHigher = currentHighestBid?.Amount > amount;
+        var isBidByTheSameTeam = false;
+        var isCurrentBidHigher = false;
         if (currentHighestBid != null)
         {
-            isSameTeamBidding = currentHighestBid.TeamId == teamIdOfBidder;
-            var shouldUpdateBid = isSameTeamBidding && currentHighestBid.IsOverBid && !isCurrentBidHigher;
-            if (shouldUpdateBid)
+            isBidByTheSameTeam = currentHighestBid.TeamId == teamIdOfBidder;
+            isCurrentBidHigher = currentHighestBid.Amount > amount;
+
+            var shouldUpdateHasOverBid = isBidByTheSameTeam && currentHighestBid.IsOverBid && !isCurrentBidHigher;
+            if (shouldUpdateHasOverBid)
             {
                 currentHighestBid!.Amount = amount;
                 currentHighestBid.UpdatedOn = DateTimeOffset.Now;
             }
-            else if (!isSameTeamBidding)
+            else if (!isBidByTheSameTeam)
             {
                 AddCounterBid(currentHighestBid);
             }
@@ -110,18 +113,23 @@ public record Player : BaseEntity
             }
         }
 
-        var isNewBidHigherThanCurrentBidPlusOneDollar = amount > (currentHighestBid?.Amount ?? Bid.MinimumAmount) + 1;
+        var isInitialOverBid = currentHighestBid == null && amount > Bid.MinimumAmount;
+        if (isInitialOverBid)
+        {
+            AddInitialPublicBid();
+        }
 
-        var isOverBid = isSameTeamBidding || isNewBidHigherThanCurrentBidPlusOneDollar;
+        var isNewBidHigherThanCurrentBidPlusOneDollar = amount > (currentHighestBid?.Amount ?? Bid.MinimumAmount) + 1;
+        var isOverBid = isBidByTheSameTeam || isNewBidHigherThanCurrentBidPlusOneDollar || isInitialOverBid;
 
         var bid = new Bid { Amount = amount, TeamId = teamIdOfBidder, PlayerId = Id, IsOverBid = isOverBid };
 
-        if (IsEligibleForFreeAgencyExtension(teamIdOfBidder))
+        Bids.Add(bid);
+
+        if (IsEligibleForFreeAgencyExtension())
         {
             GrantExtensionToFreeAgency();
         }
-
-        Bids.Add(bid);
 
         void AddCounterBid(Bid currentHighestBid)
         {
@@ -138,9 +146,15 @@ public record Player : BaseEntity
             }
         }
 
-        bool IsEligibleForFreeAgencyExtension(int teamId)
+        void AddInitialPublicBid()
         {
-            var isBidByTheSameTeam = teamId == TeamId;
+            var publicBid = new Bid { Amount = Bid.MinimumAmount, TeamId = teamIdOfBidder, PlayerId = Id, IsOverBid = false };
+
+            Bids.Add(publicBid);
+        }
+
+        bool IsEligibleForFreeAgencyExtension()
+        {
             if (isBidByTheSameTeam) return false;
 
             var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);

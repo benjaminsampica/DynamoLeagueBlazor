@@ -41,7 +41,7 @@ public class PlayerTests
     {
         var player = CreateFakePlayer();
 
-        player.AddBid(int.MaxValue, 1);
+        player.AddBid(2, 1);
 
         player.Bids.Should().HaveCount(2);
 
@@ -52,12 +52,12 @@ public class PlayerTests
 
         var privateBid = player.Bids.FindHighestBid();
         privateBid.Should().NotBeNull();
-        privateBid!.Amount.Should().Be(int.MaxValue);
+        privateBid!.Amount.Should().Be(2);
         privateBid.IsOverBid.Should().BeTrue();
     }
 
     [Fact]
-    public void GivenAPlayerHasABidFromTeamOne_WhenThatSameTeamBidsOnThemAgain_ThenIsAnOverbid()
+    public void GivenAPlayerHasABidFromTeamOne_WhenThatSameTeamBidsOnThemAgain_ThenIsAnOverBid()
     {
         var player = CreateFakePlayer();
 
@@ -98,7 +98,7 @@ public class PlayerTests
     }
 
     [Fact]
-    public void GivenAPlayerHasABidOfOneAndOverbidOfFourFromOneTeam_WhenAnotherTeamBidsTwo_ThenCounterBidsFromTheFirstTeamToTwo()
+    public void GivenAPlayerHasABidOfOneAndHasOverBidOfFourFromOneTeam_WhenAnotherTeamBidsTwo_ThenCounterBidsFromTheFirstTeamToTwo()
     {
         var player = CreateFakePlayer();
 
@@ -113,14 +113,17 @@ public class PlayerTests
         highestBid.IsOverBid.Should().BeTrue();
         highestBid.TeamId.Should().Be(1);
 
+        var teamTwoBid = player.Bids.First(b => b.TeamId == 2);
+
         var counterBid = player.Bids.OrderByDescending(b => b.Amount).Skip(1).First();
         counterBid!.Amount.Should().Be(2);
         counterBid.IsOverBid.Should().BeFalse();
         counterBid.TeamId.Should().Be(1);
+        counterBid.UpdatedOn.Should().BeAfter(teamTwoBid.UpdatedOn);
     }
 
     [Fact]
-    public void GivenAPlayerHasABidOfOneAndOverbidOfFourFromOneTeam_WhenAnotherTeamBidsFour_ThenCounterBidsFromTheFirstTeamToTheHighestAmount()
+    public void GivenAPlayerHasABidOfOneAndHasOverBidOfFourFromOneTeam_WhenAnotherTeamBidsFour_ThenCounterBidsFromTheFirstTeamToTheHighestAmount()
     {
         var player = CreateFakePlayer();
 

@@ -34,8 +34,6 @@ public class ListServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWhoIsInOfferMatching_ThenReturnsOneOfferMatching()
     {
-        var application = GetUserAuthenticatedApplication();
-
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -50,6 +48,7 @@ public class ListServerTests : IntegrationTestBase
         mockPlayer.AddBid(Bid.MinimumAmount, biddingTeam.Id);
         await UpdateAsync(mockPlayer);
 
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         var result = await client.GetFromJsonAsync<OfferMatchingListResult>(OfferMatchingListRouteFactory.Uri);

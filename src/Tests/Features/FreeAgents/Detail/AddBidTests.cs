@@ -1,13 +1,14 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
-namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Tests.Features.FreeAgents.Detail;
 
 public class AddBidTests : IntegrationTestBase
 {
     private static AddBidRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<AddBidRequest>()
-            .RuleFor(f => f.Amount, (faker) => faker.Random.Int(min: 1));
+            .RuleFor(f => f.Amount, (faker) => faker.Random.Int(min: Bid.MinimumAmount));
 
         return faker.Generate();
     }
@@ -118,8 +119,9 @@ public class AddBidTests : IntegrationTestBase
 
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
+        request.Amount = Bid.MinimumAmount;
 
-        var application = GetUserAuthenticatedApplication();
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
@@ -130,36 +132,41 @@ public class AddBidTests : IntegrationTestBase
         bid.Should().NotBeNull();
         bid!.Amount.Should().Be(request.Amount);
         bid.PlayerId.Should().Be(request.PlayerId);
-        bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
+        bid.TeamId.Should().Be(mockTeam.Id);
         bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
     }
 
     [Fact]
-    public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ButThereIsAnExistingOverBidWithAHigherAmount_ThenSavesTwoBidsWithTheOverBidAsTheHighestPlusOneDollar()
+    public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestPublicBid_ButThereIsAnExistingOverBidWithAHigherAmount_ThenSavesThreeBidsWithTheOverBidAsTheHighest()
     {
-        var mockTeam = CreateFakeTeam();
-        await AddAsync(mockTeam);
+        var originalTeam = CreateFakeTeam();
+        await AddAsync(originalTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
         await AddAsync(mockPlayer);
 
-        var request = CreateFakeValidRequest();
-        request.PlayerId = mockPlayer.Id;
+        const int privateBidAmount = 2;
+        mockPlayer.AddBid(privateBidAmount, originalTeam.Id);
+        await UpdateAsync(mockPlayer);
 
-        var application = GetUserAuthenticatedApplication();
+        var biddingTeam = CreateFakeTeam();
+        await AddAsync(biddingTeam);
+        var biddingTeamRequest = CreateFakeValidRequest();
+        biddingTeamRequest.PlayerId = mockPlayer.Id;
+        biddingTeamRequest.Amount = privateBidAmount;
+
+        var application = GetUserAuthenticatedApplication(biddingTeam.Id);
         var client = application.CreateClient();
 
-        var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
+        var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, biddingTeamRequest);
 
         result.Should().BeSuccessful();
 
-        var bid = await FirstOrDefaultAsync<Bid>();
-        bid.Should().NotBeNull();
-        bid!.Amount.Should().Be(request.Amount);
-        bid.PlayerId.Should().Be(request.PlayerId);
-        bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
-        bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Bids.Should().HaveCount(3);
+
+        dbContext.Bids.FindHighestBid()!.Amount.Should().Be(2);
     }
 }
 

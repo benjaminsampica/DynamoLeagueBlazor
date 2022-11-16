@@ -62,25 +62,41 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
         await _checkpoint.Reset(_connectionString);
     }
 
-    internal static WebApplicationFactory<Program> GetUserAuthenticatedApplication()
+    internal static WebApplicationFactory<Program> GetUserAuthenticatedApplication(int teamIdToImpersonate = 1)
         => _application
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddAuthentication(UserAuthenticationHandler.AuthenticationName)
-                        .AddScheme<AuthenticationSchemeOptions, UserAuthenticationHandler>(UserAuthenticationHandler.AuthenticationName, options => { });
+                    services.AddAuthentication(RoleName.User)
+                        .AddScheme<ImpersonationAuthenticationSchemeOptions, ImpersonationAuthenticationHandler>(RoleName.User,
+                            options =>
+                            {
+                                options.TeamIdToImpersonate = teamIdToImpersonate;
+                                options.RoleName = RoleName.User;
+                            }
+                        );
+
+                    ReplaceCurrentUserService(services, teamIdToImpersonate);
                 });
             });
 
-    internal static WebApplicationFactory<Program> GetAdminAuthenticatedApplication()
+    internal static WebApplicationFactory<Program> GetAdminAuthenticatedApplication(int teamIdToImpersonate = 1)
         => _application
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddAuthentication(AdminAuthenticationHandler.AuthenticationName)
-                        .AddScheme<AuthenticationSchemeOptions, AdminAuthenticationHandler>(AdminAuthenticationHandler.AuthenticationName, options => { });
+                    services.AddAuthentication(RoleName.Admin)
+                        .AddScheme<ImpersonationAuthenticationSchemeOptions, ImpersonationAuthenticationHandler>(RoleName.Admin,
+                            options =>
+                            {
+                                options.TeamIdToImpersonate = teamIdToImpersonate;
+                                options.RoleName = RoleName.Admin;
+                            }
+                        );
+
+                    ReplaceCurrentUserService(services, teamIdToImpersonate);
                 });
             });
 
@@ -111,16 +127,21 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
                         .ReturnsAsync(RandomString);
                     services.AddSingleton(stubPlayerHeadshotService.Object);
 
-                    var currentUserService = services.Single(d => d.ServiceType == typeof(ICurrentUserService));
-                    services.Remove(currentUserService);
-                    var stubCurrentUserService = new Mock<ICurrentUserService>();
-                    stubCurrentUserService.Setup(cus => cus.GetTeamId())
-                        .Returns(1);
-                    services.AddSingleton(stubCurrentUserService.Object);
+                    ReplaceCurrentUserService(services, 1);
                 });
             });
 
         return application;
+    }
+
+    private static void ReplaceCurrentUserService(IServiceCollection services, int teamIdToImpersonate)
+    {
+        var currentUserService = services.Single(d => d.ServiceType == typeof(ICurrentUserService));
+        services.Remove(currentUserService);
+        var stubCurrentUserService = new Mock<ICurrentUserService>();
+        stubCurrentUserService.Setup(cus => cus.GetTeamId())
+            .Returns(teamIdToImpersonate);
+        services.AddSingleton(stubCurrentUserService.Object);
     }
 
     public static async Task<TEntity?> FirstOrDefaultAsync<TEntity>()
@@ -155,72 +176,37 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
         _application.Services.GetRequiredService<T>();
 }
 
-internal class UserAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+internal class ImpersonationAuthenticationHandler : AuthenticationHandler<ImpersonationAuthenticationSchemeOptions>
 {
-    private readonly ApplicationDbContext _applicationDbContext;
-    public const string AuthenticationName = RoleName.User;
-    public static int TeamId = 1;
-
-    public UserAuthenticationHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
+    public ImpersonationAuthenticationHandler(
+        IOptionsMonitor<ImpersonationAuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock,
-        ApplicationDbContext applicationDbContext)
+        ISystemClock clock)
         : base(options, logger, encoder, clock)
     {
-        _applicationDbContext = applicationDbContext;
     }
 
-    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
-    {
-        TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
-
-        return AuthenticationHandlerUtilities.GetSuccessfulAuthenticateResult(AuthenticationName, TeamId, AuthenticationName);
-    }
-}
-
-internal class AdminAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
-{
-    private readonly ApplicationDbContext _applicationDbContext;
-    public const string AuthenticationName = RoleName.Admin;
-    public static int TeamId = 1;
-
-    public AdminAuthenticationHandler(
-        IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock,
-        ApplicationDbContext applicationDbContext)
-        : base(options, logger, encoder, clock)
-    {
-        _applicationDbContext = applicationDbContext;
-    }
-
-    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
-    {
-        TeamId = (await _applicationDbContext.Teams.FirstOrDefaultAsync())?.Id ?? TeamId;
-
-        return AuthenticationHandlerUtilities.GetSuccessfulAuthenticateResult(AuthenticationName, TeamId, AuthenticationName);
-    }
-}
-
-internal static class AuthenticationHandlerUtilities
-{
-    public static AuthenticateResult GetSuccessfulAuthenticateResult(string role, int teamId, string authenticationName)
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] {
             new Claim(ClaimTypes.Name, RandomString),
-            new Claim(ClaimTypes.Role, role),
-            new Claim(nameof(ApplicationUser.TeamId), teamId.ToString()),
+            new Claim(ClaimTypes.Role, Options.RoleName),
+            new Claim(nameof(ApplicationUser.TeamId), Options.TeamIdToImpersonate.ToString()),
             new Claim(nameof(ApplicationUser.Approved), bool.TrueString)
         };
-        var identity = new ClaimsIdentity(claims, authenticationName);
+        var identity = new ClaimsIdentity(claims, Options.RoleName);
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, authenticationName);
+        var ticket = new AuthenticationTicket(principal, Options.RoleName);
 
         var result = AuthenticateResult.Success(ticket);
 
-        return result;
+        return Task.FromResult(result);
     }
+}
+
+internal class ImpersonationAuthenticationSchemeOptions : AuthenticationSchemeOptions
+{
+    public int TeamIdToImpersonate { get; set; }
+    public string RoleName { get; set; } = null!;
 }

@@ -1,0 +1,61 @@
+﻿@page "/freeagents/{playerId:int}"
+
+<Title>
+    @_title
+</Title>
+
+@if(_result is null)
+{
+    <MudCard>
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%" />
+        <MudCardContent>
+            <MudSkeleton Width="30%" />
+            <MudSkeleton Width="80%" />
+            <MudSkeleton Width="100%" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem lg=3 xs=12 Class="d-flex flex-column align-center">
+                    <Avatar Image=@_result.HeadShotUrl Name="@_result.Name" Size=Size.Large />
+                    <MudText Typo=Typo.h5 Align=Align.Center Color=Color.Tertiary>
+                        @_result.Name
+                    </MudText>
+                    <MudText Typo=Typo.h6>Former Team</MudText>
+                    <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Team</MudText>
+                    <MudText Typo=Typo.h6>Position</MudText>
+                    <MudText Typo=Typo.h6 Color=Color.Secondary>@_result.Position</MudText>
+                    <MudDivider Class="mt-2" Style="width: 100%; max-width:250px;"/>
+                    <MudText Typo=Typo.h6>
+                        Bidding Ends In
+                    </MudText>
+                    <BidCountdown DateTime=@_result.EndOfFreeAgency />
+                </MudItem>
+                <MudItem lg=9 xs=12>
+                     <MudGrid>
+                        <MudItem xs=12>
+                            <MudText Typo=Typo.h6>Submit A New Bid</MudText>
+                            <EditForm Model=_form OnValidSubmit=OnValidSubmitAsync>
+                                <FluentValidationValidator Validator=_validator/>
+                                <MudNumericField @bind-Value="_form.Amount" Label="Bid Amount" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" 
+                                    HideSpinButtons="true" Class="mb-2" For="@(() => _form.Amount)" HelperText="Enter an amount one dollar or greater than the current bid."/>
+                                <LoadingButton @bind-IsLoading="_processingForm"/>
+                            </EditForm>
+                        </MudItem>
+                        <MudItem xs=12>
+                            <BidHistory Bids="_result.Bids" OverBid="_result.OverBid"/>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+}

@@ -42,7 +42,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
         }
 
         await AddFakeUserAsync("test@gmail.com", 1);
-        await AddFakeUserAsync("test2@gmail.com", 1);
+        await AddFakeUserAsync("test2@gmail.com", 2);
     }
 
     private async Task AddFakeUserAsync(string email, int teamId)

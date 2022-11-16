@@ -1,4 +1,4 @@
-﻿namespace DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿namespace DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
 public class FreeAgentDetailResult
 {
