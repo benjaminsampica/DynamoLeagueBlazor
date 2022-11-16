@@ -100,6 +100,9 @@ public record Player : BaseEntity
             shouldUpdateOverBid = isBidByTheSameTeam && currentHighestBid.IsOverBid && !isCurrentBidHigher;
         }
 
+        var shouldIgnoreBid = isCurrentBidHigher && isBidByTheSameTeam;
+        if (shouldIgnoreBid) return;
+
         var isInitialOverBid = currentHighestBid == null && amount > Bid.MinimumAmount;
         if (isInitialOverBid)
         {
@@ -121,10 +124,6 @@ public record Player : BaseEntity
         else if (!isBidByTheSameTeam && currentHighestBid != null)
         {
             AddCounterBid(currentHighestBid);
-        }
-        else if (isCurrentBidHigher)
-        {
-            return;
         }
 
         if (IsEligibleForFreeAgencyExtension())
