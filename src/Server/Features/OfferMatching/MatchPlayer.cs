@@ -49,18 +49,18 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
 
 public class MatchPlayerValidator : IMatchPlayerValidator
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
     private readonly ApplicationDbContext _dbContext;
 
-    public MatchPlayerValidator(IHttpContextAccessor httpContextAccessor, ApplicationDbContext dbContext)
+    public MatchPlayerValidator(ICurrentUserService currentUserService, ApplicationDbContext dbContext)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
         _dbContext = dbContext;
     }
 
     public async Task<bool> CanOfferMatchAsync(int playerId, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
 
         var canOfferMatch = await _dbContext.Players
             .AnyAsync(p => p.TeamId == currentUserTeamId

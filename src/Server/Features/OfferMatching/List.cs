@@ -28,21 +28,21 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
     public ListHandler(
         ApplicationDbContext dbContext,
         IMapper mapper,
-        IHttpContextAccessor httpContextAccessor)
+        ICurrentUserService currentUserService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
     }
 
     public async Task<OfferMatchingListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
 
         var offerMatches = await _dbContext.Players
             .Include(p => p.Bids)
@@ -51,7 +51,7 @@ public class ListHandler : IRequestHandler<ListQuery, OfferMatchingListResult>
             .ProjectTo<OfferMatchingListResult.OfferMatchingItem>(_mapper.ConfigurationProvider, new { currentUserTeamId })
             .ToListAsync(cancellationToken);
 
-        
+
         return new OfferMatchingListResult
         {
             OfferMatches = offerMatches

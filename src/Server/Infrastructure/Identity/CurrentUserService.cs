@@ -7,12 +7,12 @@ public interface ICurrentUserService
 
 public class CurrentUserService : ICurrentUserService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+    public CurrentUserService(ICurrentUserService currentUserService)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
     }
 
-    public int GetTeamId() => _httpContextAccessor.HttpContext!.User.GetTeamId();
+    public int GetTeamId() => _currentUserService.GetTeamId();
 }

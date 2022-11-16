@@ -49,12 +49,12 @@ public record AddBidCommand(int PlayerId, int Amount) : IRequest { }
 public class AddBidHandler : IRequestHandler<AddBidCommand>
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
-    public AddBidHandler(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public AddBidHandler(ApplicationDbContext dbContext, ICurrentUserService currentUserService)
     {
         _dbContext = dbContext;
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Unit> Handle(AddBidCommand request, CancellationToken cancellationToken)
@@ -64,14 +64,12 @@ public class AddBidHandler : IRequestHandler<AddBidCommand>
             .AsTracking()
             .SingleAsync(p => p.Id == request.PlayerId, cancellationToken);
 
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
         player!.AddBid(request.Amount, currentUserTeamId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
-
-
     }
 }
 

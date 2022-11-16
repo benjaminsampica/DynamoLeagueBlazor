@@ -28,18 +28,18 @@ public class DetailHandler : IRequestHandler<DetailQuery, FreeAgentDetailResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
-    public DetailHandler(ApplicationDbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public DetailHandler(ApplicationDbContext dbContext, IMapper mapper, ICurrentUserService currentUserService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentUserService;
     }
 
     public async Task<FreeAgentDetailResult> Handle(DetailQuery request, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
 
         var result = await _dbContext.Players
             .Include(p => p.Bids)
