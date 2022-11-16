@@ -110,7 +110,7 @@ public record Player : BaseEntity
             }
         }
 
-        var isNewBidHigherThanCurrentBidPlusOneDollar = amount > currentHighestBid?.Amount + 1;
+        var isNewBidHigherThanCurrentBidPlusOneDollar = amount > (currentHighestBid?.Amount ?? Bid.MinimumAmount) + 1;
 
         var isOverBid = isSameTeamBidding || isNewBidHigherThanCurrentBidPlusOneDollar;
 
@@ -127,7 +127,7 @@ public record Player : BaseEntity
         {
             if (isCurrentBidHigher)
             {
-                var counterBid = new Bid { Amount = amount + 1, TeamId = currentHighestBid.TeamId, PlayerId = Id, IsOverBid = false };
+                var counterBid = new Bid { Amount = amount, TeamId = currentHighestBid.TeamId, PlayerId = Id, IsOverBid = false };
 
                 Bids.Add(counterBid);
             }
@@ -172,7 +172,7 @@ public record Player : BaseEntity
         return fine;
     }
 
-    public int GetHighestBidAmount() => Bids.Any() ? Bids.Where(b => b.IsOverBid == false).FindHighestBid()!.Amount : Bid.MinimumAmount;
+    public int GetHighestBidAmount() => Bids.Any(b => b.IsOverBid == false) ? Bids.Where(b => b.IsOverBid == false).FindHighestBid()!.Amount : Bid.MinimumAmount;
     public string GetOfferingTeam() => Bids.Any() ? Bids.FindHighestBid()!.Team.Name : string.Empty;
 
     public TimeSpan GetRemainingFreeAgencyTime() => EndOfFreeAgency!.Value.AddDays(3) - DateTime.Now;

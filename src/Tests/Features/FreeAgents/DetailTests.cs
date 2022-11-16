@@ -33,8 +33,7 @@ public class DetailServerTests : IntegrationTestBase
         mockFreeAgent.TeamId = mockTeam.Id;
         await AddAsync(mockFreeAgent);
 
-        var bidAmount = int.MaxValue;
-        mockFreeAgent.AddBid(bidAmount, mockTeam.Id);
+        mockFreeAgent.AddBid(Bid.MinimumAmount, mockTeam.Id);
         await UpdateAsync(mockFreeAgent);
 
         var client = application.CreateClient();
@@ -52,7 +51,7 @@ public class DetailServerTests : IntegrationTestBase
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
         bid.Team.Should().Be(mockTeam.Name);
-        bid.Amount.Should().Be(bidAmount);
+        bid.Amount.Should().Be(Bid.MinimumAmount);
         DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }

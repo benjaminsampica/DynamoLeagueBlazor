@@ -44,8 +44,7 @@ public class ListTests : IntegrationTestBase
         mockPlayer.BeginNewSeason(biddingEnds);
         await AddAsync(mockPlayer);
 
-        var bidAmount = int.MaxValue;
-        mockPlayer.AddBid(bidAmount, mockTeam.Id);
+        mockPlayer.AddBid(Bid.MinimumAmount, mockTeam.Id);
         await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -61,7 +60,7 @@ public class ListTests : IntegrationTestBase
         freeAgent.Position.Should().Be(mockPlayer.Position);
         freeAgent.Team.Should().Be(mockTeam.Name);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
-        freeAgent.HighestBid.Should().Be(bidAmount);
+        freeAgent.HighestBid.Should().Be(Bid.MinimumAmount);
         freeAgent.BiddingEnds.Should().Be(biddingEnds);
         freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }

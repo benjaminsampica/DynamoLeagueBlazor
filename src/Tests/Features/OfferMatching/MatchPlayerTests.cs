@@ -18,7 +18,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = matchingTeam.Id;
         mockPlayer.State = PlayerState.OfferMatching;
-        mockPlayer.AddBid(int.MaxValue, biddingTeam.Id);
+        mockPlayer.AddBid(Bid.MinimumAmount, biddingTeam.Id);
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         await AddAsync(mockPlayer);
 
@@ -33,7 +33,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         unsignedPlayer!.YearContractExpires.Should().Be(null);
         unsignedPlayer.EndOfFreeAgency.Should().Be(null);
         unsignedPlayer.YearAcquired.Should().Be(DateTime.Today.Year);
-        unsignedPlayer.ContractValue.Should().Be(int.MaxValue);
+        unsignedPlayer.ContractValue.Should().Be(Bid.MinimumAmount);
         unsignedPlayer.State.Should().Be(PlayerState.Unsigned);
         unsignedPlayer.TeamId.Should().Be(matchingTeam.Id);
     }
