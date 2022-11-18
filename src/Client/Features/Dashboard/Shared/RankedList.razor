@@ -2,7 +2,7 @@
 {
     <MudItem xs=12>
         @{
-            var first  =RankedItems.First();
+            var first = RankedItems.First();
             var second = RankedItems.Skip(1).First();
             var third = RankedItems.Skip(2).First();
         }
@@ -12,7 +12,7 @@
     </MudItem>
     @foreach(var rankedItem in RankedItems.Skip(3))
     {
-        <MudItem xs=12 sm=4 Class="mx-auto">
+        <MudItem xs=12 sm=6>
             <RankedCard RankedItem="@rankedItem" NameTypo=Typo.body1 AmountTypo=Typo.h6 />
         </MudItem>
     }
