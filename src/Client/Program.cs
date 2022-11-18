@@ -1,10 +1,10 @@
 using DynamoLeagueBlazor.Client;
 using DynamoLeagueBlazor.Client.Areas.Identity;
 using DynamoLeagueBlazor.Client.Features.Admin;
-using DynamoLeagueBlazor.Client.Features.FreeAgents;
+using DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using DynamoLeagueBlazor.Shared.Infastructure.Identity;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

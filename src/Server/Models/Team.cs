@@ -18,7 +18,7 @@ public record Team : BaseEntity
 
     public Fine AddFine(decimal amount, string reason)
     {
-        var fine = new Fine(amount, reason, Id);
+        var fine = new Fine { Amount = amount, Reason = reason, TeamId = Id };
 
         Fines.Add(fine);
 

@@ -41,9 +41,15 @@ public class Handler : IRequestHandler<SeedDataCommand>
             await _roleManager.CreateAsync(userRole);
         }
 
-        if (await _userManager.FindByEmailAsync("test@gmail.com") is null)
+        await AddFakeUserAsync("test@gmail.com", 1);
+        await AddFakeUserAsync("test2@gmail.com", 2);
+    }
+
+    private async Task AddFakeUserAsync(string email, int teamId)
+    {
+        if (await _userManager.FindByEmailAsync(email) is null)
         {
-            var user = new ApplicationUser("test@gmail.com", 1) { EmailConfirmed = true, Approved = true };
+            var user = new ApplicationUser(email, teamId) { EmailConfirmed = true, Approved = true };
             await _userManager.CreateAsync(user, "hunter2");
 
             await _userManager.AddToRoleAsync(user, RoleName.Admin);
@@ -76,13 +82,15 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
         if (!await _dbContext.Players.AnyAsync(cancellationToken))
         {
+            var random = new Random();
             for (int i = 1; i < 250; i++)
             {
+                var randomTeamId = random.Next(1, 10);
                 var player = new Player
                 {
                     Name = "Atlanta",
                     Position = "DEF",
-                    TeamId = new Random().Next(1, 10),
+                    TeamId = randomTeamId,
                     HeadShotUrl = baseImage
                 };
 
@@ -102,6 +110,7 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
                     if (i % 16 == 0)
                     {
+                        player.AddBid(new Random().Next(), randomTeamId);
                         player.MatchOffer();
                     }
                 }

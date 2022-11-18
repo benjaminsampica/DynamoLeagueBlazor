@@ -32,8 +32,6 @@ public class ListTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenThereIsOnePlayerWhoIsAFreeAgent_ThenReturnsOneFreeAgent()
     {
-        var application = GetUserAuthenticatedApplication();
-
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -44,10 +42,10 @@ public class ListTests : IntegrationTestBase
         mockPlayer.BeginNewSeason(biddingEnds);
         await AddAsync(mockPlayer);
 
-        var bidAmount = int.MaxValue;
-        mockPlayer.AddBid(bidAmount, mockTeam.Id);
+        mockPlayer.AddBid(Bid.MinimumAmount, mockTeam.Id);
         await UpdateAsync(mockPlayer);
 
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         var result = await client.GetFromJsonAsync<FreeAgentListResult>(FreeAgentListRouteFactory.Uri);
@@ -61,7 +59,7 @@ public class ListTests : IntegrationTestBase
         freeAgent.Position.Should().Be(mockPlayer.Position);
         freeAgent.Team.Should().Be(mockTeam.Name);
         freeAgent.HeadShotUrl.Should().Be(mockPlayer.HeadShotUrl);
-        freeAgent.HighestBid.Should().Be(bidAmount);
+        freeAgent.HighestBid.Should().Be(Bid.MinimumAmount);
         freeAgent.BiddingEnds.Should().Be(biddingEnds);
         freeAgent.CurrentUserIsHighestBidder.Should().BeTrue();
     }

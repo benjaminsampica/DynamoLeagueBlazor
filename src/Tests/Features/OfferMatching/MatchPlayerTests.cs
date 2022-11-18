@@ -7,8 +7,6 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerIsMatchedAndHasBids_ThenPlayerIsMovedToUnsignedForTheMatchingTeam()
     {
-        var application = GetUserAuthenticatedApplication();
-
         var matchingTeam = CreateFakeTeam();
         await AddAsync(matchingTeam);
 
@@ -18,11 +16,12 @@ public class MatchPlayerServerTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         mockPlayer.TeamId = matchingTeam.Id;
         mockPlayer.State = PlayerState.OfferMatching;
-        mockPlayer.AddBid(int.MaxValue, biddingTeam.Id);
+        mockPlayer.AddBid(Bid.MinimumAmount, biddingTeam.Id);
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
+        var application = GetUserAuthenticatedApplication(matchingTeam.Id);
         var client = application.CreateClient();
 
         var response = await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);
@@ -33,7 +32,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         unsignedPlayer!.YearContractExpires.Should().Be(null);
         unsignedPlayer.EndOfFreeAgency.Should().Be(null);
         unsignedPlayer.YearAcquired.Should().Be(DateTime.Today.Year);
-        unsignedPlayer.ContractValue.Should().Be(int.MaxValue);
+        unsignedPlayer.ContractValue.Should().Be(Bid.MinimumAmount);
         unsignedPlayer.State.Should().Be(PlayerState.Unsigned);
         unsignedPlayer.TeamId.Should().Be(matchingTeam.Id);
     }
@@ -41,7 +40,6 @@ public class MatchPlayerServerTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnyAuthenticatedUser_WhenPlayerHasNoBidsOnOfferMatch_ThenContractValueIsTheMinimumBid()
     {
-        var application = GetUserAuthenticatedApplication();
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -51,6 +49,7 @@ public class MatchPlayerServerTests : IntegrationTestBase
         await AddAsync(mockPlayer);
 
         var request = new MatchPlayerRequest(mockPlayer.Id);
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
         var client = application.CreateClient();
 
         await client.PostAsJsonAsync(MatchPlayerRouteFactory.Uri, request);

@@ -1,5 +1,4 @@
 ﻿using DynamoLeagueBlazor.Shared.Enums;
-using DynamoLeagueBlazor.Shared.Helpers;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace DynamoLeagueBlazor.Shared.Features.Admin;
@@ -12,7 +11,7 @@ public class AddPlayerRequest
     public int ContractValue { get; set; }
 }
 
-public class AddPlayerRequestValidator : AsyncAbstractValidator<AddPlayerRequest>
+public class AddPlayerRequestValidator : AbstractValidator<AddPlayerRequest>
 {
     public AddPlayerRequestValidator()
     {

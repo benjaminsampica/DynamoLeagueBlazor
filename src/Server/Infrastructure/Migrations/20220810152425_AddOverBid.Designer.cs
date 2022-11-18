@@ -4,6 +4,7 @@ using DynamoLeagueBlazor.Server.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220810152425_AddOverBid")]
+    partial class AddOverBid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -312,7 +314,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PlayerId")
+                    b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Reason")
@@ -349,6 +351,7 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HeadShotUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -543,7 +546,9 @@ namespace DynamoLeagueBlazor.Server.Infrastructure.Migrations
                 {
                     b.HasOne("DynamoLeagueBlazor.Server.Models.Player", "Player")
                         .WithMany("Fines")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DynamoLeagueBlazor.Server.Models.Team", "Team")
                         .WithMany("Fines")

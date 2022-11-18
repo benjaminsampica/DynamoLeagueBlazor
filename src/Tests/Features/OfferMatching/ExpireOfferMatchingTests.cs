@@ -7,7 +7,6 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnNonOfferMatchingPlayer_ThenDoesNothing()
     {
-        var application = GetUnauthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         await AddAsync(mockPlayer);
 
@@ -23,7 +22,6 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     [InlineData(0), InlineData(-1), InlineData(-2)]
     public async Task GivenAnOfferMatchingPlayer_WhenTodayIsTwoDaysOrLessAfterEndOfFreeAgency_ThenDoesNothing(int daysAgo)
     {
-        var application = GetUnauthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(daysAgo);
         mockPlayer.State = PlayerState.OfferMatching;
@@ -40,14 +38,12 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     [Fact]
     public async Task GivenAnOfferMatchingPlayerWithBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenSetsToUnsignedForTheBiddingTeam()
     {
-        var application = GetUnauthenticatedApplication();
-
         var biddingTeam = CreateFakeTeam();
         await AddAsync(biddingTeam);
 
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.OfferMatching;
-        mockPlayer.AddBid(int.MaxValue, biddingTeam.Id);
+        mockPlayer.AddBid(Bid.MinimumAmount, biddingTeam.Id);
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         await AddAsync(mockPlayer);
 
@@ -58,13 +54,12 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
         var unsignedPlayer = await FirstOrDefaultAsync<Player>();
         unsignedPlayer!.State.Should().Be(PlayerState.Unsigned);
         unsignedPlayer!.TeamId.Should().Be(biddingTeam.Id);
-        unsignedPlayer.ContractValue.Should().Be(int.MaxValue);
+        unsignedPlayer.ContractValue.Should().Be(Bid.MinimumAmount);
     }
 
     [Fact]
     public async Task GivenAnOfferMatchingPlayerWithoutBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenIsRemovedFromTheLeague()
     {
-        var application = GetUnauthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
         mockPlayer.State = PlayerState.OfferMatching;

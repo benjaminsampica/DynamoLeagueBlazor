@@ -2,12 +2,12 @@ using Coravel;
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Admin.Shared;
-using DynamoLeagueBlazor.Server.Features.Fines;
 using DynamoLeagueBlazor.Server.Features.FreeAgents;
+using DynamoLeagueBlazor.Server.Features.FreeAgents.Detail;
 using DynamoLeagueBlazor.Server.Features.OfferMatching;
 using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
 using DynamoLeagueBlazor.Shared.Features.Players;
 using DynamoLeagueBlazor.Shared.Infastructure;
@@ -76,6 +76,7 @@ try
 
     builder.Services.AddTransient<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+    builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
     builder.Services.AddAuthentication()
         .AddIdentityServerJwt();

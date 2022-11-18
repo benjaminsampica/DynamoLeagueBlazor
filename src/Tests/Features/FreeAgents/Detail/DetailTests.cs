@@ -1,8 +1,7 @@
-﻿using DynamoLeagueBlazor.Client.Features.FreeAgents;
-using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Tests.Features.FreeAgents.Detail;
 
 public class DetailServerTests : IntegrationTestBase
 {
@@ -33,8 +32,7 @@ public class DetailServerTests : IntegrationTestBase
         mockFreeAgent.TeamId = mockTeam.Id;
         await AddAsync(mockFreeAgent);
 
-        var bidAmount = int.MaxValue;
-        mockFreeAgent.AddBid(bidAmount, mockTeam.Id);
+        mockFreeAgent.AddBid(Bid.MinimumAmount, mockTeam.Id);
         await UpdateAsync(mockFreeAgent);
 
         var client = application.CreateClient();
@@ -52,7 +50,7 @@ public class DetailServerTests : IntegrationTestBase
         response!.Bids.Should().HaveCount(1);
         var bid = response.Bids.First();
         bid.Team.Should().Be(mockTeam.Name);
-        bid.Amount.Should().Be(bidAmount.ToString("C0"));
+        bid.Amount.Should().Be(Bid.MinimumAmount);
         DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }
@@ -67,7 +65,7 @@ public class DetailClientTests : UITestBase
         GetHttpHandler.When(HttpMethod.Get)
             .TimesOutAfter(5000);
 
-        var cut = RenderComponent<Detail>();
+        var cut = RenderComponent<Client.Features.FreeAgents.Detail.Detail>();
 
         cut.HasComponent<MudSkeleton>().Should().BeTrue();
     }
@@ -80,7 +78,7 @@ public class DetailClientTests : UITestBase
         GetHttpHandler.When(HttpMethod.Get)
             .RespondsWithJson(AutoFaker.Generate<FreeAgentDetailResult>());
 
-        var cut = RenderComponent<Detail>();
+        var cut = RenderComponent<Client.Features.FreeAgents.Detail.Detail>();
 
         cut.HasComponent<MudTimeline>().Should().BeTrue();
         cut.HasComponent<MudNumericField<int>>().Should().BeTrue();

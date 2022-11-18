@@ -1,13 +1,14 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Server.Infrastructure;
+using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
-namespace DynamoLeagueBlazor.Tests.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Tests.Features.FreeAgents.Detail;
 
 public class AddBidTests : IntegrationTestBase
 {
     private static AddBidRequest CreateFakeValidRequest()
     {
         var faker = new AutoFaker<AddBidRequest>()
-            .RuleFor(f => f.Amount, (faker) => faker.Random.Int(min: 1));
+            .RuleFor(f => f.Amount, (faker) => faker.Random.Int(min: Bid.MinimumAmount));
 
         return faker.Generate();
     }
@@ -109,9 +110,6 @@ public class AddBidTests : IntegrationTestBase
     [Fact]
     public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestBid_ThenSavesTheBid()
     {
-        var application = GetUserAuthenticatedApplication();
-        var client = application.CreateClient();
-
         var mockTeam = CreateFakeTeam();
         await AddAsync(mockTeam);
 
@@ -121,6 +119,10 @@ public class AddBidTests : IntegrationTestBase
 
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
+        request.Amount = Bid.MinimumAmount;
+
+        var application = GetUserAuthenticatedApplication(mockTeam.Id);
+        var client = application.CreateClient();
 
         var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, request);
 
@@ -130,8 +132,41 @@ public class AddBidTests : IntegrationTestBase
         bid.Should().NotBeNull();
         bid!.Amount.Should().Be(request.Amount);
         bid.PlayerId.Should().Be(request.PlayerId);
-        bid.TeamId.Should().Be(UserAuthenticationHandler.TeamId);
+        bid.TeamId.Should().Be(mockTeam.Id);
         bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+    }
+
+    [Fact]
+    public async Task POST_GivenAnyAuthenticatedUser_WhenIsHighestPublicBid_ButThereIsAnExistingOverBidWithAHigherAmount_ThenSavesThreeBidsWithTheOverBidAsTheHighest()
+    {
+        var originalTeam = CreateFakeTeam();
+        await AddAsync(originalTeam);
+
+        var mockPlayer = CreateFakePlayer();
+        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
+        await AddAsync(mockPlayer);
+
+        const int privateBidAmount = 2;
+        mockPlayer.AddBid(privateBidAmount, originalTeam.Id);
+        await UpdateAsync(mockPlayer);
+
+        var biddingTeam = CreateFakeTeam();
+        await AddAsync(biddingTeam);
+        var biddingTeamRequest = CreateFakeValidRequest();
+        biddingTeamRequest.PlayerId = mockPlayer.Id;
+        biddingTeamRequest.Amount = privateBidAmount;
+
+        var application = GetUserAuthenticatedApplication(biddingTeam.Id);
+        var client = application.CreateClient();
+
+        var result = await client.PostAsJsonAsync(AddBidRouteFactory.Uri, biddingTeamRequest);
+
+        result.Should().BeSuccessful();
+
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Bids.Should().HaveCount(3);
+
+        dbContext.Bids.FindHighestBid()!.Amount.Should().Be(2);
     }
 }
 
@@ -147,7 +182,14 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
     [Theory]
     [InlineData(-1), InlineData(0)]
     public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
-        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId }).ShouldHaveValidationErrorFor(p => p.PlayerId);
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId })
+        .ShouldHaveValidationErrorFor(p => p.PlayerId);
+
+    [Theory]
+    [InlineData(-1), InlineData(0)]
+    public void GivenInvalidAmounts_ThenAreNotValid(int amount) =>
+        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { Amount = amount, PlayerId = int.MaxValue })
+        .ShouldHaveValidationErrorFor(p => p.Amount);
 
     [Fact]
     public async Task GivenABidOfOne_WhenAPlayerAlreadyHasBidOfOneDollar_ThenIsNotValid()

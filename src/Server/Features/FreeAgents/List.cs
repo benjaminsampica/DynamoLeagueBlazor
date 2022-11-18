@@ -28,21 +28,21 @@ public class ListHandler : IRequestHandler<ListQuery, FreeAgentListResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICurrentUserService _currentUserService;
 
     public ListHandler(
         ApplicationDbContext dbContext,
         IMapper mapper,
-        IHttpContextAccessor httpContextAccessor)
+        ICurrentUserService currentuserService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
+        _currentUserService = currentuserService;
     }
 
     public async Task<FreeAgentListResult> Handle(ListQuery request, CancellationToken cancellationToken)
     {
-        var currentUserTeamId = _httpContextAccessor.HttpContext!.User.GetTeamId();
+        var currentUserTeamId = _currentUserService.GetTeamId();
 
         var freeAgents = await _dbContext.Players
             .Include(p => p.Team)

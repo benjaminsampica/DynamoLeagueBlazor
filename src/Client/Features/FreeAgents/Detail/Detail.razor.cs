@@ -1,6 +1,6 @@
-﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents;
+﻿using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 
-namespace DynamoLeagueBlazor.Client.Features.FreeAgents;
+namespace DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 
 public sealed partial class Detail : IDisposable
 {
@@ -33,6 +33,11 @@ public sealed partial class Detail : IDisposable
         {
             await RefreshPageStateAsync();
             SnackBar.Add("Successfully added bid.", Severity.Success);
+
+            if (_result!.OverBid == null && _form.Amount != _result!.Bids.Max(b => b.Amount))
+            {
+                SnackBar.Add("You've been outbid.", Severity.Error);
+            }
         }
         else
         {
