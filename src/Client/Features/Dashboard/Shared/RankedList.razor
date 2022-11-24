@@ -12,7 +12,7 @@
     </MudItem>
     @foreach(var rankedItem in RankedItems.Skip(3))
     {
-        <MudItem xs=12 sm=6>
+        <MudItem xs=12 sm=6 Class="pt-0 pb-0">
             <RankedCard RankedItem="@rankedItem" NameTypo=Typo.body1 AmountTypo=Typo.h6 />
         </MudItem>
     }
