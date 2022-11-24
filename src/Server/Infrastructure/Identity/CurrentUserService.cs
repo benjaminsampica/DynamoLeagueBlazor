@@ -14,5 +14,5 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public int GetTeamId() => _httpContextAccessor.HttpContext.User.GetTeamId();
+    public int GetTeamId() => _httpContextAccessor.HttpContext!.User.GetTeamId();
 }

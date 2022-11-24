@@ -1,0 +1,47 @@
+﻿<MudPaper Class="pa-4">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudStack Row=true Class="align-center">
+                <MudImage Src="logo.png" Height="50" />
+                <PageHeader>Change Log</PageHeader>
+                <MudLink Href="https://github.com/benjaminsampica/DynamoLeagueBlazor/issues/new" Target="_blank" Class="ml-auto d-flex align-center" Style="gap: 3px;">
+                    <MudIcon Icon="@Icons.Filled.QuestionAnswer" /> Want something? Tell us!
+                </MudLink>
+            </MudStack>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudText Typo="Typo.h6" Color="Color.Success">Released Changes</MudText>
+            <MudList>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Success">
+                    Auto-bidding! You can now set a maximum bid you would pay for a player and will only pay what others try to outbid you at.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Success">
+                    Teams can now be fined. Obey the rules and don't miss dates or face the wrath of the League!
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Success">
+                    All-around performance improvements.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Success">
+                    Light mode! Additionally, Light/Dark mode is now detected based on your device preference.
+                </MudListItem>
+            </MudList>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudText Typo="Typo.h6" Color="Color.Info">Planned Changes</MudText>
+            <MudList>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Info">
+                    Facilitating the rookie draft entirely in-house.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Info">
+                    Higher class connectivity to the leagues in Yahoo.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Info">
+                    Login with any provider - Google, Facebook, etc.
+                </MudListItem>
+                <MudListItem Icon="@Icons.Filled.ChevronRight" IconColor="Color.Info">
+                    You've been outbid notifications via email.
+                </MudListItem>
+            </MudList>
+        </MudItem>
+    </MudGrid>
+</MudPaper>

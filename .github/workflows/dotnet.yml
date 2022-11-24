@@ -65,10 +65,9 @@ jobs:
       run: dotnet workload install wasm-tools 
     - name: Restore dependencies
       run: dotnet restore
-    - name: Publish 
+    - name: Publish
       run: dotnet publish -c Release -o 'drop'
     - name: Variable Substitution
-      if: startsWith(github.ref, 'refs/tags/v')
       uses: microsoft/variable-substitution@v1
       with:
         files: '**/drop/appsettings.Production.json'
@@ -76,7 +75,6 @@ jobs:
         ConnectionStrings.DefaultConnection: ${{ secrets.connectionstring }}
         Email.Password: ${{ secrets.email_password }}
     - name: Create app_offline file
-      if: startsWith(github.ref, 'refs/tags/v')
       shell: pwsh
       run: |
           New-Item offline_files -ItemType Directory

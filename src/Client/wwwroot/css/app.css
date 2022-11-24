@@ -58,7 +58,7 @@ html, body {
 }
 
 .mud-table-striped .mud-table-container .mud-table-root .mud-table-body .mud-table-row:nth-of-type(odd) {
-    background-color: #32333d !important;
+    background-color: var(--mud-palette-table-lines) !important;
 }
 
 .mud-xs-table .mud-table-row {

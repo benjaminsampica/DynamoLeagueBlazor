@@ -29,12 +29,12 @@
         </MudContainer>
     </MudMainContent>
     <MudHidden Breakpoint=Breakpoint.LgAndUp>
-        <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center justify-center">
+        <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center justify-center" Color="appBarColor">
             <MudToolBar>
-                <MudIconButton Icon=@Icons.Outlined.SupervisedUserCircle Link="/teams" Size=Size.Large Color=Color.Primary />
-                <MudIconButton Icon=@Icons.Outlined.People Link="/players" Size=Size.Large Color=Color.Primary />
-                <MudIconButton Icon=@Icons.Outlined.MoneyOff Link="/fines" Size=Size.Large Color=Color.Primary />
-                <MudIconButton Icon=@Icons.Outlined.FreeCancellation Link="/freeagents" Size=Size.Large Color=Color.Primary />
+                <MudIconButton Icon=@Icons.Outlined.SupervisedUserCircle Link="/teams" Size=Size.Large Color=buttonColor />
+                <MudIconButton Icon=@Icons.Outlined.People Link="/players" Size=Size.Large Color=buttonColor />
+                <MudIconButton Icon=@Icons.Outlined.MoneyOff Link="/fines" Size=Size.Large Color=buttonColor />
+                <MudIconButton Icon=@Icons.Outlined.FreeCancellation Link="/freeagents" Size=Size.Large Color=buttonColor />
             </MudToolBar>
         </MudAppBar>
     </MudHidden>    
@@ -43,12 +43,15 @@
 
 <MudBreakpointProvider />
 <MudSnackbarProvider/>
-<MudThemeProvider Theme=darkTheme IsDarkMode=true/>
+<MudThemeProvider @ref=_mudThemeProvider Theme=_baseTheme IsDarkMode=_isDarkMode />
 
 @code {
+    private MudThemeProvider? _mudThemeProvider;
+    private bool _isDarkMode;
     private static string[] HeaderFontFamily = new[] { "Graduate", "cursive" };
-
-    private MudTheme darkTheme = new MudTheme()
+    private Color buttonColor;
+    private Color appBarColor;
+    private MudTheme _baseTheme = new MudTheme()
     {
         Typography = new Typography
         {
@@ -61,9 +64,23 @@
             H6 = new H6 { FontFamily = HeaderFontFamily }
         }
     };
-
     private ErrorBoundary? _errorBoundary;
     private bool _showNavMenu;
+
+    protected override void OnInitialized()
+    {
+        buttonColor = _isDarkMode ? Color.Primary : Color.Dark;
+        appBarColor = _isDarkMode ? Color.Dark : Color.Primary;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider!.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
 
     protected override void OnParametersSet()
     {

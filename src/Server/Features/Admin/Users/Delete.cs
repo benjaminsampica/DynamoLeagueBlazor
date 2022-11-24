@@ -39,7 +39,7 @@ public class DeleteHandler : IRequestHandler<DeleteCommand>
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
 
-        await _userManager.DeleteAsync(user);
+        await _userManager.DeleteAsync(user!);
 
         return Unit.Value;
     }
