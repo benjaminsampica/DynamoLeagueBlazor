@@ -11,8 +11,9 @@ A new season begins every May and continues until the end of December. At the en
 
 # Getting Started
 
-Running & contributing to Dynamo League Blazor requires the following:
+Click [here](./docs/running-locally.md) to be taken to how to run the app locally.
 
+Running & contributing to Dynamo League Blazor requires the following:
 - .NET 7 SDK
 - IIS Express
 - Docker (Linux)
