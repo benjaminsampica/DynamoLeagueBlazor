@@ -4,7 +4,7 @@
 
 @inject NavigationManager Navigation
 
-<AuthorizeView Roles=@AllowedRoles>
+<AuthorizeView>
     <Authorized>
         <MudNavLink Href="authentication/profile">Manage Account</MudNavLink>
         <MudNavLink OnClick="BeginSignOut">Log Out</MudNavLink>
@@ -16,8 +16,6 @@
 </AuthorizeView>
 
 @code{
-    private string AllowedRoles = $"{RoleName.Admin}, {RoleName.User}";
-
     private void BeginSignOut(MouseEventArgs args)
     {
         Navigation.NavigateToLogout("authentication/logout");

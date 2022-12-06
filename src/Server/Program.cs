@@ -35,8 +35,17 @@ try
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
-        .Enrich.WithEnvironmentName()
-        .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+        .Enrich.WithEnvironmentName();
+
+    if (builder.Environment.IsDevelopment())
+    {
+        loggerConfiguration.WriteTo.Debug();
+    }
+    else
+    {
+        loggerConfiguration.WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+    }
+
 
     builder.Logging.ClearProviders();
 
@@ -51,7 +60,7 @@ try
         connectionString = await MsSqlContainerFactory.CreateAsync();
     }
 
-    builder.Services.AddDbContextFactory<ApplicationDbContext>(options => 
+    builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     {
         options.UseSqlServer(connectionString);
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
