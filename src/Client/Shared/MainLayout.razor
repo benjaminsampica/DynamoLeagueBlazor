@@ -20,9 +20,9 @@
                 <ChildContent>
                     @Body
                 </ChildContent>
-                <ErrorContent>
+                <ErrorContent Context=ex>
                     <MudAlert Severity=Severity.Error>
-                        An error has occured...
+                        @GetErrorMessage(ex)
                     </MudAlert>
                 </ErrorContent>
             </ErrorBoundary>
@@ -39,53 +39,8 @@
         </MudAppBar>
     </MudHidden>    
 </MudLayout>
-<MudDialogProvider CloseButton=true/>
 
+<MudDialogProvider CloseButton=true/>
 <MudBreakpointProvider />
 <MudSnackbarProvider/>
 <MudThemeProvider @ref=_mudThemeProvider Theme=_baseTheme IsDarkMode=_isDarkMode />
-
-@code {
-    private MudThemeProvider? _mudThemeProvider;
-    private bool _isDarkMode;
-    private static string[] HeaderFontFamily = new[] { "Graduate", "cursive" };
-    private Color buttonColor;
-    private Color appBarColor;
-    private MudTheme _baseTheme = new MudTheme()
-    {
-        Typography = new Typography
-        {
-            Default = new Default { FontFamily = new[] { "Open Sans", "sans-serif" } },
-            H1 = new H1 { FontFamily = HeaderFontFamily },
-            H2 = new H2 { FontFamily = HeaderFontFamily },
-            H3 = new H3 { FontFamily = HeaderFontFamily },
-            H4 = new H4 { FontFamily = HeaderFontFamily },
-            H5 = new H5 { FontFamily = HeaderFontFamily },
-            H6 = new H6 { FontFamily = HeaderFontFamily }
-        }
-    };
-    private ErrorBoundary? _errorBoundary;
-    private bool _showNavMenu;
-
-    protected override void OnInitialized()
-    {
-        buttonColor = _isDarkMode ? Color.Primary : Color.Dark;
-        appBarColor = _isDarkMode ? Color.Dark : Color.Primary;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _isDarkMode = await _mudThemeProvider!.GetSystemPreference();
-            StateHasChanged();
-        }
-    }
-
-    protected override void OnParametersSet()
-    {
-        _errorBoundary?.Recover();
-    }
-
-    private void OnOpenChanged(bool open = true) => _showNavMenu = open;
-}
