@@ -17,7 +17,7 @@ Ensure you've installed all necessary prerequisites before running the project.
 Things you will need before running the application:
 - .NET 7 SDK (Installing Visual Studio 2022 and selecting .NET 7 in the modules will do this, or you can go to their [website](https://dotnet.microsoft.com/en-us/download/dotnet) and download the SDK via their instructions)
 - IIS Express
-- Docker (In Linux mode)
+- Docker (in Linux mode)
 - WASM tools (can be installed via `dotnet workload install wasm-tools` in the command line)
 
 ## Running locally:
