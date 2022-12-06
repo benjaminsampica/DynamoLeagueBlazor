@@ -1,4 +1,5 @@
 using Coravel;
+using DotNet.Testcontainers.Configurations;
 using Duende.IdentityServer.Services;
 using DynamoLeagueBlazor.Server.Areas.Identity;
 using DynamoLeagueBlazor.Server.Features.Admin.Shared;
@@ -29,16 +30,25 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Logging.ClearProviders();
+
     var loggerConfiguration = new LoggerConfiguration()
-        .MinimumLevel.Is(LogEventLevel.Information)
         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .MinimumLevel.Override("Duende", LogEventLevel.Error)
         .Enrich.FromLogContext()
-        .Enrich.WithEnvironmentName()
-        .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+        .Enrich.WithEnvironmentName();
 
-    builder.Logging.ClearProviders();
+    if (builder.Environment.IsDevelopment())
+    {
+        loggerConfiguration.MinimumLevel.Is(LogEventLevel.Verbose);
+        loggerConfiguration.WriteTo.Debug();
+    }
+    else
+    {
+        loggerConfiguration.MinimumLevel.Is(LogEventLevel.Information);
+        loggerConfiguration.WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Name} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
+    }
 
     Log.Logger = loggerConfiguration.CreateLogger();
 
@@ -48,6 +58,8 @@ try
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     if (builder.Environment.IsDevelopment())
     {
+        var logger = LoggerFactory.Create(logging => logging.AddSerilog(Log.Logger)).CreateLogger<Program>();
+        TestcontainersSettings.Logger = logger;
         connectionString = await MsSqlContainerFactory.CreateAsync();
     }
 
