@@ -10,60 +10,60 @@
 </PageHeader>
 
 
-    <MudGrid>
-        <MudItem lg="8" md="12">
-            <EditForm Model=_addPlayerForm OnValidSubmit=OnValidSubmitAsync>
-                <FluentValidationValidator />
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudTextField @bind-Value="_addPlayerForm.Name" Label="Player Name" Variant="Variant.Text" For="@(() => _addPlayerForm.Name)" id="@nameof(_addPlayerForm.Name)" OnBlur=MapToHeadshotForm/>
-                    </MudItem>
-                    <MudItem xs="12" lg="4">
-                        <MudTextField @bind-Value="_addPlayerForm.ContractValue" Label="Contract Value" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" For="@(() => _addPlayerForm.ContractValue)" id="@nameof(_addPlayerForm.ContractValue)"/>
-                    </MudItem>
-                    <MudItem xs="12" lg="2">
-                        <MudSelect Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_addPlayerForm.Position" For="@(() => _addPlayerForm.Position)" id="@nameof(_addPlayerForm.Position)" OnBlur=MapToHeadshotForm>
-                            @foreach (Position pos in Position.List)
-                            {
-                                <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
-                            }
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="12" lg="6">
-                        <MudSelect Label="Team" AnchorOrigin="Origin.BottomCenter" @bind-Value="_addPlayerForm.TeamId" For="@(() => _addPlayerForm.TeamId)" id="@nameof(_addPlayerForm.TeamId)">
-                            <MudSelectItem Value="0">-- Select a Team --</MudSelectItem>
-                            @foreach (var team in _teamList.Teams)
-                            {
-                                <MudSelectItem Value="@team.Id">@team.Name</MudSelectItem>
-                            }
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <LoadingButton @bind-IsLoading="_isProcessingForm"/>
-                    </MudItem>
-                </MudGrid>
-             </EditForm> 
-        </MudItem>
-        <MudItem lg="4" xs="12" Class="d-flex justify-center align-center">
+<MudGrid>
+    <MudItem lg="8" md="12">
+        <EditForm Model=_addPlayerForm OnValidSubmit=OnValidSubmitAsync>
+            <FluentValidationValidator />
             <MudGrid>
-                <MudItem xs="12" Class="d-flex justify-center">
-                    <Avatar Image="@_previewHeadshotUrl" Name=@_addPlayerForm.Name Size="Size.Large"/>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_addPlayerForm.Name" Label="Player Name" Variant="Variant.Text" For="@(() => _addPlayerForm.Name)" id="@nameof(_addPlayerForm.Name)" OnBlur=MapToHeadshotForm/>
+                </MudItem>
+                <MudItem xs="12" lg="4">
+                    <MudTextField @bind-Value="_addPlayerForm.ContractValue" Label="Contract Value" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" For="@(() => _addPlayerForm.ContractValue)" id="@nameof(_addPlayerForm.ContractValue)"/>
+                </MudItem>
+                <MudItem xs="12" lg="2">
+                    <MudSelect Label="Position" AnchorOrigin="Origin.BottomCenter" @bind-Value="_addPlayerForm.Position" For="@(() => _addPlayerForm.Position)" id="@nameof(_addPlayerForm.Position)" OnBlur=MapToHeadshotForm>
+                        @foreach (Position pos in Position.List)
+                        {
+                            <MudSelectItem Value="@pos.Name">@pos.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" lg="6">
+                    <MudSelect Label="Team" AnchorOrigin="Origin.BottomCenter" @bind-Value="_addPlayerForm.TeamId" For="@(() => _addPlayerForm.TeamId)" id="@nameof(_addPlayerForm.TeamId)">
+                        <MudSelectItem Value="0">-- Select a Team --</MudSelectItem>
+                        @foreach (var team in _teamList.Teams)
+                        {
+                            <MudSelectItem Value="@team.Id">@team.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudItem>
                 <MudItem xs="12">
-                    <EditForm Model=_playerPreviewForm OnValidSubmit=PreviewHeadshotAsync>
-                        <FluentValidationValidator />
-                        <LoadingButton Color=Color.Tertiary Icon=@Icons.Outlined.ImageSearch @bind-IsLoading="_isPreviewButtonDisabled">
-                            <IsLoadingContent>
-                                 Attempting to find a player headshot...
-                            </IsLoadingContent>
-                            <ButtonContent>
-                                Preview Player Headshot
-                            </ButtonContent>
-                        </LoadingButton>
-                        <ValidationSummary />
-                    </EditForm>
+                    <LoadingButton @bind-IsLoading="_isProcessingForm"/>
                 </MudItem>
             </MudGrid>
-        </MudItem>
-    </MudGrid>
+            </EditForm> 
+    </MudItem>
+    <MudItem lg="4" xs="12" Class="d-flex justify-center align-center">
+        <MudGrid>
+            <MudItem xs="12" Class="d-flex justify-center">
+                <Avatar Image="@_previewHeadshotUrl" Name=@_addPlayerForm.Name Size="Size.Large"/>
+            </MudItem>
+            <MudItem xs="12">
+                <EditForm Model=_playerPreviewForm OnValidSubmit=PreviewHeadshotAsync>
+                    <FluentValidationValidator />
+                    <LoadingButton Color=Color.Tertiary Icon=@Icons.Outlined.ImageSearch @bind-IsLoading="_isPreviewButtonDisabled">
+                        <IsLoadingContent>
+                                Attempting to find a player headshot...
+                        </IsLoadingContent>
+                        <ButtonContent>
+                            Preview Player Headshot
+                        </ButtonContent>
+                    </LoadingButton>
+                    <ValidationSummary />
+                </EditForm>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>
 

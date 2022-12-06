@@ -63,7 +63,7 @@ try
         connectionString = await MsSqlContainerFactory.CreateAsync();
     }
 
-    builder.Services.AddDbContextFactory<ApplicationDbContext>(options => 
+    builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     {
         options.UseSqlServer(connectionString);
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
