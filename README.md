@@ -14,7 +14,6 @@ A new season begins every May and continues until the end of December. At the en
 Ensure you've installed all necessary prerequisites before running the project.
 
 ## Prerequisites:
-Things you will need before running the application:
 - .NET 7 SDK (Installing Visual Studio 2022 and selecting .NET 7 in the modules will do this, or you can go to their [website](https://dotnet.microsoft.com/en-us/download/dotnet) and download the SDK via their instructions)
 - IIS Express
 - Docker (in Linux mode)
