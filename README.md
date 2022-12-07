@@ -13,13 +13,13 @@ A new season begins every May and continues until the end of December. At the en
 
 Ensure you've installed all necessary prerequisites before running the project.
 
-## Prerequisites:
+## Prerequisites
 - .NET 7 SDK (Installing Visual Studio 2022 and selecting .NET 7 in the modules will do this, or you can go to their [website](https://dotnet.microsoft.com/en-us/download/dotnet) and download the SDK via their instructions)
 - IIS Express
 - Docker (in Linux mode)
 - WASM tools (can be installed via `dotnet workload install wasm-tools` in the command line)
 
-## Running locally:
+## Running locally
 1) Load the solution in Visual Studio or Rider.
 2) Set the `DynamoLeagueBlazor.Server` as the start up project.
 3) Run the application.
