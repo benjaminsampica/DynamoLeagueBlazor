@@ -1,6 +1,6 @@
 ﻿using Bunit.TestDoubles;
 using DynamoLeagueBlazor.Client.Shared.Components;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MockHttp.Json;
