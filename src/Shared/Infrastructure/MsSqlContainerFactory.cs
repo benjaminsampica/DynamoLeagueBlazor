@@ -2,7 +2,7 @@
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 
-namespace DynamoLeagueBlazor.Shared.Infastructure;
+namespace DynamoLeagueBlazor.Shared.Infrastructure;
 
 public class MsSqlContainerFactory : IAsyncDisposable
 {

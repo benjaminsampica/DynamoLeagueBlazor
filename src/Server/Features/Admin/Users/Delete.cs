@@ -1,6 +1,6 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Users;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin.Users;
