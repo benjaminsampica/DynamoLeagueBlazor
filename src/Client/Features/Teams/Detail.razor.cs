@@ -1,6 +1,6 @@
 ﻿using DynamoLeagueBlazor.Client.Shared.Components;
 using DynamoLeagueBlazor.Shared.Features.Teams;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 using static DynamoLeagueBlazor.Shared.Features.Teams.TeamDetailResult;
 
 namespace DynamoLeagueBlazor.Client.Features.Teams;

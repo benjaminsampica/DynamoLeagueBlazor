@@ -1,5 +1,5 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Fines;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 
 namespace DynamoLeagueBlazor.Server.Features.Fines;
 

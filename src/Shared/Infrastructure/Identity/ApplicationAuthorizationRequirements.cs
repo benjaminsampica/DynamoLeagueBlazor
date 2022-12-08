@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace DynamoLeagueBlazor.Shared.Infastructure.Identity;
+namespace DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 
 public static class PolicyRequirements
 {

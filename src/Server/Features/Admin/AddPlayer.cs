@@ -1,6 +1,6 @@
 ﻿using DynamoLeagueBlazor.Shared.Features.Admin;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
-using DynamoLeagueBlazor.Shared.Infastructure.Identity;
+using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 using static DynamoLeagueBlazor.Shared.Features.Admin.TeamNameListResult;
 
 namespace DynamoLeagueBlazor.Server.Features.Admin;
