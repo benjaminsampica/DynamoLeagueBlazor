@@ -52,7 +52,7 @@
             <MudItem xs="12">
                 <EditForm Model=_playerPreviewForm OnValidSubmit=PreviewHeadshotAsync>
                     <FluentValidationValidator />
-                    <LoadingButton Color=Color.Tertiary Icon=@Icons.Outlined.ImageSearch @bind-IsLoading="_isPreviewButtonDisabled">
+                    <LoadingButton Color=Color.Tertiary Icon=@Icons.Material.Outlined.ImageSearch @bind-IsLoading="_isPreviewButtonDisabled">
                         <IsLoadingContent>
                                 Attempting to find a player headshot...
                         </IsLoadingContent>

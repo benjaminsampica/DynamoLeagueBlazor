@@ -19,13 +19,11 @@ public class Handler : IRequestHandler<SeedDataCommand>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(SeedDataCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SeedDataCommand request, CancellationToken cancellationToken)
     {
         await SeedApplicationDataAsync(cancellationToken);
 
         await SeedIdentityDataAsync();
-
-        return Unit.Value;
     }
 
     private async Task SeedIdentityDataAsync()

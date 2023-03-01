@@ -7,10 +7,6 @@ namespace DynamoLeagueBlazor.Server.Areas.Identity;
 
 public class ProfileService : IProfileService
 {
-    public ProfileService()
-    {
-    }
-
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         var nameClaim = context.Subject.FindAll(JwtClaimTypes.Name);

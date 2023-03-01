@@ -1,5 +1,7 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 
@@ -8,16 +10,27 @@ namespace DynamoLeagueBlazor.Server.Features.OfferMatching;
 public class MatchPlayerController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IValidator<MatchPlayerRequest> _validator;
 
-    public MatchPlayerController(IMediator mediator)
+    public MatchPlayerController(IMediator mediator, IValidator<MatchPlayerRequest> validator)
     {
         _mediator = mediator;
+        _validator = validator;
     }
 
     [HttpPost]
-    public async Task<Unit> PostAsync([FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> PostAsync([CustomizeValidator(Skip = true)][FromBody] MatchPlayerRequest request, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new MatchPlayerCommand(request.PlayerId), cancellationToken);
+        var result = await _validator.ValidateAsync(request, cancellationToken);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
+        await _mediator.Send(new MatchPlayerCommand(request.PlayerId), cancellationToken);
+
+        return Ok();
     }
 }
 
@@ -32,7 +45,7 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
+    public async Task Handle(MatchPlayerCommand request, CancellationToken cancellationToken)
     {
         var player = (await _dbContext.Players
             .AsTracking()
@@ -42,8 +55,6 @@ public class MatchPlayerHandler : IRequestHandler<MatchPlayerCommand>
         player.MatchOffer();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

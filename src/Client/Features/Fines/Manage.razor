@@ -7,14 +7,14 @@
         <DialogActions>
             <MudGrid Spacing=1>
                 <MudItem xs=12>
-                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Outlined.Delete OnClick=@(() => IsApproved(false)) Color=Color.Error>
+                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Material.Outlined.Delete OnClick=@(() => IsApproved(false)) Color=Color.Error>
                         <ButtonContent>
                             <MudText>Delete</MudText>
                         </ButtonContent>
                     </LoadingButton>
                 </MudItem>
                 <MudItem xs=12>
-                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Outlined.Check OnClick=@(() => IsApproved(true))>
+                    <LoadingButton @bind-IsLoading="_processingForm" Icon=@Icons.Material.Outlined.Check OnClick=@(() => IsApproved(true))>
                         <ButtonContent>
                             <MudText>Approve</MudText>
                         </ButtonContent>

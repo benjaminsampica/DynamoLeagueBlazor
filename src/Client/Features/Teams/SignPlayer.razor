@@ -25,7 +25,7 @@ else
                 </MudSelect>    
             </DialogContent>
             <DialogActions>
-                <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
+                <MudButton Color="Color.Success" Variant=Variant.Text StartIcon=@Icons.Material.Outlined.Check ButtonType=ButtonType.Submit Disabled="@_processingForm" FullWidth=true Size=Size.Large>
                     @if (_processingForm)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

@@ -48,7 +48,7 @@ public class IsSeasonStartedHandler : IRequestHandler<IsSeasonStartedQuery, bool
 }
 
 
-public record StartSeasonCommand : IRequest<Unit> { }
+public record StartSeasonCommand : IRequest { }
 
 public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
 {
@@ -61,7 +61,7 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(StartSeasonCommand request, CancellationToken cancellationToken)
+    public async Task Handle(StartSeasonCommand request, CancellationToken cancellationToken)
     {
         var random = new Random();
 
@@ -81,8 +81,6 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
         _dbContext.Fines.RemoveRange(fines);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 
     private static DateTime GetRandomBoundariedDate(Random seed, DateTime boundaryStartDate, DateTime boundaryEndDate)

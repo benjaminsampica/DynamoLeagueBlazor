@@ -1,6 +1,7 @@
 ﻿using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace DynamoLeagueBlazor.Server.Features.FreeAgents.Detail;
 
@@ -11,12 +12,14 @@ public class AddBidController : ControllerBase
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IBidValidator _bidValidator;
+    private readonly IValidator<AddBidRequest> _validator;
 
-    public AddBidController(IMediator mediator, IMapper mapper, IBidValidator bidValidator)
+    public AddBidController(IMediator mediator, IMapper mapper, IBidValidator bidValidator, IValidator<AddBidRequest> validator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _bidValidator = bidValidator;
+        _validator = validator;
     }
 
     [HttpGet("ishighest")]
@@ -36,11 +39,20 @@ public class AddBidController : ControllerBase
     }
 
     [HttpPost]
-    public async Task PostAsync([FromBody] AddBidRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> PostAsync([CustomizeValidator(Skip = true)][FromBody] AddBidRequest request, CancellationToken cancellationToken)
     {
+        var result = await _validator.ValidateAsync(request, cancellationToken);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
         var query = _mapper.Map<AddBidCommand>(request);
 
         await _mediator.Send(query, cancellationToken);
+
+        return Ok();
     }
 }
 
@@ -57,7 +69,7 @@ public class AddBidHandler : IRequestHandler<AddBidCommand>
         _currentUserService = currentUserService;
     }
 
-    public async Task<Unit> Handle(AddBidCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddBidCommand request, CancellationToken cancellationToken)
     {
         var player = await _dbContext.Players
             .Include(p => p.Bids)
@@ -68,8 +80,6 @@ public class AddBidHandler : IRequestHandler<AddBidCommand>
         player!.AddBid(request.Amount, currentUserTeamId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

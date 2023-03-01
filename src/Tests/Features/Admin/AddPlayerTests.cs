@@ -108,7 +108,7 @@ public class AddPlayerUITests : UITestBase
             .RespondsWithJson(_teamNameListResult);
 
         GetHttpHandler.When(HttpMethod.Post, AddPlayerRouteFactory.Uri)
-            .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
+            .Respond(with => with.StatusCode(HttpStatusCode.OK))
             .Verifiable();
 
         var cut = RenderComponent<AddPlayer>();

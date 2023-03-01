@@ -26,6 +26,6 @@ public class ConfirmDialogService : IConfirmDialogService
         var dialog = _dialogService.Show<ConfirmDialog>();
         var result = await dialog.Result;
 
-        return result.Cancelled;
+        return result.Canceled;
     }
 }

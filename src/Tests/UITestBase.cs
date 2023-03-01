@@ -4,7 +4,6 @@ using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MockHttp.Json;
-using MockHttp.Json.Newtonsoft;
 using MockHttp.Language;
 using MockHttp.Language.Flow;
 using MudBlazor.Services;
@@ -84,7 +83,7 @@ public class UITestBase : TestContextWrapper, IDisposable
     public void Dispose() => TestContext?.Dispose();
 }
 
-public static class UITestExtensions
+public static class HttpHandlerExtensions
 {
     public static IConfiguredRequest When(this MockHttpHandler mockHttpHandler, HttpMethod httpMethod, string? uri = null)
         => mockHttpHandler.When(matching =>
@@ -95,5 +94,5 @@ public static class UITestExtensions
         });
 
     public static ISequenceResponseResult RespondsWithJson<T>(this IConfiguredRequest request, T value)
-        => request.RespondJson(HttpStatusCode.OK, value);
+        => request.Respond(with => with.StatusCode(HttpStatusCode.OK).JsonBody(value));
 }

@@ -29,7 +29,7 @@ public class IntegrationTestBase : IAsyncLifetime
 [CollectionDefinition(nameof(Server))]
 public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsyncLifetime
 {
-    private static Checkpoint _checkpoint = null!;
+    private static Respawner _respawner = null!;
     private static WebApplicationFactory<Program> _application = null!;
     private static IServiceScope _scope = null!;
     private static string _connectionString = null!;
@@ -38,11 +38,6 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
     {
         _connectionString = await MsSqlContainerFactory.CreateAsync();
 
-        _checkpoint = new Checkpoint
-        {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
-        };
-
         _application = CreateApplication();
 
         _scope = _application.Services.CreateAsyncScope();
@@ -50,6 +45,11 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
         var dbContext = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.MigrateAsync();
+
+        _respawner = await Respawner.CreateAsync(_connectionString, new RespawnerOptions
+        {
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
+        });
     }
 
     public async Task DisposeAsync()
@@ -59,7 +59,7 @@ public class IntegrationTesting : ICollectionFixture<IntegrationTesting>, IAsync
 
     public static async Task ResetStateAsync()
     {
-        await _checkpoint.Reset(_connectionString);
+        await _respawner.ResetAsync(_connectionString);
     }
 
     internal static WebApplicationFactory<Program> GetUserAuthenticatedApplication(int teamIdToImpersonate = 1)

@@ -181,14 +181,14 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
     [Theory]
     [InlineData(-1), InlineData(0)]
-    public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
-        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { PlayerId = playerId })
+    public async Task GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
+        (await new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidateAsync(new AddBidRequest { PlayerId = playerId }))
         .ShouldHaveValidationErrorFor(p => p.PlayerId);
 
     [Theory]
     [InlineData(-1), InlineData(0)]
-    public void GivenInvalidAmounts_ThenAreNotValid(int amount) =>
-        new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidate(new AddBidRequest { Amount = amount, PlayerId = int.MaxValue })
+    public async Task GivenInvalidAmounts_ThenAreNotValid(int amount) =>
+        (await new AddBidRequestValidator(Mock.Of<IBidValidator>()).TestValidateAsync(new AddBidRequest { Amount = amount, PlayerId = int.MaxValue }))
         .ShouldHaveValidationErrorFor(p => p.Amount);
 
     [Fact]
@@ -204,7 +204,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = 1 };
 
-        var result = _validator.TestValidate(request);
+        var result = await _validator.TestValidateAsync(request);
 
         result.ShouldHaveValidationErrorFor(p => p.Amount);
     }
@@ -222,7 +222,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = 2 };
 
-        var result = _validator.TestValidate(request);
+        var result = await _validator.TestValidateAsync(request);
 
         result.ShouldNotHaveValidationErrorFor(p => p.Amount);
     }
@@ -238,7 +238,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
 
-        var result = _validator.TestValidate(request);
+        var result = await _validator.TestValidateAsync(request);
 
         result.ShouldHaveValidationErrorFor(p => p);
     }
@@ -254,7 +254,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
 
-        var result = _validator.TestValidate(request);
+        var result = await _validator.TestValidateAsync(request);
 
         result.ShouldNotHaveValidationErrorFor(p => p);
     }
