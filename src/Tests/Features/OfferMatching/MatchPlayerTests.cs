@@ -84,6 +84,6 @@ public class MatchPlayerRequestValidatorTests
 {
     [Theory]
     [InlineData(-1), InlineData(0)]
-    public void GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
-        new MatchPlayerRequestValidator(Mock.Of<IMatchPlayerValidator>()).TestValidate(new MatchPlayerRequest(playerId)).ShouldHaveValidationErrorFor(p => p.PlayerId);
+    public async Task GivenInvalidPlayerIds_ThenAreNotValid(int playerId) =>
+        (await new MatchPlayerRequestValidator(Mock.Of<IMatchPlayerValidator>()).TestValidateAsync(new MatchPlayerRequest(playerId))).ShouldHaveValidationErrorFor(p => p.PlayerId);
 }

@@ -39,7 +39,7 @@ public class ManageFineHandler : IRequestHandler<ManageFineCommand>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(ManageFineCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ManageFineCommand request, CancellationToken cancellationToken)
     {
         var fine = await _dbContext.Fines
             .AsTracking()
@@ -49,8 +49,6 @@ public class ManageFineHandler : IRequestHandler<ManageFineCommand>
         else fine.Status = request.Approved;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

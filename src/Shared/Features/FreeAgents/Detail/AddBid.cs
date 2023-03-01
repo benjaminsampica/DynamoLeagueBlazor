@@ -13,7 +13,7 @@ public class AddBidRequestValidator : AsyncAbstractValidator<AddBidRequest>
 {
     public AddBidRequestValidator(IBidValidator bidValidator)
     {
-        CascadeMode = CascadeMode.Stop;
+        ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(x => x.PlayerId).GreaterThan(0);
         RuleFor(x => x.Amount)

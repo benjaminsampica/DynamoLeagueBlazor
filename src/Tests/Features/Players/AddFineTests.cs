@@ -88,7 +88,7 @@ public class AddFineUITests : UITestBase
             .Verifiable();
 
         GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
-            .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
+            .Respond(with => with.StatusCode(HttpStatusCode.OK))
             .Verifiable();
 
         var cut = await RenderMudDialogAsync<AddFine>(new DialogParameters

@@ -37,7 +37,7 @@ public class AddFineHandler : IRequestHandler<AddFineCommand>
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(AddFineCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddFineCommand request, CancellationToken cancellationToken)
     {
         var team = (await _dbContext.Teams
             .AsTracking()
@@ -46,8 +46,6 @@ public class AddFineHandler : IRequestHandler<AddFineCommand>
         team.AddFine(request.Amount, request.FineReason);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

@@ -10,9 +10,10 @@ using DynamoLeagueBlazor.Server.Infrastructure.Identity;
 using DynamoLeagueBlazor.Shared.Features.Admin.Shared;
 using DynamoLeagueBlazor.Shared.Features.FreeAgents.Detail;
 using DynamoLeagueBlazor.Shared.Features.OfferMatching;
-using DynamoLeagueBlazor.Shared.Features.Players;
+using DynamoLeagueBlazor.Shared.Features.Teams;
 using DynamoLeagueBlazor.Shared.Infrastructure;
 using DynamoLeagueBlazor.Shared.Infrastructure.Identity;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -86,7 +87,7 @@ try
 
     builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-    builder.Services.AddTransient<IProfileService, ProfileService>();
+    builder.Services.AddScoped<IProfileService, ProfileService>();
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
@@ -102,14 +103,12 @@ try
     builder.Services.AddRazorPages();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-    builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-    builder.Services.AddFluentValidation(fv =>
-    {
-        fv.RegisterValidatorsFromAssemblyContaining<AddFineRequestValidator>();
-    });
-    builder.Services.AddTransient<IBidValidator, BidValidator>();
-    builder.Services.AddTransient<IPlayerHeadshotService, PlayerHeadshotService>();
-    builder.Services.AddTransient<IMatchPlayerValidator, MatchPlayerValidator>();
+    builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>());
+    builder.Services.AddValidatorsFromAssemblyContaining<AddFineRequestValidator>();
+    builder.Services.AddFluentValidationAutoValidation();
+    builder.Services.AddScoped<IBidValidator, BidValidator>();
+    builder.Services.AddScoped<IPlayerHeadshotService, PlayerHeadshotService>();
+    builder.Services.AddScoped<IMatchPlayerValidator, MatchPlayerValidator>();
 
     builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.Email))
         .AddSingleton(s => s.GetRequiredService<IOptions<EmailSettings>>().Value);

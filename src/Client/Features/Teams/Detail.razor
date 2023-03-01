@@ -40,17 +40,17 @@ else
                     </AuthorizeView>
                     <MudDivider Class="mt-2" Style="max-width:250px; width: 100%"/>
                     <MudBadge Origin=Origin.CenterRight Content=_result.RosteredPlayers.Count() Color=Color.Tertiary>
-                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Outlined.PersonAdd OnClick=ShowRosteredPlayers>
+                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Material.Outlined.PersonAdd OnClick=ShowRosteredPlayers>
                             Rostered Players
                         </MudButton>
                     </MudBadge>
                     <MudBadge Origin=Origin.CenterRight Content=_result.UnrosteredPlayers.Count() Color=Color.Tertiary>
-                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Outlined.PersonOff OnClick=ShowUnrosteredPlayers>
+                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Material.Outlined.PersonOff OnClick=ShowUnrosteredPlayers>
                             Unrostered Players
                         </MudButton>
                     </MudBadge>
                     <MudBadge Origin=Origin.CenterRight Content=_result.UnsignedPlayers.Count() Color=Color.Tertiary>
-                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Outlined.PendingActions OnClick=ShowUnsignedPlayers>
+                        <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon=@Icons.Material.Outlined.PendingActions OnClick=ShowUnsignedPlayers>
                             Unsigned Players
                         </MudButton>
                     </MudBadge>

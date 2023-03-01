@@ -59,7 +59,7 @@ public class SignPlayerUITests : UITestBase
     {
         // Delay the response.
         GetHttpHandler.When(HttpMethod.Get)
-            .TimesOutAfter(5000);
+            .Respond(with => with.ClientTimeout(TimeSpan.FromSeconds(5)));
         var cut = RenderComponent<SignPlayer>();
 
         cut.HasComponent<MudDialog>().Should().BeTrue();

@@ -86,7 +86,7 @@ public class AddFineUITests : UITestBase
     public async Task GivenAValidForm_WhenSubmitIsClicked_ThenSavesTheForm()
     {
         GetHttpHandler.When(HttpMethod.Post, AddFineRouteFactory.Uri)
-            .Respond(message => Task.FromResult(message.CreateResponse(HttpStatusCode.OK)))
+            .Respond(with => with.StatusCode(HttpStatusCode.OK))
             .Verifiable();
 
         var cut = await RenderMudDialogAsync<AddFine>(new DialogParameters

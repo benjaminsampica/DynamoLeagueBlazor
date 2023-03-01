@@ -46,7 +46,7 @@ public sealed partial class Detail : IDisposable
         _playersToDisplay = _result!.RosteredPlayers;
         _playerTableHeader = "Rostered Players";
         _onPlayerTableActionClick = UnrosterPlayerAsync;
-        _tableActionIcon = Icons.Outlined.PersonRemove;
+        _tableActionIcon = Icons.Material.Outlined.PersonRemove;
     }
 
     private void ShowUnrosteredPlayers()
@@ -61,7 +61,7 @@ public sealed partial class Detail : IDisposable
         _playersToDisplay = _result!.UnsignedPlayers;
         _playerTableHeader = "Unsigned Players";
         _onPlayerTableActionClick = OpenSignPlayerDialogAsync;
-        _tableActionIcon = Icons.Filled.AssignmentLate;
+        _tableActionIcon = Icons.Material.Filled.AssignmentLate;
     }
 
     private async Task UnrosterPlayerAsync(int playerId)
@@ -94,7 +94,7 @@ public sealed partial class Detail : IDisposable
         var dialog = DialogService.Show<SignPlayer>("Sign Player", parameters, dialogOptions);
         var result = await dialog.Result;
 
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             await LoadDataAsync();
             ShowUnsignedPlayers();

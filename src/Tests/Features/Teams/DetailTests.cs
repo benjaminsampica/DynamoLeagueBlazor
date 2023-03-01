@@ -92,7 +92,7 @@ public class DetailUITests : UITestBase
         AuthorizeAsUser(int.MaxValue);
 
         GetHttpHandler.When(HttpMethod.Get, TeamDetailRouteFactory.Create(int.MaxValue))
-            .TimesOutAfter(500);
+            .Respond(with => with.ClientTimeout(TimeSpan.FromSeconds(5)));
 
         var cut = RenderComponent<Detail>(parameters =>
         {

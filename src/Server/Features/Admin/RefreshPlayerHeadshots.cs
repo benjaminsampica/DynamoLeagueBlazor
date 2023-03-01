@@ -25,7 +25,7 @@ public class RefreshPlayerHeadshotsController : ControllerBase
     }
 }
 
-public record RefreshPlayerHeadshotsCommand : IRequest<Unit> { }
+public record RefreshPlayerHeadshotsCommand : IRequest { }
 
 public class RefreshPlayerHeadshotsHandler : IRequestHandler<RefreshPlayerHeadshotsCommand>
 {
@@ -38,7 +38,7 @@ public class RefreshPlayerHeadshotsHandler : IRequestHandler<RefreshPlayerHeadsh
         _playerHeadshotService = playerHeadshotService;
     }
 
-    public async Task<Unit> Handle(RefreshPlayerHeadshotsCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RefreshPlayerHeadshotsCommand request, CancellationToken cancellationToken)
     {
         var players = await _dbContext.Players.AsTracking().ToListAsync(cancellationToken);
         foreach (var player in players)
@@ -48,7 +48,5 @@ public class RefreshPlayerHeadshotsHandler : IRequestHandler<RefreshPlayerHeadsh
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

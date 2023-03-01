@@ -45,7 +45,7 @@ public sealed partial class List : IDisposable
 
         var result = await dialog.Result;
 
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             await LoadDataAsync();
             StateHasChanged();

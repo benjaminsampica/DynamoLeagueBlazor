@@ -63,7 +63,7 @@ public class DetailClientTests : UITestBase
         TestContext!.Services.AddSingleton(Mock.Of<IBidValidator>());
 
         GetHttpHandler.When(HttpMethod.Get)
-            .TimesOutAfter(5000);
+            .Respond(with => with.ClientTimeout(TimeSpan.FromSeconds(5)));
 
         var cut = RenderComponent<Client.Features.FreeAgents.Detail.Detail>();
 
