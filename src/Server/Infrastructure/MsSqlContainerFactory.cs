@@ -19,10 +19,6 @@ public class MsSqlContainerFactory : IAsyncDisposable
                 Password = "yourStrong!Password123"
             })
             .WithImage("mcr.microsoft.com/mssql/server:2019-latest")
-            .WithCreateContainerParametersModifier(parameters =>
-            {
-                parameters.Env.Add("TZ=America/Chicago"); // TODO: All dates and comparisons should be UTC. Some tests fail because they use DateTime.Now in production or in the test.
-            })
             .Build();
 
         await _msSqlTestContainer.StartAsync();

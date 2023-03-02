@@ -106,7 +106,7 @@ public class BidValidator : IBidValidator
     {
         var player = await _dbContext.Players.FindAsync(new object[] { request.PlayerId }, cancellationToken);
 
-        var hasNotEnded = player!.EndOfFreeAgency > DateTime.Now;
+        var hasNotEnded = player!.EndOfFreeAgency > DateTimeOffset.UtcNow;
 
         return hasNotEnded;
     }

@@ -9,7 +9,7 @@ public class BidCountdownTests : UITestBase
     {
         var cut = RenderComponent<BidCountdown>(parameters =>
         {
-            parameters.Add(p => p.DateTime, DateTime.Now.AddSeconds(2));
+            parameters.Add(p => p.DateTime, DateTimeOffset.UtcNow.AddSeconds(2));
         });
 
         cut.WaitForState(() => cut.Markup.Contains("0 seconds"), TimeSpan.FromSeconds(5));
@@ -20,7 +20,7 @@ public class BidCountdownTests : UITestBase
     {
         var cut = RenderComponent<BidCountdown>(parameters =>
         {
-            parameters.Add(p => p.DateTime, DateTime.Now.AddSeconds(1));
+            parameters.Add(p => p.DateTime, DateTimeOffset.UtcNow.AddSeconds(1));
         });
 
         cut.Markup.Contains("mud-text-error");
@@ -31,7 +31,7 @@ public class BidCountdownTests : UITestBase
     {
         var cut = RenderComponent<BidCountdown>(parameters =>
         {
-            parameters.Add(p => p.DateTime, DateTime.Now.AddDays(1));
+            parameters.Add(p => p.DateTime, DateTimeOffset.UtcNow.AddDays(1));
         });
 
         cut.Markup.Contains("mud-text-warning");

@@ -41,7 +41,7 @@
                 <MudTd DataLabel="Player Position">@context.Position</MudTd>
                 <MudTd DataLabel="Player Team">@context.Team</MudTd>
                 <MudTd DataLabel="Bidding Ends">
-                    @context.BiddingEnds.ToShortDateString()
+                    @context.BiddingEnds.LocalDateTime.ToShortDateString()
                 </MudTd>
                 <MudTd DataLabel="Highest Bid">
                     <span>
