@@ -38,6 +38,15 @@ try
         options.AddApplicationAuthorizationPolicies();
     });
 
+    if (builder.HostEnvironment.IsDevelopment())
+    {
+        builder.Services.AddMsalAuthentication(options =>
+        {
+            builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+            options.ProviderOptions.LoginMode = "redirect";
+        });
+    }
+
     builder.Services.AddMudServices(config =>
     {
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
