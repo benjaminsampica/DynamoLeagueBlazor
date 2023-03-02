@@ -142,7 +142,7 @@ try
         app.Services.UseScheduler(scheduler =>
         {
             // All bidding closes at 10PM CST.
-            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Chicago");
 
             scheduler.Schedule<EndBiddingService>()
                 .DailyAtHour(22)
