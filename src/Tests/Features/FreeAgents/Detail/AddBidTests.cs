@@ -69,7 +69,7 @@ public class AddBidTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(1);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddSeconds(1);
         await AddAsync(mockPlayer);
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
@@ -86,7 +86,7 @@ public class AddBidTests : IntegrationTestBase
         var client = application.CreateClient();
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(-1);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddSeconds(-1);
         await AddAsync(mockPlayer);
         var request = CreateFakeValidRequest();
         request.PlayerId = mockPlayer.Id;
@@ -114,7 +114,7 @@ public class AddBidTests : IntegrationTestBase
         await AddAsync(mockTeam);
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddDays(1);
         await AddAsync(mockPlayer);
 
         var request = CreateFakeValidRequest();
@@ -133,7 +133,7 @@ public class AddBidTests : IntegrationTestBase
         bid!.Amount.Should().Be(request.Amount);
         bid.PlayerId.Should().Be(request.PlayerId);
         bid.TeamId.Should().Be(mockTeam.Id);
-        bid.CreatedOn.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+        bid.CreatedOn.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public class AddBidTests : IntegrationTestBase
         await AddAsync(originalTeam);
 
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now.AddDays(1);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddDays(1);
         await AddAsync(mockPlayer);
 
         const int privateBidAmount = 2;
@@ -233,7 +233,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now;
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow;
         await AddAsync(mockPlayer);
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };
@@ -249,7 +249,7 @@ public class AddBidRequestValidatorTests : IntegrationTestBase
         var stubTeam = CreateFakeTeam();
         await AddAsync(stubTeam);
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Now.AddSeconds(1);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddSeconds(1);
         await AddAsync(mockPlayer);
 
         var request = new AddBidRequest { PlayerId = mockPlayer.Id, Amount = int.MaxValue };

@@ -94,11 +94,11 @@ public class Handler : IRequestHandler<SeedDataCommand>
 
                 if (i % 2 == 0)
                 {
-                    player.SignForCurrentTeam(DateTime.Today.AddYears(1).Year, i);
+                    player.SignForCurrentTeam(DateTimeOffset.UtcNow.AddYears(1).Year, i);
 
                     if (i % 4 == 0)
                     {
-                        player.BeginNewSeason(DateTime.Today.AddYears(1));
+                        player.BeginNewSeason(DateTimeOffset.UtcNow.AddYears(1));
                     }
 
                     if (i % 8 == 0)

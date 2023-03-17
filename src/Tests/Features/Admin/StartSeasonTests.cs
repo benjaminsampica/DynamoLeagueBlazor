@@ -35,7 +35,7 @@ public class StartSeasonTests : IntegrationTestBase
         var application = GetAdminAuthenticatedApplication();
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.Rostered;
-        mockPlayer.BeginNewSeason(DateTime.MaxValue);
+        mockPlayer.BeginNewSeason(DateTimeOffset.MaxValue);
         await AddAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -71,7 +71,7 @@ public class StartSeasonTests : IntegrationTestBase
         await AddAsync(mockPlayer);
 
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        mockFine.CreatedOn = DateTime.MinValue;
+        mockFine.CreatedOn = DateTimeOffset.MinValue;
         await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();
@@ -98,7 +98,7 @@ public class StartSeasonTests : IntegrationTestBase
         await AddAsync(mockPlayer);
 
         var mockFine = mockPlayer.AddFine(int.MaxValue, RandomString);
-        mockFine.CreatedOn = new DateTime(DateTime.Today.Year, 1, 1);
+        mockFine.CreatedOn = new DateTimeOffset(DateTimeOffset.UtcNow.Year, 1, 1, 0, 0, 0, TimeSpan.Zero);
         await UpdateAsync(mockPlayer);
 
         var client = application.CreateClient();

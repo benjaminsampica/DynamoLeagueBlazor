@@ -6,7 +6,7 @@ public record Player : BaseEntity
 {
     private readonly StateMachine<PlayerState, PlayerStateTrigger> _machine;
     private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<int, int> _rosteredTrigger;
-    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<DateTime> _freeAgentTrigger;
+    private readonly StateMachine<PlayerState, PlayerStateTrigger>.TriggerWithParameters<DateTimeOffset> _freeAgentTrigger;
 
     public Player()
     {
@@ -19,11 +19,11 @@ public record Player : BaseEntity
 
         _rosteredTrigger = _machine.SetTriggerParameters<int, int>(PlayerStateTrigger.SignedByTeam);
         _machine.Configure(PlayerState.Rostered)
-            .OnEntryFrom(_rosteredTrigger, (yearContractExpires, contractValue) => SetToRostered(yearContractExpires, contractValue))
+            .OnEntryFrom(_rosteredTrigger, SetToRostered)
             .Permit(PlayerStateTrigger.UnrosteredByTeam, PlayerState.Unrostered)
             .Permit(PlayerStateTrigger.NewSeasonStarted, PlayerState.FreeAgent);
 
-        _freeAgentTrigger = _machine.SetTriggerParameters<DateTime>(PlayerStateTrigger.NewSeasonStarted);
+        _freeAgentTrigger = _machine.SetTriggerParameters<DateTimeOffset>(PlayerStateTrigger.NewSeasonStarted);
         _machine.Configure(PlayerState.FreeAgent)
             .OnEntryFrom(_freeAgentTrigger, (endOfFreeAgency) => EndOfFreeAgency = endOfFreeAgency)
             .Permit(PlayerStateTrigger.BiddingEnded, PlayerState.OfferMatching);
@@ -40,7 +40,7 @@ public record Player : BaseEntity
     public int ContractValue { get; set; }
     public int YearAcquired { get; set; }
     public int? TeamId { get; set; }
-    public DateTime? EndOfFreeAgency { get; set; }
+    public DateTimeOffset? EndOfFreeAgency { get; set; }
     public PlayerState State { get; set; } = PlayerState.Unsigned;
 
     public Team Team { get; private set; } = null!;
@@ -83,7 +83,7 @@ public record Player : BaseEntity
         EndOfFreeAgency = null;
     }
 
-    public void BeginNewSeason(DateTime endOfFreeAgency) => _machine.Fire(_freeAgentTrigger, endOfFreeAgency);
+    public void BeginNewSeason(DateTimeOffset endOfFreeAgency) => _machine.Fire(_freeAgentTrigger, endOfFreeAgency);
 
     // TODO: Refactor this into an event so its easier to understand each individual piece.
     public void AddBid(int amount, int teamIdOfBidder)
@@ -119,7 +119,7 @@ public record Player : BaseEntity
         if (shouldUpdateOverBid)
         {
             currentHighestBid!.Amount = amount;
-            currentHighestBid.UpdatedOn = DateTimeOffset.Now;
+            currentHighestBid.UpdatedOn = DateTimeOffset.UtcNow;
         }
         else if (!isBidByTheSameTeam && currentHighestBid != null)
         {
@@ -142,7 +142,7 @@ public record Player : BaseEntity
             else if (currentHighestBid!.Amount == amount)
             {
                 currentHighestBid.IsOverBid = false;
-                currentHighestBid.UpdatedOn = DateTimeOffset.Now;
+                currentHighestBid.UpdatedOn = DateTimeOffset.UtcNow;
             }
         }
 
@@ -157,11 +157,11 @@ public record Player : BaseEntity
         {
             if (isBidByTheSameTeam) return false;
 
-            var maxFreeAgencyExtensionDate = new DateTime(DateTime.Now.Year, 8, 28);
+            var maxFreeAgencyExtensionDate = new DateTimeOffset(DateTimeOffset.UtcNow.Year, 8, 28, 0, 0, 0, TimeSpan.Zero);
             var isBeforeMaximumExtensionDate = EndOfFreeAgency < maxFreeAgencyExtensionDate;
 
             const int maxFreeAgencyExtensionDays = 3;
-            var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTime.Now.AddDays(maxFreeAgencyExtensionDays);
+            var isBeforeMaximumExtensionDays = EndOfFreeAgency < DateTimeOffset.UtcNow.AddDays(maxFreeAgencyExtensionDays);
 
             return isBeforeMaximumExtensionDate && isBeforeMaximumExtensionDays;
         }
@@ -189,5 +189,5 @@ public record Player : BaseEntity
     public int GetHighestBidAmount() => Bids.Any(b => b.IsOverBid == false) ? Bids.Where(b => b.IsOverBid == false).FindHighestBid()!.Amount : Bid.MinimumAmount;
     public string GetOfferingTeam() => Bids.Any() ? Bids.FindHighestBid()!.Team.Name : string.Empty;
 
-    public TimeSpan GetRemainingFreeAgencyTime() => EndOfFreeAgency!.Value.AddDays(3) - DateTime.Now;
+    public TimeSpan GetRemainingFreeAgencyTime() => EndOfFreeAgency!.Value.AddDays(3) - DateTimeOffset.UtcNow;
 }

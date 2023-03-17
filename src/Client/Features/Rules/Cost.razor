@@ -5,7 +5,7 @@
     Dues <b>must</b> be paid by January 1st each season. If an owner does not pay by one week before the season, that owner will be removed from the league.
     <br /><br />
     <MudGrid Spacing=1>
-        @foreach(var year in Enumerable.Range(DateTime.Today.Year, 5))
+        @foreach(var year in Enumerable.Range(DateTimeOffset.UtcNow.Year, 5))
         {
             var date = new DateOnly(year, 1, 1);
 

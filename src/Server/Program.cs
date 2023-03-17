@@ -141,9 +141,9 @@ try
 
         app.Services.UseScheduler(scheduler =>
         {
-            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            // All bidding closes at 10PM CST.
+            var centralStandardTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Chicago");
 
-            // Hosting provider is in pacific time.
             scheduler.Schedule<EndBiddingService>()
                 .DailyAtHour(22)
                 .Zoned(centralStandardTimeZone)
@@ -155,7 +155,7 @@ try
                 .RunOnceAtStart();
         }).OnError((ex) =>
         {
-            Log.Logger.Error(ex, "An exception occured when trying to run a scheduled job.");
+            Log.Error(ex, "An exception occured when trying to run a scheduled job.");
         });
     }
 

@@ -19,7 +19,7 @@ public class EndBiddingService : IInvocable
         var players = await _dbContext.Players
             .AsTracking()
             .Where(p => p.State == PlayerState.FreeAgent
-                && p.EndOfFreeAgency <= DateTime.Now)
+                && p.EndOfFreeAgency <= DateTimeOffset.UtcNow)
             .ToListAsync();
 
         if (!players.Any()) return;
