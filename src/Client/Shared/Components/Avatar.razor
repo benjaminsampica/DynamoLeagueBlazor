@@ -1,5 +1,12 @@
-﻿<MudAvatar Image=@Image Size=Size @attributes=AllOtherAttributes>
-    @Initials
+﻿<MudAvatar Size=Size @attributes=AllOtherAttributes>
+    @if(Image is not null)
+    {
+        <MudImage Src="@Image"  ObjectFit="ObjectFit.Contain"/>
+    }
+    else
+    {
+        @Initials
+    }
 </MudAvatar>
 
 

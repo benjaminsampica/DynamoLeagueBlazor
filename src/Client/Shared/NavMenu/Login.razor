@@ -6,12 +6,12 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudNavLink Href="authentication/profile">Manage Account</MudNavLink>
-        <MudNavLink OnClick="BeginSignOut">Log Out</MudNavLink>
+        <MudNavLink Href="authentication/profile" Icon="@Icons.Material.Outlined.ManageAccounts">Manage Account</MudNavLink>
+        <MudNavLink OnClick="BeginSignOut" Icon="@Icons.Material.Outlined.Logout">Log Out</MudNavLink>
     </Authorized>
     <NotAuthorized>
-        <MudNavLink Href="authentication/register">Register</MudNavLink>
-        <MudNavLink Href="authentication/login">Log In</MudNavLink>
+        <MudNavLink Href="authentication/register" Icon="@Icons.Material.Outlined.AppRegistration">Register</MudNavLink>
+        <MudNavLink Href="authentication/login" Icon="@Icons.Material.Outlined.Login">Log In</MudNavLink>
     </NotAuthorized>
 </AuthorizeView>
 
