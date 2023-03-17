@@ -23,7 +23,7 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     public async Task GivenAnOfferMatchingPlayer_WhenTodayIsTwoDaysOrLessAfterEndOfFreeAgency_ThenDoesNothing(int daysAgo)
     {
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(daysAgo);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddDays(daysAgo);
         mockPlayer.State = PlayerState.OfferMatching;
         await AddAsync(mockPlayer);
 
@@ -44,7 +44,7 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
         var mockPlayer = CreateFakePlayer();
         mockPlayer.State = PlayerState.OfferMatching;
         mockPlayer.AddBid(Bid.MinimumAmount, biddingTeam.Id);
-        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddDays(-3);
         await AddAsync(mockPlayer);
 
         var sut = GetRequiredService<ExpireOfferMatchingService>();
@@ -61,7 +61,7 @@ public class ExpireOfferMatchingTests : IntegrationTestBase
     public async Task GivenAnOfferMatchingPlayerWithoutBids_WhenTodayIsThreeDaysOrMoreAfterEndOfFreeAgency_ThenIsRemovedFromTheLeague()
     {
         var mockPlayer = CreateFakePlayer();
-        mockPlayer.EndOfFreeAgency = DateTime.Today.AddDays(-3);
+        mockPlayer.EndOfFreeAgency = DateTimeOffset.UtcNow.AddDays(-3);
         mockPlayer.State = PlayerState.OfferMatching;
         await AddAsync(mockPlayer);
 

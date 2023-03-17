@@ -53,8 +53,8 @@ public record StartSeasonCommand : IRequest { }
 public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly DateTime _boundaryStartDate = new(DateTime.Today.Year, 6, 25);
-    private readonly DateTime _boundaryEndDate = new(DateTime.Today.Year, 8, 20);
+    private readonly DateTimeOffset _boundaryStartDate = new(DateTimeOffset.UtcNow.Year, 6, 25, 0, 0, 0, TimeSpan.Zero);
+    private readonly DateTimeOffset _boundaryEndDate = new(DateTimeOffset.UtcNow.Year, 8, 20, 0, 0, 0, TimeSpan.Zero);
 
     public StartSeasonHandler(ApplicationDbContext dbContext)
     {
@@ -66,7 +66,7 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
         var random = new Random();
 
         var players = _dbContext.Players
-            .Where(p => p.YearContractExpires < DateTime.Today.Year)
+            .Where(p => p.YearContractExpires < DateTimeOffset.UtcNow.Year)
             .AsTracking();
 
         foreach (var player in players)
@@ -76,14 +76,14 @@ public class StartSeasonHandler : IRequestHandler<StartSeasonCommand>
             player.BeginNewSeason(endOfFreeAgency);
         }
 
-        var startOfTheCurrentYear = new DateTime(DateTime.Today.Year, 1, 1);
+        var startOfTheCurrentYear = new DateTimeOffset(DateTimeOffset.UtcNow.Year, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var fines = _dbContext.Fines.Where(f => f.CreatedOn < startOfTheCurrentYear);
         _dbContext.Fines.RemoveRange(fines);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    private static DateTime GetRandomBoundariedDate(Random seed, DateTime boundaryStartDate, DateTime boundaryEndDate)
+    private static DateTimeOffset GetRandomBoundariedDate(Random seed, DateTimeOffset boundaryStartDate, DateTimeOffset boundaryEndDate)
     {
         var maximumDaysToAdd = (boundaryEndDate - boundaryStartDate).Days;
         var daysToAdd = seed.Next(maximumDaysToAdd);

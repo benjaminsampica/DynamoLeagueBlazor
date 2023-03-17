@@ -194,7 +194,7 @@ public class PlayerStateTests
         var rosteredPlayer = CreateFakePlayer();
         rosteredPlayer.State = PlayerState.Rostered;
 
-        rosteredPlayer.BeginNewSeason(DateTime.MaxValue);
+        rosteredPlayer.BeginNewSeason(DateTimeOffset.MaxValue);
 
         rosteredPlayer.State.Should().Be(PlayerState.FreeAgent);
     }
@@ -208,7 +208,7 @@ public class PlayerStateTests
         FluentActions.Invoking(() =>
         {
             player.SignForCurrentTeam(int.MaxValue, int.MaxValue);
-            player.BeginNewSeason(DateTime.MaxValue);
+            player.BeginNewSeason(DateTimeOffset.MaxValue);
             player.EndBidding();
             player.MatchOffer();
         }).Should().NotThrow();
