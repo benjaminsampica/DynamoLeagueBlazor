@@ -1,8 +1,8 @@
 ﻿<AuthorizeView Policy=@PolicyRequirements.Admin>
     <Authorized>
-        <MudDivider />
-        <MudNavLink Href="/admin/startseason">Start New Season</MudNavLink>
-        <MudNavLink Href="/admin/refreshplayerheadshots">Refresh Headshots</MudNavLink>
-        <MudNavLink Href="/admin/users">Manage Users</MudNavLink>
+        <MudDivider DividerType="DividerType.Middle" />
+        <MudNavLink Href="/admin/startseason"Icon="@Icons.Material.Outlined.Refresh">Start New Season</MudNavLink>
+        <MudNavLink Href="/admin/refreshplayerheadshots" Icon="@Icons.Material.Outlined.Photo">Refresh Headshots</MudNavLink>
+        <MudNavLink Href="/admin/users" Icon="@Icons.Material.Outlined.PersonAdd">Manage Users</MudNavLink>
     </Authorized>
 </AuthorizeView>
