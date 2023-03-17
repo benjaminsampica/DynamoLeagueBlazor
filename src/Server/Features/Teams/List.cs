@@ -74,7 +74,7 @@ public class ListHandler : IRequestHandler<ListQuery, TeamListResult>
 
             var unsignedPlayersContractValue = await unsignedPlayersQuery.SumAsync(rp => rp.ContractValue, cancellationToken);
 
-            team.CapSpace = CapSpaceUtilities.GetRemainingCapSpace(DateOnly.FromDateTime(DateTime.Today), rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue).ToString("C0");
+            team.CapSpace = CapSpaceUtilities.GetRemainingCapSpace(DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime), rosteredPlayersContractValue, unrosteredPlayersContractValue, unsignedPlayersContractValue).ToString("C0");
         });
 
         return new TeamListResult

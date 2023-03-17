@@ -30,7 +30,7 @@ public class DetailServerTests : IntegrationTestBase
 
         var mockRosteredPlayer = CreateFakePlayer();
         mockRosteredPlayer.TeamId = stubTeam.Id;
-        mockRosteredPlayer.SignForCurrentTeam(DateTime.MaxValue.Year, 1);
+        mockRosteredPlayer.SignForCurrentTeam(DateTimeOffset.MaxValue.Year, 1);
         mockRosteredPlayer.State = PlayerState.Rostered;
         await AddAsync(mockRosteredPlayer);
 
@@ -52,7 +52,7 @@ public class DetailServerTests : IntegrationTestBase
         response.Should().NotBeNull();
         response!.Name.Should().Be(stubTeam.Name);
         var expectedCapSpace = CapSpaceUtilities.GetRemainingCapSpace(
-            DateOnly.FromDateTime(DateTime.Today),
+            DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime),
             mockRosteredPlayer.ContractValue,
             mockUnrosteredPlayer.ContractValue,
             mockUnsignedPlayer.ContractValue).ToString("C0");

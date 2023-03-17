@@ -51,7 +51,7 @@ public class DetailServerTests : IntegrationTestBase
         var bid = response.Bids.First();
         bid.Team.Should().Be(mockTeam.Name);
         bid.Amount.Should().Be(Bid.MinimumAmount);
-        DateTime.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
+        DateTimeOffset.Parse(bid.CreatedOn).Should().BeExactly(TimeSpan.FromSeconds(0));
     }
 }
 

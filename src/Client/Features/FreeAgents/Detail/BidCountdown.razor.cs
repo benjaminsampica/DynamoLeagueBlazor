@@ -7,7 +7,7 @@ namespace DynamoLeagueBlazor.Client.Features.FreeAgents.Detail;
 
 public partial class BidCountdown
 {
-    [Parameter, EditorRequired] public DateTime DateTime { get; set; }
+    [Parameter, EditorRequired] public DateTimeOffset DateTime { get; set; }
 
     private readonly Timer _timer = new(1000);
     private string _remainingTime = string.Empty;
@@ -21,7 +21,7 @@ public partial class BidCountdown
 
     private void CountDown(object? source, ElapsedEventArgs e)
     {
-        var remainingTime = DateTime - DateTime.Now;
+        var remainingTime = DateTime - DateTimeOffset.UtcNow;
 
         if (remainingTime <= TimeSpan.FromDays(1))
         {
