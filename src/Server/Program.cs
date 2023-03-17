@@ -106,6 +106,11 @@ try
     builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>());
     builder.Services.AddValidatorsFromAssemblyContaining<AddFineRequestValidator>();
     builder.Services.AddFluentValidationAutoValidation();
+
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    });
     builder.Services.AddScoped<IBidValidator, BidValidator>();
     builder.Services.AddScoped<IPlayerHeadshotService, PlayerHeadshotService>();
     builder.Services.AddScoped<IMatchPlayerValidator, MatchPlayerValidator>();

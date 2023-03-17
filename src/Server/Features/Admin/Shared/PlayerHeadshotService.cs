@@ -6,8 +6,7 @@ namespace DynamoLeagueBlazor.Server.Features.Admin.Shared;
 public class PlayerHeadshotService : IPlayerHeadshotService
 {
     private readonly HttpClient _httpClient;
-    private ILogger<PlayerHeadshotService> _logger;
-    private static PlayerDataResult? _playerDataResult;
+    private readonly ILogger<PlayerHeadshotService> _logger;
 
     public PlayerHeadshotService(HttpClient httpClient, ILogger<PlayerHeadshotService> logger)
     {
@@ -17,23 +16,29 @@ public class PlayerHeadshotService : IPlayerHeadshotService
 
     public async Task<string?> FindPlayerHeadshotUrlAsync(string fullName, string position, CancellationToken cancellationToken)
     {
-        if (_playerDataResult == null)
+        try
         {
-            _playerDataResult = await _httpClient.GetFromJsonAsync<PlayerDataResult>(PlayerHeadshotRouteFactory.GetPlayersUri, cancellationToken);
+            var playerDataResult = await _httpClient.GetFromJsonAsync<PlayerDataResult>(PlayerHeadshotRouteFactory.GetPlayersUri, cancellationToken);
+
+            var matchingPlayers = playerDataResult!.Data.Players
+                .Where(p => p.FullName == fullName && p.Position == position)
+                .ToList();
+
+            if (matchingPlayers.Count != 1)
+            {
+                return null;
+            }
+
+            var metricResult = await _httpClient.GetFromJsonAsync<PlayerMetricDataResult>(PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayers.Single().PlayerId!), cancellationToken: cancellationToken);
+
+            return metricResult!.Data.Player.Core?.Avatar;
         }
-
-        var matchingPlayers = _playerDataResult!.Data.Players
-            .Where(p => p.FullName == fullName && p.Position == position)
-            .ToList();
-
-        if (matchingPlayers.Count != 1)
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Failed to acquire player preview.");
             return null;
         }
 
-        var metricResult = await _httpClient.GetFromJsonAsync<PlayerMetricDataResult>(PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayers.Single().PlayerId), cancellationToken: cancellationToken);
-
-        return metricResult!.Data.Player.Core.Avatar;
     }
 }
 
@@ -54,12 +59,13 @@ internal class PlayerDataResult
 
         public class PlayerResult
         {
+            // Note: This provider has bad data whhere every property is null, thus these needing to be nullable.
             [JsonPropertyName("Player_ID")]
-            public required string PlayerId { get; set; }
+            public string? PlayerId { get; set; }
             [JsonPropertyName("Full Name")]
-            public required string FullName { get; set; }
-            public required string Team { get; set; }
-            public required string Position { get; set; }
+            public string? FullName { get; set; }
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public string? Position { get; set; }
         }
     }
 }
@@ -74,14 +80,15 @@ internal class PlayerMetricDataResult
 
         public class PlayerData
         {
+            // Note: This provider has bad data whhere every property is null, thus these needing to be nullable.
             [JsonPropertyName("Player_ID")]
-            public required string PlayerId { get; set; }
+            public string? PlayerId { get; set; }
 
-            public required Player Core { get; set; }
+            public Player? Core { get; set; }
 
             public class Player
             {
-                public required string Avatar { get; set; }
+                public string? Avatar { get; set; }
             }
         }
     }
