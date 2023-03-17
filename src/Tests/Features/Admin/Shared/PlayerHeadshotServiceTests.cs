@@ -1,4 +1,5 @@
 ﻿using DynamoLeagueBlazor.Server.Features.Admin.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace DynamoLeagueBlazor.Tests.Features.Admin.Shared;
 
@@ -21,7 +22,7 @@ public class PlayerHeadshotServiceTests : IntegrationTestBase
         mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayer.PlayerId!))
             .RespondsWithJson(stubPlayerMetricDataResult);
 
-        var sut = new PlayerHeadshotService(httpClient);
+        var sut = new PlayerHeadshotService(httpClient, Mock.Of<ILogger<PlayerHeadshotService>>());
 
         var headshot = await sut.FindPlayerHeadshotUrlAsync(matchingPlayer.FullName!, matchingPlayer.Position!, CancellationToken.None);
 
@@ -42,12 +43,12 @@ public class PlayerHeadshotServiceTests : IntegrationTestBase
 
         var stubPlayerMetricDataResult = new AutoFaker<PlayerMetricDataResult>().Generate();
         stubPlayerMetricDataResult.Data.Player.PlayerId = matchingPlayer.PlayerId;
-        mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayer.PlayerId))
+        mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayer.PlayerId!))
             .RespondsWithJson(stubPlayerMetricDataResult);
 
-        var sut = new PlayerHeadshotService(httpClient);
+        var sut = new PlayerHeadshotService(httpClient, Mock.Of<ILogger<PlayerHeadshotService>>());
 
-        var headshot = await sut.FindPlayerHeadshotUrlAsync(RandomString, matchingPlayer.Position, CancellationToken.None);
+        var headshot = await sut.FindPlayerHeadshotUrlAsync(RandomString, matchingPlayer.Position!, CancellationToken.None);
 
         headshot.Should().BeNull();
     }
@@ -69,7 +70,7 @@ public class PlayerHeadshotServiceTests : IntegrationTestBase
         mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayerUri(matchingPlayer.PlayerId!))
             .RespondsWithJson(stubPlayerMetricDataResult);
 
-        var sut = new PlayerHeadshotService(httpClient);
+        var sut = new PlayerHeadshotService(httpClient, Mock.Of<ILogger<PlayerHeadshotService>>());
 
         var headshot = await sut.FindPlayerHeadshotUrlAsync(matchingPlayer.FullName!, RandomString, CancellationToken.None);
 
@@ -86,7 +87,7 @@ public class PlayerHeadshotServiceTests : IntegrationTestBase
         mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayersUri)
             .Respond(with => with.StatusCode(HttpStatusCode.InternalServerError));
 
-        var sut = new PlayerHeadshotService(httpClient);
+        var sut = new PlayerHeadshotService(httpClient, Mock.Of<ILogger<PlayerHeadshotService>>());
 
         var headshot = await sut.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), RandomString, CancellationToken.None);
 
@@ -102,7 +103,7 @@ public class PlayerHeadshotServiceTests : IntegrationTestBase
         mockHttpHandler.When(HttpMethod.Get, PlayerHeadshotRouteFactory.GetPlayersUri)
             .RespondsWithJson(RandomString);
 
-        var sut = new PlayerHeadshotService(httpClient);
+        var sut = new PlayerHeadshotService(httpClient, Mock.Of<ILogger<PlayerHeadshotService>>());
 
         var headshot = await sut.FindPlayerHeadshotUrlAsync(It.IsAny<string>(), RandomString, CancellationToken.None);
 

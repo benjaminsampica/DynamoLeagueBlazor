@@ -6,10 +6,12 @@ namespace DynamoLeagueBlazor.Server.Features.Admin.Shared;
 public class PlayerHeadshotService : IPlayerHeadshotService
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<PlayerHeadshotService> _logger;
 
-    public PlayerHeadshotService(HttpClient httpClient)
+    public PlayerHeadshotService(HttpClient httpClient, ILogger<PlayerHeadshotService> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<string?> FindPlayerHeadshotUrlAsync(string fullName, string position, CancellationToken cancellationToken)
@@ -31,8 +33,9 @@ public class PlayerHeadshotService : IPlayerHeadshotService
 
             return metricResult!.Data.Player.Core?.Avatar;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Failed to acquire player preview.");
             return null;
         }
 
