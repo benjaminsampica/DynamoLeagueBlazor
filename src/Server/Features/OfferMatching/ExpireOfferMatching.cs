@@ -20,7 +20,7 @@ public class ExpireOfferMatchingService : IInvocable
             .AsTracking()
             .Include(p => p.Bids)
             .Where(p => p.State == PlayerState.OfferMatching
-                && p.EndOfFreeAgency!.Value.AddDays(3) <= DateTime.Today)
+                && p.EndOfFreeAgency!.Value.AddDays(3) <= DateTimeOffset.UtcNow)
             .ToListAsync();
 
         if (!players.Any()) return;

@@ -8,8 +8,8 @@ public record Bid : BaseEntity
     public required int PlayerId { get; init; }
     public required int TeamId { get; init; }
     public bool IsOverBid { get; set; }
-    public DateTime CreatedOn { get; private set; } = DateTime.Now;
-    public DateTimeOffset UpdatedOn { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset CreatedOn { get; private set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedOn { get; set; } = DateTimeOffset.UtcNow;
     public Team Team { get; private set; } = null!;
     public Player Player { get; private set; } = null!;
 }

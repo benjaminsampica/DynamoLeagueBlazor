@@ -6,7 +6,7 @@ public class FreeAgentDetailResult
     public required string Position { get; set; }
     public required string HeadShotUrl { get; set; }
     public required string Team { get; set; }
-    public DateTime EndOfFreeAgency { get; set; }
+    public DateTimeOffset EndOfFreeAgency { get; set; }
 
     public BidItem? OverBid { get; set; }
 

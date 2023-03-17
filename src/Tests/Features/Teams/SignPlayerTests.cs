@@ -32,7 +32,7 @@ public class SignPlayerServerTests : IntegrationTestBase
         var application = GetUserAuthenticatedApplication();
         var player = CreateFakePlayer();
         player.Position = Position.QuarterBack.Name;
-        player.YearContractExpires = DateTime.Now.Year;
+        player.YearContractExpires = DateTimeOffset.UtcNow.Year;
         await AddAsync(player);
         var request = CreateFakeValidRequest();
         request.YearContractExpires = (int)player.YearContractExpires;
