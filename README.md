@@ -2,6 +2,8 @@
 
 # Introduction
 
+### April 8th, 2023 This repository is archived and no further fixes or features will be worked on. After five years, the leagues effort has outgrown how much fun it is, weighed against our continued evolving lives and other hobbies :).
+
 Dynamo League is a fantasy football league based off the Yahoo fantasy football league with heavily customized rule sets.
 It is comprised of two separate stand-alone applications - a client UI written using Blazor WebAssembly and an API server written using ASP.NET Core.
 
